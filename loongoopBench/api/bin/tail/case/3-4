@@ -1,0 +1,11 @@
+#!/bin/sh
+str=`genString 1023`
+str=$str"中文"
+#echo "str:$str"
+filePath="$apiPath/tail3-4"
+realPath=`getLeofsRealPath $filePath`
+echo $str > $realPath
+ret=`$tail $filePath 2>/dev/null`
+#echo "ret:$ret"
+#echo $ret|wc -L
+checkOk $? "$str" "$ret"

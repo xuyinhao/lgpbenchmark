@@ -1,0 +1,9 @@
+#!/bin/sh
+filePath="$tmpDir/mfl4-3中文"
+echo "aa" > $filePath
+srcMd5=`getMd5 $filePath`
+#echo "src:$srcMd5"
+dstPath="$apiPath/mfl4-3dst"
+realDstPath=`getLeofsRealPath $dstPath`
+`$mfl $filePath $dstPath 2>/dev/null`
+checkOk $? "$srcMd5" $realDstPath

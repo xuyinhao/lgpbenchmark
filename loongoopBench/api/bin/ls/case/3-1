@@ -1,0 +1,7 @@
+#!/bin/bash
+deepPath=`genDeepPath 5 5`
+`$mkdir -p ${apiPath}${deepPath} 2>/dev/null`
+firstPath=${deepPath:0:7}
+#echo "$firstPath"
+ret=`$ls -R ${apiPath}${firstPath} 2>/dev/null`
+okCheckForPath $? "$ret" "$apiPath$firstPath"

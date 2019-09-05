@@ -1,0 +1,80 @@
+#!/bin/sh
+function okCheckForPath(){
+ flag=1
+ if [ 0 -ne $1 ]; then
+  flag=0
+ else
+  realPath=`getLeofsRealPath $3`
+  #echo "rp:$realPath"
+  paths=`ls $realPath 2>&1`
+  #echo "paths:$paths"
+  for path in $paths
+   do
+    str=`echo $2|grep $path`
+    if [ "$str" == "" ]; then
+     flag=0
+     break
+    fi
+   done 
+ fi
+ echo $flag
+}
+
+function okCheck(){
+ flag=1
+ if [ 0 -ne $1 ]; then
+  flag=0
+ else
+  str=`echo $2|grep $3`
+  if [ "" == "$str" ]; then
+   flag=0
+  fi
+ fi
+ echo $flag
+}
+
+function checkOkForMore(){
+ flag=1
+ if [ 0 -ne $1 ]; then
+  flag=0
+ else
+  paths=($3)
+  for path in $paths
+  do
+   str=`echo "$2"|grep $path`
+   if [ "" == "$str" ]; then
+    flag=0
+    break
+   fi
+  done
+ fi
+ echo $flag
+}
+
+function checkOkForLocal(){
+ flag=1
+ if [ 0 -ne $1 ]; then
+  flag=0
+ else
+  paths=`ls $3 2>&1`
+  for path in $paths
+   do
+    str=`echo $2|grep $path`
+    if [ "$str" == "" ]; then
+     flag=0
+     break
+    fi
+   done
+ fi
+ echo $flag
+}
+
+messageCheck(){
+ str=`echo "$1" | grep "$2"`
+ if [ "$str" == "" ]; then
+  echo 0
+ else
+  echo 1
+ fi
+}
+

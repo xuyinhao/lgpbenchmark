@@ -1,0 +1,6 @@
+#!/bin/sh
+`$rm -f file:///cfl5-3 1>/dev/null 2>&1`
+`$rm -f leofs:///cfl5-3dist 1>/dev/null 2>&1`
+echo "aa" > "/cfl5-3"
+`$cfl file:///cfl5-3 leofs:///cfl5-3dist 2>/dev/null`
+checkOkForLocal $? "/cfl5-3" "/cfl5-3dist"

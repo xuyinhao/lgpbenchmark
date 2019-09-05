@@ -1,0 +1,8 @@
+#!/bin/sh
+`$test -d "leofs:///ls5-1" 2>/dev/null`
+if [ 0 -eq $? ]; then
+ `$rm -R "leofs:///ls5-1" 1>/dev/null 2>&1`
+fi
+`$mkdir -p leofs:///"ls5-1"/a 2>/dev/null`
+ret=`$ls leofs:///"ls5-1" 2>&1`
+okCheckForPath $? "$ret" "/ls5-1"

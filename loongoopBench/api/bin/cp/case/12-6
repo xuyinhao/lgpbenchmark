@@ -1,0 +1,5 @@
+#!/bin/sh
+srcPath=`touchFile "cp12-6"`
+distPath="$apiPath/cp12-6dist"
+`$cp -ptopa "$srcPath" "$distPath" 2>/dev/null`
+checkFileNature $? $srcPath $distPath "1 3 6"

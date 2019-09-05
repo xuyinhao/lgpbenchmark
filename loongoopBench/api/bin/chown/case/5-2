@@ -1,0 +1,4 @@
+#!/bin/sh
+`$touchz $apiPath/chown5-2 2>/dev/null`
+ret=`$chown chownU5-2:root $apiPath/chown5-2 2>&1`
+checkError $? "$ret" "chown: invalid user"

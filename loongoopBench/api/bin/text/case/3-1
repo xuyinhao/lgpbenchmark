@@ -1,0 +1,9 @@
+#!/bin/sh
+str=`genString 100`
+filePath="$apiPath/text3-1/a/b/c/d"
+`$mkdir -p $filePath 1>/dev/null 2>&1`
+filePath="$filePath/text1-1"
+realPath=`getLeofsRealPath $filePath`
+echo $str > $realPath
+ret=`$text $filePath 2>&1`
+checkOk $? $str "$ret"

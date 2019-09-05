@@ -1,0 +1,7 @@
+#!/bin/sh
+filePath="$apiPath/tail7-1"
+realPath=`getLeofsRealPath $filePath`
+mkdir $realPath
+ret=`$tail $filePath 2>&1`
+#echo "$ret"
+checkError $? "$ret" "Is a directory"

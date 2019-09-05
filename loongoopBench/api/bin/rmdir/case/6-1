@@ -1,0 +1,5 @@
+#!/bin/sh
+dirPath="$apiPath/rmdir6-1"
+`$touchz $dirPath 2>/dev/null`
+ret=`$rmdir $dirPath 2>&1`
+checkError $? "$ret" "Is not a directory"

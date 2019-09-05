@@ -1,0 +1,13 @@
+#!/bin/sh
+srcPath1=`touchFile "cfl6-2a"`
+srcPath2=`touchFile "cfl6-2b"`
+distPath="$apiPath/cfl6-2dist"
+`$mkdir $distPath 2>/dev/null`
+`$cfl $srcPath1 $srcPath2 $distPath 2>/dev/null`
+#echo "ret:$ret"
+ret=`checkOk $? $srcPath1 "$distPath/cfl6-2a"`
+if [ 1 -eq $ret ]; then
+ checkOk $? $srcPath2 "$distPath/cfl6-2b"
+else
+ echo 0
+fi

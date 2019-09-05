@@ -1,0 +1,7 @@
+#!/bin/sh
+deepPath="$apiPath/a/b/c"
+realDeepPath=`getLeofsRealPath $deepPath`
+mkdir -p $realDeepPath
+filePath="$deepPath/touchz4-1"
+`$touchz $filePath 2>/dev/null`
+checkOk $? $filePath

@@ -1,0 +1,10 @@
+#!/bin/sh
+filePath="$apiPath/tail7-2"
+realPath=`getLeofsRealPath $filePath`
+mkdir $realPath
+touch "$realPath/aa"
+touch "$realPath/bb"
+mkdir "$realPath/cc"
+ret=`$tail $filePath/* 2>&1`
+#echo "$ret"
+checkError $? "$ret" "No such file or directory"

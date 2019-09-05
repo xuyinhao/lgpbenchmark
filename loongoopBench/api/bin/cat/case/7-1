@@ -1,0 +1,4 @@
+#!/bin/sh
+filePath="$apiPath/cat7-1"
+ret=`$cat $filePath 2>&1`
+checkError $? "$ret" "No such file or directory"

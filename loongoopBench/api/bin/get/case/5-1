@@ -1,0 +1,6 @@
+#!/bin/sh
+`$touchz leofs:///ctl5-1 2>/dev/null`
+realPath=`getLeofsRealPath "/ctl5-1"`
+echo "aa" > $realPath
+`$get leofs:///ctl5-1 $tmpDir 2>/dev/null`
+checkOk $? "$tmpDir/ctl5-1" "/ctl5-1"

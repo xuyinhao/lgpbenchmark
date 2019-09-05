@@ -1,0 +1,7 @@
+#!/bin/sh
+dstPath="$apiPath/cfl9-3"
+realPath=`getLeofsRealPath $dstPath`
+mkdir "$tmpDir/cfl9-3"
+mkdir $realPath
+`$cfl "$tmpDir/cfl9-3" $dstPath 2>/dev/null`
+checkOkForPath $? "$dstPath/cfl9-3"

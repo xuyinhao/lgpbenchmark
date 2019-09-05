@@ -1,0 +1,5 @@
+#!/bin/sh
+file="$apiPath/count_t_f9-1"
+msg=`getErrMsg $file`
+countErrCheck $file "$msg"
+echo $?

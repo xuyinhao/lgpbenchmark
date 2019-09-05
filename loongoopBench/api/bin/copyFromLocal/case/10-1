@@ -1,0 +1,5 @@
+#!/bin/sh
+srcPath=`touchFile "cfl10-1"`
+distPath="$apiPath/cfl10-1dist"
+`$cfl -p $srcPath $distPath 2>/dev/null`
+checkFileNature $? $srcPath $distPath "1 3 6"

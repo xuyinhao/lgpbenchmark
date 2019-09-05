@@ -1,0 +1,8 @@
+#!/bin/sh
+`$rm -f leofs:///cp6-1 1>/dev/null 2>&1`
+`$rm -f leofs:///cp6-1dist 1>/dev/null 2>&1`
+`$touchz leofs:///cp6-1 2>/dev/null`
+realpath=`getLeofsRealPath "/cp6-1"`
+echo "aa" > $realpath
+`$cp leofs:///cp6-1 leofs:///cp6-1dist 2>/dev/null`
+checkOk $? "/cp6-1" "/cp6-1dist"

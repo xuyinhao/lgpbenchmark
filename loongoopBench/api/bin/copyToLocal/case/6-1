@@ -1,0 +1,3 @@
+#!/bin/sh
+ret=`$ctl $apiPath/ctl6-1 $tmpDir 2>&1`
+checkError $? "$ret" "No such file or directory"

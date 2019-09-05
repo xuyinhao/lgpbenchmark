@@ -1,0 +1,7 @@
+#!/bin/sh
+ret=`$mkdir 2>&1`
+`okCheck $?`
+if [ 0 -eq $? ]; then
+ `messageCheck "$ret" "Not enough arguments"`
+fi
+echo $?

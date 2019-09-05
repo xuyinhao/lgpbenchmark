@@ -1,0 +1,10 @@
+#!/bin/sh
+fileName=`genString 249`
+filePath="$tmpDir/mfl2-1$fileName"
+echo "aa" > $filePath
+srcMd5=`getMd5 $filePath`
+#echo "src:$srcMd5"
+dstPath="$apiPath/mfl2-1dst"
+realDstPath=`getLeofsRealPath $dstPath`
+`$mfl $filePath $dstPath 2>/dev/null`
+checkOk $? "$srcMd5" $realDstPath

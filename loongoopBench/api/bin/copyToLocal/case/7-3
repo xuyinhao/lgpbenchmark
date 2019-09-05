@@ -1,0 +1,5 @@
+#!/bin/sh
+srcPath=`touchFile ctl7-3`
+dstPath="$tmpDir/ctl7-3"
+ret=`$ctl -p -P $srcPath $tmpDir 2>&1`
+checkError $? "$ret" "Illegal option"

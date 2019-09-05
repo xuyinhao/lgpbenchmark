@@ -1,0 +1,12 @@
+#!/bin/sh
+deepPath="$apiPath/a/b/c/d"
+realPath=`getLeofsRealPath $deepPath`
+mkdir -p $realPath
+filePath="$deepPath/mv3-2"
+realSrcPath="$realPath/mv3-2"
+echo "aa" > $realSrcPath
+srcMd5=`getMd5 $realSrcPath`
+dstPath="$apiPath/a/b/c/mv3-2"
+realDstPath=`getLeofsRealPath $dstPath`
+`$mv $filePath $dstPath 2>/dev/null`
+checkOk $? "$srcMd5" "$realDstPath"

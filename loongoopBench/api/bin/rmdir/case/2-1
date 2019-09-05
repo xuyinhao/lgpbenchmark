@@ -1,0 +1,6 @@
+#!/bin/sh
+str=`genString 247`
+dirPath="$apiPath/rmdir2-1$str"
+`$mkdir $dirPath 2>/dev/null`
+`$rmdir $dirPath 2>/dev/null`
+checkOk $? $dirPath

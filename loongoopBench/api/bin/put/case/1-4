@@ -1,0 +1,6 @@
+#!/bin/sh
+`$touchz $apiPath/put1-4f 2>/dev/null`
+`$mkdir $apiPath/put1-4p 2>/dev/null`
+realPath=`getLeofsRealPath "$apiPath/put1-4p"`
+ret=`$put $realPath $apiPath/put1-4f 2>&1`
+checkError $? "$ret" "File exists"

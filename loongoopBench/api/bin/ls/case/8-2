@@ -1,0 +1,7 @@
+#!/bin/sh
+ret=`$ls -Rh 2>&1`
+if [ 0 -eq $? ]; then
+ echo 0
+else
+ messageCheck "$ret" "Illegal option"
+fi

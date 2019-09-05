@@ -1,0 +1,7 @@
+#!/bin/sh
+fileName="ls4-2!@#$%^&\*()_+\{}-=\[];\"\\|<>\?,.'"
+`$mkdir -p ${apiPath}/$fileName/a 2>/dev/null`
+ret=`$ls ${apiPath}/$fileName  2>&1`
+#echo "ret:$ret"
+pathName=$apiName/"ls4-2!@#$%^&*()_+{}-=\\[];\"\|<>?,.'"
+okCheck $? "$ret" "$pathName"

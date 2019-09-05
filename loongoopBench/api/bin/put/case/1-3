@@ -1,0 +1,7 @@
+#!/bin/sh
+srcPath=`touchFile "put1-3"`
+`$mkdir $apiPath/put1-3path 2>/dev/null`
+realPath=`getLeofsRealPath $srcPath`
+distPath="$apiPath/put1-3path/"
+`$put $realPath $distPath 2>/dev/null`
+checkOk $? $srcPath $distPath/"put1-3"

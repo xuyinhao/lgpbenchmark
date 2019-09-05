@@ -1,0 +1,100 @@
+#!/bin/sh
+function getFileNature(){
+ realPath=`getLeofsRealPath "$1"`
+ nature=`ls -l $realPath 2>/dev/null`
+ natures=($nature)
+ echo ${natures[$2]}
+}
+
+function getLocalFileNature(){
+ nature=`ls -l $1`
+ natures=($nature)
+ echo ${natures[$2]}
+}
+
+
+function getPathNature(){
+ realPath=`getLeofsRealPath "$1"`
+ nature=`ls -ld $realPath`
+ natures=($nature)
+ echo ${natures[$2]}
+}
+
+function checkOk(){
+ flag=1
+ if [ 0 -eq $1 ]; then
+  grp=`getFileNature $3 3`
+  if [ "$2" != "$grp" ]; then
+   flag=0
+  fi
+ else
+  flag=0
+ fi
+ echo $flag
+}
+
+function checkOkForLocalFile(){
+ flag=1
+ if [ 0 -eq $1 ]; then
+  grp=`getLocalFileNature $3 3`
+  if [ "$2" != "$grp" ]; then
+   flag=0
+  fi
+ else
+  flag=0
+ fi
+ echo $flag
+}
+
+
+function checkOkForPath(){
+ flag=1
+ if [ 0 -eq $1 ]; then
+  grp=`getPathNature $3 3`
+  if [ "$2" != "$grp" ]; then
+   flag=0
+  fi
+ else
+  flag=0
+ fi
+ echo $flag
+}
+
+function checkOkForDeepPath(){
+ flag=1
+ if [ 0 -eq $1 ]; then
+  paths=`$ls -R "$3" 2>&1`
+  for pa in $paths
+  do
+   `$test -d "$pa" 1>/dev/null 2>&1`
+   if [ 0 -eq $? ]; then
+    flag=`checkOkForPath $1 "$2" "$pa"`
+   else
+    `$test -f "$pa" 1>/dev/null 2>&1`
+    if [ 0 -eq $? ]; then
+     flag=`checkOk $1 "$2" "$pa"`
+    fi
+   fi
+   if [ 0 -eq $flag ]; then
+    break
+   fi
+  done
+ else
+  flag=0
+ fi
+ echo $flag
+}
+
+function checkError(){
+ flag=1
+ if [ 0 -eq $1 ]; then
+  flag=0
+ else
+  str=`echo "$2"|grep "$3"`
+  if [ "$str" == "" ]; then
+   flag=0
+  fi
+ fi
+ echo $flag
+}
+

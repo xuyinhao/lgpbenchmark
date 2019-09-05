@@ -1,0 +1,5 @@
+#!/bin/sh
+f1="$apiPath/aaa"
+`$touchz $f1 2>/dev/null`
+countOkCheck $f1 "0 1 0 $f1"
+echo $?

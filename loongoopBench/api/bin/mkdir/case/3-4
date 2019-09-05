@@ -1,0 +1,8 @@
+#!/bin/sh
+ret=`$mkdir -p $apiPath/b/b/b 2>/dev/null`
+okCheck $?
+if [ 1 -eq $? ]; then
+ `fileExitCheck "$apiPath/b/b/b"`
+fi
+echo $?
+

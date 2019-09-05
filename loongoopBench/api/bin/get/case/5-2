@@ -1,0 +1,4 @@
+#!/bin/sh
+echo "aa" > "/ctl5-2"
+`$get file:///ctl5-2 $tmpDir 2>/dev/null`
+checkOkForAllLocal $? "$tmpDir/ctl5-2" "/ctl5-2"

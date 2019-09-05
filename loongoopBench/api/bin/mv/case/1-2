@@ -1,0 +1,8 @@
+#!/bin/sh
+filePath="$apiPath/mv1-2"
+realPath=`getLeofsRealPath $filePath`
+mkdir $realPath
+dstPath="$apiPath/mv1-2dst"
+realDstPath=`getLeofsRealPath $dstPath`
+`$mv $filePath $dstPath 2>/dev/null`
+checkOkForPath $? "$realPath" "$realDstPath"

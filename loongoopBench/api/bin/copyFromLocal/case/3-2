@@ -1,0 +1,7 @@
+#!/bin/sh
+deepPath=`genDeepPath 5 5`
+`$mkdir -p $apiPath/cfl3-2/$deepPath 2>/dev/null`
+mkdir "$tmpDir/cfl3-2p"
+distPath="$apiPath/cfl3-2/$deepPath"
+`$cfl $tmpDir/cfl3-2p $distPath 2>/dev/null`
+checkOkForPath  $?  "$distPath/cfl3-2p"

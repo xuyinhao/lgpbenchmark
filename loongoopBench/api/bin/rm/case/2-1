@@ -1,0 +1,6 @@
+#!/bin/sh
+str=`genString 250`
+fileName="$apiPath/rm2-1$str"
+`$touchz "$fileName" 2>/dev/null`
+`$rm "$fileName" 1>/dev/null 2>&1`
+checkOk $? "$fileName"

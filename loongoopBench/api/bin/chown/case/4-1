@@ -1,0 +1,6 @@
+#!/bin/sh
+`useradd chownU4-1 2>/dev/null`
+`$touchz leofs:///chown4-1 2>/dev/null`
+`$chown chownU4-1:root leofs:///chown4-1 2>/dev/null`
+checkOk $? "chownU4-1:root" "/chown4-1"
+`userdel chownU4-1`

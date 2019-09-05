@@ -1,0 +1,9 @@
+#!/bin/sh
+fileName="put5-1@\$!&*()+-=;',."
+srcPath=`touchFile $fileName`
+realPath=`getLeofsRealPath $apiPath/$fileName`
+#echo "$realPath"
+distPath="$apiPath/put5-1dist"
+`$put "$realPath" $distPath 2>/dev/null`
+checkOk $? $srcPath $distPath
+

@@ -1,0 +1,19 @@
+#!/bin/sh
+dirPath="$apiPath/chgrp3-1p/a/b/c"
+`$mkdir -p $dirPath 2>/dev/null`
+`$touchz $dirPath/chgrp3-1 2>/dev/null`
+`groupadd chgrp3-1g`
+`$chgrp chgrp3-1g $dirPath/chgrp3-1 2>/dev/null`
+ret=`checkOk $? "chgrp3-1g" "$dirPath/chgrp3-1"`
+if [ 1 -eq $ret ]; then
+ result=`checkOkForPath 0 "chgrp3-1g" $dirPath`
+ if [ 0 -eq $result ]; then
+  echo 1
+ else
+  echo 0
+ fi
+else
+ echo 0
+fi
+`$rm -r $dirPath/chgrp3-1 1>/dev/null 2>&1`
+`groupdel chgrp3-1g`

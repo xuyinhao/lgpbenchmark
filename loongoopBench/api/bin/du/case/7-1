@@ -1,0 +1,13 @@
+#!/bin/sh
+d1="$apiPath/du_t_d1-2"
+reald1=`getLeofsRealPath $d1`
+rm -rf $reald1
+mkdir $reald1
+f1="$d1/du_t_f1-2"
+realf1="$reald1/du_t_f1-2"
+echo "123" > $realf1
+f2="$d1/du_t_f1-2_2"
+realf2="$reald1/du_t_f1-2_2"
+echo "4567890" > $realf2
+duOkCheck "-s $d1" "12 $d1"
+echo $?

@@ -1,0 +1,20 @@
+#!/bin/sh
+str=`genString 100`
+echo $str > "atf5-3src"
+`$touchz "$apiPath/atf5-3aadst" 2>/dev/null`
+`$touchz "$apiPath/atf5-3Aadst" 2>/dev/null`
+`$atf "$path/atf5-3src" "$apiPath/atf5-3aadst" 2>/dev/null`
+ret=`checkOk $? "$str" "$apiPath/atf5-3aadst"`
+if [ 1 -eq $ret ]; then
+ `$atf "$path/atf5-3src" "$apiPath/atf5-3Aadst" 2>/dev/null`
+ ret=`checkOk 0 "$str" "$apiPath/atf5-3aadst"`
+ if [ 1 -eq $ret ]; then
+  checkOk $? "$str" "$apiPath/atf5-3Aadst"
+ else
+  echo 0
+ fi
+else
+ echo 0
+fi
+`rm -f $path/atf5-3src`
+`$rm "$apiPath/atf5-3*" 1>/dev/null 2>&1`

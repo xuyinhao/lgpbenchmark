@@ -1,0 +1,39 @@
+#!/bin/sh
+function checkOk(){
+ flag=1
+ if [ 0 -eq $1 ]; then
+  `$test -f "$2" 1>/dev/null 2>&1`
+  if [ 0 -eq $? ]; then
+   flag=0
+  fi
+ else
+  flag=0
+ fi
+ echo $flag
+}
+
+function checkOkForPath(){
+ flag=1
+ if [ 0 -eq $1 ]; then
+  `$test -d "$2" 1>/dev/null 2>&1`
+  if [ 0 -eq $? ]; then
+   flag=0
+  fi
+ else
+  flag=0
+ fi
+ echo $flag
+}
+
+function checkError(){
+ flag=1
+ if [ 0 -eq $1 ]; then
+  flag=0
+ else
+  str=`echo "$2"|grep "$3"`
+  if [ "$str" == "" ]; then
+   flag=0
+  fi
+ fi
+ echo $flag
+}

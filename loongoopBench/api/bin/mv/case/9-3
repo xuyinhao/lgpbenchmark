@@ -1,0 +1,14 @@
+#!/bin/sh
+filePath1="$apiPath/mv9-3a"
+filePath2="$apiPath/mv9-3b"
+realPath1=`getLeofsRealPath $filePath1`
+realPath2=`getLeofsRealPath $filePath2`
+mkdir $realPath1
+mkdir $realPath2
+dstPath="$apiPath/mv9-3dst"
+realDstPath=`getLeofsRealPath $dstPath`
+touch $realDstPath
+ret=`$mv $filePath1 $filePath2 $dstPath 2>&1`
+#echo "$ret"
+checkError $? "$ret" "Is not a directory" 
+

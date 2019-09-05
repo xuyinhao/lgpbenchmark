@@ -1,0 +1,6 @@
+#!/bin/sh
+name255=`genString 255`
+f1="$apiPath/$name255"
+`$touchz $f1 2>/dev/null`
+countOkCheck $f1 "0 1 0 $f1"
+echo $?

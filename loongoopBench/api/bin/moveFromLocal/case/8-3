@@ -1,0 +1,12 @@
+#!/bin/sh
+filePath1="$tmpDir/mfl8-3a"
+filePath2="$tmpDir/mfl8-3b"
+mkdir $filePath1
+mkdir $filePath2
+dstPath="$apiPath/mfl8-3dst"
+realDstPath=`getLeofsRealPath $dstPath`
+touch $realDstPath
+ret=`$mfl $filePath1 $filePath2 $dstPath 2>&1`
+#echo "$ret"
+checkError $? "$ret" "Is not a directory" 
+

@@ -1,0 +1,7 @@
+#!/bin/sh
+f1="$apiPath/count_t_f9-2"
+f2="$apiPath/count_t_f9-2_2"
+`$touchz $f1 2>/dev/null`
+msg=`getErrMsg $f2`
+countSomeOkCheck "$f1 $f2" "0 1 0 $f1 $msg"
+echo $?

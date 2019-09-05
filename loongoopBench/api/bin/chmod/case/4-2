@@ -1,0 +1,5 @@
+#!/bin/sh
+`$touchz file:///chmod4-2 2>/dev/null`
+`$chmod 755 file:///chmod4-2 2>/dev/null`
+checkOkForLocalFile $? 755 "/chmod4-2"
+`$rm -f file:///chmod4-2 1>/dev/null 2>&1`

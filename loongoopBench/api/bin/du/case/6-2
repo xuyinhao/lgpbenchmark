@@ -1,0 +1,3 @@
+#!/bin/sh
+duErrorCheck "-x" "Illegal option"
+echo $?

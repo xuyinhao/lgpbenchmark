@@ -1,0 +1,11 @@
+#!/bin/sh
+fileName1="$apiPath/rm6-2aaa"
+fileName2="$apiPath/rm6-2Aaa"
+`$mkdir $fileName1 2>/dev/null`
+`$touchz $fileName2 2>/dev/null`
+ret=`$rm $fileName1 $fileName2 2>&1`
+if [ 1 -eq $? ]; then
+ checkOk 0 "$fileName2"
+else
+ echo 0
+fi

@@ -1,0 +1,5 @@
+#!/bin/sh
+filePath="$tmpDir/cfl10-2"
+mkdir $filePath
+`$cfl -p $filePath $apiPath/cfl10-2dist 2>/dev/null`
+checkFileNature $? $filePath "$apiPath/cfl10-2dist" "1 3 6"

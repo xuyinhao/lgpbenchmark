@@ -1,0 +1,52 @@
+#!/bin/sh
+function getFileMode(){
+ realPath=`getLeofsRealPath "$1"`
+ mode=`stat -c %a $realPath`
+ echo $mode
+}
+
+function getLocalFileMode(){
+ mode=`stat -c %a $1`
+ echo $mode
+}
+
+function checkOk(){
+ flag=1
+ if [ 0 -eq $1 ]; then
+  mode=`getFileMode $3`
+  if [ $2 -ne $mode ]; then
+   flag=0
+  fi
+ else
+  flag=0
+ fi
+ echo $flag
+}
+
+function checkOkForLocalFile(){
+ flag=1
+ if [ 0 -eq $1 ]; then
+  mode=`getLocalFileMode $3`
+  if [ $2 -ne $mode ]; then
+   flag=0
+  fi
+ else
+  flag=0
+ fi
+ echo $flag
+
+}
+
+function checkError(){
+ flag=1
+ if [ 0 -eq $1 ]; then
+  flag=0
+ else
+  str=`echo "$2"|grep "$3"`
+  if [ "$str" == "" ]; then
+   flag=0
+  fi
+ fi
+ echo $flag
+}
+

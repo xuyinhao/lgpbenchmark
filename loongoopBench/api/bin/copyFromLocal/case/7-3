@@ -1,0 +1,13 @@
+#!/bin/sh
+srcPath1=`touchFile "cfl7-3a"`
+srcPath2="$tmpDir/cfl7-3b"
+distPath="$apiPath/cfl7-3dist"
+`$mkdir $distPath 2>/dev/null`
+ret=`$cfl $srcPath1 $srcPath2 $distPath 2>&1`
+#echo "ret:$ret"
+ret=`checkError $? "$ret" "No such file or directory"`
+if [ 1 -eq $ret ]; then
+ checkOk $? $srcPath1 "$distPath/cfl7-3a"
+else
+ echo 0
+fi

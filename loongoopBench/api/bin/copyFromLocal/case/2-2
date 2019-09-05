@@ -1,0 +1,7 @@
+#!/bin/sh
+srcFileName=`genString 255`
+distFileName=`genString 255`
+mkdir $tmpDir/$srcFileName
+distPath="$apiPath/$distFileName"
+`$cfl $tmpDir/$srcFileName $distPath 2>/dev/null`
+checkOkForPath $? $distPath

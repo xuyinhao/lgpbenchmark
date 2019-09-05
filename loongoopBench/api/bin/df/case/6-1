@@ -1,0 +1,5 @@
+#!/bin/sh
+info=`datapoolDfh`
+#echo $info
+dfOkCheck "-h /" "$info"
+echo $?

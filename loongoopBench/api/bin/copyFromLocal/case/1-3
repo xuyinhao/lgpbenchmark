@@ -1,0 +1,5 @@
+#!/bin/sh
+srcPath=`touchFile "cfl1-3"`
+distPath="$apiPath/cfl1-3"
+`$cfl $srcPath $distPath 2>/dev/null`
+checkOk $? $srcPath $distPath

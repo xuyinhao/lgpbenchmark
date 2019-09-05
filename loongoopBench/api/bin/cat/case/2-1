@@ -1,0 +1,8 @@
+#!/bin/sh
+str=`genString 100`
+fileName=`genString 249`
+filePath="$apiPath/cat2-1$fileName"
+realPath=`getLeofsRealPath $filePath`
+`echo $str > $realPath`
+ret=`$cat $filePath 2>&1`
+checkOk $? $str "$ret"

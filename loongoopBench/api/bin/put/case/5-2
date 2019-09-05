@@ -1,0 +1,6 @@
+#!/bin/sh
+srcPath=`touchFile "put5-2文件"`
+realPath=`getLeofsRealPath $srcPath`
+distPath="$apiPath/put5-2dist"
+`$put $realPath $distPath 2>/dev/null`
+checkOk $? $srcPath $distPath

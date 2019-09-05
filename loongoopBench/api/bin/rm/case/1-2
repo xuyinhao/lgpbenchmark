@@ -1,0 +1,5 @@
+#!/bin/sh
+pathName="$apiPath/rm1-2"
+`$mkdir $pathName 2>/dev/null`
+`$rmr $pathName 1>/dev/null 2>&1`
+checkOkForPath $? "$pathName"

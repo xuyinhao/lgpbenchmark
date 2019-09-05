@@ -1,0 +1,9 @@
+#!/bin/sh
+f1="$apiPath/du_t_f2-1"
+realf1=`getLeofsRealPath $f1`
+for((i=0;i<100;i++))
+do
+  echo "123456789" >> $realf1
+done
+duOkCheck $f1 "1000 $f1"
+echo $?

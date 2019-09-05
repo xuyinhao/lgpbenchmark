@@ -1,0 +1,4 @@
+#!/bin/sh
+ret=`$touchz file:///touchzaa/bb 2>&1`
+#echo "$ret"
+checkError $? "$ret" "No such file or directory"

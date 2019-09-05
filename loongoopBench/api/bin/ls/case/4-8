@@ -1,0 +1,6 @@
+#!/bin/sh
+`$mkdir $apiPath/"ls4-8Bbb" 2>/dev/null`
+`$mkdir $apiPath/"ls4-8bbb" 2>/dev/null`
+`$touchz $apiPath/"ls4-8Bbb/a" 2>/dev/null`
+ret=`$ls $apiPath/"ls4-8Bbb" 2>/dev/null`
+okCheck $? "$ret" "a"

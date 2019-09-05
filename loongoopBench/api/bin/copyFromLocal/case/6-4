@@ -1,0 +1,14 @@
+#!/bin/sh
+srcPath1="$tmpDir/cfl6-4a"
+srcPath2="$tmpDir/cfl6-4b"
+mkdir $srcPath1 $srcPath2
+distPath="$apiPath/cfl6-4dist"
+`$mkdir $distPath 2>/dev/null`
+`$cfl $srcPath1 $srcPath2 $distPath 2>/dev/null`
+#echo "ret:$ret"
+ret=`checkOkForPath $? "$distPath/cfl6-4a"`
+if [ 1 -eq $ret ]; then
+ checkOkForPath $? "$distPath/cfl6-4b"
+else
+ echo 0
+fi

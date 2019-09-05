@@ -1,0 +1,31 @@
+#!/bin/sh
+deepPath="$apiPath/a/b/c/d"
+realDeepPath=`getLeofsRealPath $deepPath`
+mkdir -p $realDeepPath/bb
+`$test -d $deepPath/bb 2>/dev/null`
+if [ 1 -eq $? ]; then
+ echo 0
+ return
+fi
+`$test -f $deepPath/bb 2>/dev/null`
+if [ 0 -eq $? ]; then
+ echo 0
+ return
+fi 
+`$test -e $deepPath/bb 2>/dev/null`
+if [ 1 -eq $? ]; then
+ echo 0
+ return
+fi 
+`$test -s $deepPath/bb 2>/dev/null`
+if [ 1 -eq $? ]; then
+ echo 0
+ return
+fi
+
+`$test -z $deepPath/bb 2>/dev/null`
+if [ 0 -eq $? ]; then
+ echo 0
+ return
+fi
+echo 1

@@ -1,0 +1,7 @@
+#!/bin/sh
+filePath="$apiPath/mv5-4"
+realPath=`getLeofsRealPath $filePath`
+echo "aa" > $realPath
+dstPath="$tmpDir/mv5-4dst"
+ret=`$mv "leofs:///$filePath" "file:///$dstPath" 2>&1`
+checkError $? "$ret" "Does not match target filesystem"

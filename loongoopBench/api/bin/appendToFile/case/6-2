@@ -1,0 +1,7 @@
+#!/bin/sh
+str=`genString 100`
+`echo $str > /atf6-2src`
+`touch /atf6-2dst`
+ret=`$atf file:///atf6-2src file:///atf6-2dst 2>&1`
+checkError $? "$ret" "appendToFile: Not supported"
+`rm /atf6-2*`

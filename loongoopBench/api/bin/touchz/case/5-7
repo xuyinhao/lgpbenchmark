@@ -1,0 +1,16 @@
+#!/bin/sh
+filePath1="$apiPath/touchzaaa"
+filePath2="$apiPath/touchzAaa"
+filePath3="$apiPath/touchzAAA"
+`$touchz $filePath1 $filePath2 $filePath3 2>/dev/null`
+ret=`checkOk $? $filePath1`
+if [ 1 -eq $ret ]; then
+ ret=`checkOk 0 $filePath2`
+ if [ 1 -eq $ret ]; then
+  checkOk 0 $filePath3
+ else
+  echo 0
+ fi
+else
+ echo 0
+fi

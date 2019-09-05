@@ -1,0 +1,29 @@
+#!/bin/sh
+filePath="$tmpDir/test3-2"
+touch $filePath
+`$test -d file://$filePath 2>/dev/null`
+if [ 0 -eq $? ]; then
+ echo 0
+ return
+fi
+`$test -f file://$filePath  2>/dev/null`
+if [ 1 -eq $? ]; then
+ echo 0
+ return
+fi 
+`$test -e file://$filePath 2>/dev/null`
+if [ 1 -eq $? ]; then
+ echo 0
+ return
+fi 
+`$test -s file://$filePath 2>/dev/null`
+if [ 0 -eq $? ]; then
+ echo 0
+ return
+fi 
+`$test -z file://$filePath 2>/dev/null`
+if [ 1 -eq $? ]; then
+ echo 0
+ return
+fi 
+echo 1

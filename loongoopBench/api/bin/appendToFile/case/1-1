@@ -1,0 +1,8 @@
+#!/bin/sh
+str=`genString 100`
+echo $str > "atf1-1src"
+`$touchz "$apiPath/atf1-1dst" 2>/dev/null`
+`$atf "$path/atf1-1src" "$apiPath/atf1-1dst" 2>/dev/null`
+checkOk $? "$str" "$apiPath/atf1-1dst"
+`rm -f $path/atf1-1src`
+`$rm "$apiPath/atf1-1dst" 1>/dev/null 2>&1`

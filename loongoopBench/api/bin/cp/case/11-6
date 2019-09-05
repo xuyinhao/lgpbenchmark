@@ -1,0 +1,13 @@
+#!/bin/sh
+srcPath1=`touchFile "cp11-6a"`
+`$mkdir "$apiPath/cp11-6b" 2>/dev/null`
+distPath="$apiPath/cp11-6dist"
+`$mkdir $distPath 2>/dev/null`
+`$cp "$srcPath1" "$apiPath/cp11-6b" $distPath 2>/dev/null`
+result=$?
+ret=`checkOk $result $srcPath1 $distPath/cp11-6a`
+if [ 1 -eq $ret ]; then
+ checkOkForPath $result "$distPath/cp11-6b"
+else
+ echo $ret
+fi

@@ -1,0 +1,7 @@
+#!/bin/sh
+`$mkdir $apiPath/文件夹 2>/dev/null`
+`okCheck $?`
+if [ 1 -eq $? ]; then
+ `fileExitCheck $apiPath/文件夹`
+fi
+echo $?

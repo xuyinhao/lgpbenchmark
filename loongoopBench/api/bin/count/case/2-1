@@ -1,0 +1,13 @@
+#!/bin/sh
+num=50
+deepPath="count_t_d2-1"
+firstPath="$apiPath/$deepPath"
+for((i=0; i<$num; i++))
+do
+  str=`genString 1`
+  deepPath="$deepPath/$str"
+done
+d1="$apiPath/$deepPath"
+`$mkdir -p $d1 2>/dev/null`
+countOkCheck $firstPath "51 0 0 $firstPath"
+echo $?

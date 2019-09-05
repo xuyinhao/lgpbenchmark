@@ -1,0 +1,3 @@
+#!/bin/sh
+ret=`$touchz -x 2>&1`
+checkError $? "$ret" "Illegal option"

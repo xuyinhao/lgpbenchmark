@@ -1,0 +1,8 @@
+#!/bin/sh
+filePath="$apiPath/touchz3-1"
+realPath=`getLeofsRealPath $filePath`
+mkdir $realPath
+ret=`$touchz $filePath 2>&1`
+#echo "$ret"
+checkError $? "$ret" "Is a directory"
+rm -r $realPath

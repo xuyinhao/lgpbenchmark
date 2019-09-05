@@ -1,0 +1,9 @@
+#!/bin/sh
+fileName="cfl5-1@\$!&*()+-=;',."
+srcPath=`touchFile $fileName`
+#fileName1="cfl5-1@\$!&*()+-=;',."
+#echo "$realPath"
+distPath="$apiPath/cfl5-1dist"
+`$cfl "$srcPath" $distPath 2>/dev/null`
+checkOk $? $srcPath $distPath
+

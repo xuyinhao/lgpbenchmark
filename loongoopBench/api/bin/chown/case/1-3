@@ -1,0 +1,8 @@
+#!/bin/sh
+`useradd chownU1-3 2>/dev/null`
+filePath="$apiPath/chown1-3"
+`$mkdir $filePath 1>/dev/null 2>&1`
+`$chown chownU1-3:root $filePath 2>/dev/null`
+checkOk $? "chownU1-3:root" $filePath
+`$rmr $filePath 1>/dev/null 2>&1`
+`userdel chownU1-3`

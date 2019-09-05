@@ -1,0 +1,10 @@
+#!/bin/sh
+deepPath="$tmpDir/mfl/a/b/c"
+mkdir -p $deepPath
+filePath="$deepPath/mfl3-1"
+echo "aa" > $filePath
+srcMd5=`getMd5 $filePath`
+#echo "src:$srcMd5"
+dstPath="$tmpDir/mfl3-1dst"
+`$mfl $filePath "file:$dstPath" 2>/dev/null`
+checkOk $? "$srcMd5" $dstPath

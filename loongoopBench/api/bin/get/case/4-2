@@ -1,0 +1,5 @@
+#!/bin/sh
+srcPath=`touchFile ctl4-2中文`
+dstPath="$tmpDir/ctl4-2"
+`$get $srcPath $dstPath 2>/dev/null`
+checkOk $? $dstPath $srcPath

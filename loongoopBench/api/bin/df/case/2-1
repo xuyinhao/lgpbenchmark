@@ -1,0 +1,5 @@
+#!/bin/sh
+f1="$apiPath/df_t_f2-1"
+msg=`getErrMsg $f1`
+dfErrCheck $f1 "$msg"
+echo $?

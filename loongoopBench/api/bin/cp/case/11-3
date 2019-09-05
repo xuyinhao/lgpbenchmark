@@ -1,0 +1,6 @@
+#!/bin/sh
+srcPath1=`touchFile "cp11-3a"`
+srcPath2=`touchFile "cp11-3b"`
+distPath=`touchFile "/cp11-3dist"`
+ret=`$cp $srcPath1 $srcPath2 $distPath 2>&1`
+checkError $? "$ret" "Is not a directory"

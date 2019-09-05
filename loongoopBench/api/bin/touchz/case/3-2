@@ -1,0 +1,8 @@
+#!/bin/sh
+filePath="$apiPath/touchz3-2"
+realPath=`getLeofsRealPath $filePath`
+echo "aa" > $realPath
+ret=`$touchz $filePath 2>&1`
+#echo "$ret"
+checkError $? "$ret" "Not a zero-length file"
+rm -f $realPath

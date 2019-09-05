@@ -1,0 +1,7 @@
+#!/bin/sh
+str=`genString 100`
+filePath="$apiPath/text4-2中文"
+realPath=`getLeofsRealPath $filePath`
+echo $str > $realPath
+ret=`$text $filePath 2>&1`
+checkOk $? $str "$ret"

@@ -1,0 +1,7 @@
+#!/bin/sh
+`$touchz "file:///chgrp5-1" 2>/dev/null`
+`groupadd "chgrp5-1g"`
+`$chgrp "chgrp5-1g" "file:///chgrp5-1" 2>/dev/null`
+checkOkForLocalFile $? "chgrp5-1g" "/chgrp5-1"
+`rm -f "/chgrp5-1"`
+`groupdel "chgrp5-1g"`

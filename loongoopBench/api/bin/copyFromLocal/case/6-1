@@ -1,0 +1,7 @@
+#!/bin/sh
+srcPath=`touchFile "cfl6-1"`
+distPath="$apiPath/cfl6-1dist"
+`$mkdir $distPath 2>/dev/null`
+ret=`$cfl $srcPath $srcPath $distPath 2>&1`
+#echo "ret:$ret"
+checkError $? "$ret" "File exists"

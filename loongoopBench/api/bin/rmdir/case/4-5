@@ -1,0 +1,5 @@
+#!/bin/sh
+dirPath="$apiPath/rmdir4-5中文"
+`$mkdir $dirPath 2>/dev/null`
+`$rmdir $dirPath 2>/dev/null`
+checkOk $? $dirPath

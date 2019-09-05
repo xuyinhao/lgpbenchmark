@@ -1,0 +1,13 @@
+#!/bin/sh
+dirPath="$apiPath/rmdir4-1"
+`$mkdir -p $dirPath/ab $dirPath/ba/c 2>/dev/null`
+ret=`$rmdirIg $dirPath/ab $dirPath/ba  2>&1`
+ret=`checkOk $? $dirPath/ab`
+if [ 1 -eq $ret ]; then
+ `$test -d $dirPath/ba 2>/dev/null`
+ if [ 0 -eq $? ]; then
+  echo 1
+ else
+  echo 0
+ fi
+fi 

@@ -1,0 +1,3 @@
+#!/bin/sh
+ret=`$atf 2>&1`
+checkError $? "$ret" "missing destination argument"

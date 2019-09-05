@@ -1,0 +1,5 @@
+#!/bin/sh
+srcPath=`touchFile ctl1-1`
+dstPath="$tmpDir/ctl1-1"
+`$ctl $srcPath $tmpDir 2>/dev/null`
+checkOk $? $dstPath $srcPath

@@ -1,0 +1,8 @@
+#!/bin/sh
+`$rm -f leofs:///put6-1 1>/dev/null 2>&1`
+`$rm -f leofs:///put6-1dist 1>/dev/null 2>&1`
+`$touchz leofs:///put6-1 2>/dev/null`
+realpath=`getLeofsRealPath "/put6-1"`
+echo "aa" > $realpath
+ret=`$put leofs:///put6-1 leofs:///put6-1dist 2>&1`
+checkError $? "$ret" "No such file or directory"

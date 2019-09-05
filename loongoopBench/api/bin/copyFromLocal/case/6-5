@@ -1,0 +1,8 @@
+#!/bin/sh
+srcPath1=`touchFile "cfl6-5a"`
+srcPath2=`touchFile "cfl6-5b"`
+distPath="$apiPath/cfl6-5dist"
+`$touchz $distPath 2>/dev/null`
+ret=`$cfl $srcPath1 $srcPath2 $distPath 2>&1`
+#echo "ret:$ret"
+checkError $? "$ret" "Is not a directory"

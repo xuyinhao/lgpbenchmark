@@ -1,0 +1,15 @@
+#!/bin/sh
+filePath1="$tmpDir/mfl8-2a"
+filePath2="$tmpDir/mfl8-2b"
+mkdir $filePath1
+mkdir $filePath2
+dstPath1="$apiPath/mfl8-2a"
+dstPath2="$apiPath/mfl8-2b"
+realDstPath1=`getLeofsRealPath $dstPath1`
+realDstPath2=`getLeofsRealPath $dstPath2`
+`$mfl $filePath1 $filePath2 $apiPath 2>/dev/null`
+flag=`checkOkForPath $? $filePath1 $realDstPath1`
+if [ 1 -eq $flag ]; then
+ flag=`checkOkForPath 0 $filePath2 $realDstPath2`
+fi
+echo $flag

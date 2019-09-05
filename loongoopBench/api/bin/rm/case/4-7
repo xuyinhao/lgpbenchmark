@@ -1,0 +1,12 @@
+#!/bin/sh
+fileName1="$apiPath/rm4-7aaa"
+fileName2="$apiPath/rm4-7Aaa"
+`$mkdir $fileName1 $fileName2 2>/dev/null`
+`$rmr $apiPath/rm4-7aaa 1>/dev/null 2>&1`
+`$rmr $apiPath/rm4-7Aaa 1>/dev/null 2>&1`
+ret=`checkOkForPath $? "$fileName1"`
+if [ 1 -eq $ret ]; then
+ checkOkForPath $? "$fileName2"
+else
+ echo 0
+fi

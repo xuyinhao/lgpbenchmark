@@ -1,0 +1,7 @@
+#!/bin/sh
+`$mkdir -p $apiPath/cp3-2/a/b 2>/dev/null`
+srcPath=`touchFile "cp3-2/a/b/cp3-2f"`
+`$mkdir -p $apiPath/cp3-2/b/a 2>/dev/null`
+distPath="$apiPath/cp3-2/b/a/cp3-2dist"
+`$cp $srcPath $distPath 2>/dev/null`
+checkOk $? "$srcPath" "$distPath"

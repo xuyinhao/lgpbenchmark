@@ -1,0 +1,16 @@
+#!/bin/sh
+srcPath1="$apiPath/put11-2a"
+realPath1=`getLeofsRealPath $srcPath1`
+srcPath2="$apiPath/put11-2b"
+realPath2=`getLeofsRealPath $srcPath2`
+`$mkdir $srcPath1 $srcPath2 2>/dev/null`
+distPath="$apiPath/put11-2dist"
+`$mkdir $distPath 2>/dev/null`
+`$put $realPath1 $realPath2 $distPath 2>/dev/null`
+ret=`checkOkForPath $? "$distPath/put11-2a"`
+if [ 1 -eq $ret ]; then
+ ret=`checkOkForPath $? "$distPath/put11-2b"`
+ echo $ret
+else
+ echo $ret
+fi

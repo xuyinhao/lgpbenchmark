@@ -1,0 +1,44 @@
+#!/bin/bash
+function checkOk(){
+ flag=1
+ if [ 0 -eq $1 ]; then
+  str=$2
+  len=`echo $str|wc -L`
+  if [ 1023 -le $len ]; then
+   str=$3
+   len=`echo $str|wc -L`
+   st=`echo $str|grep "中文"`
+   if [ "" != "$st" ]; then
+    len=`expr $len + 2`
+   fi
+   #echo "len:$len"
+   st=`echo $2|grep $str`
+   if [ 1023 -ne $len ] || [ "" == $st ]; then
+    flag=0
+   fi
+  else
+   if [ "$2" != "$3" ]; then
+    flag=0
+   fi
+  fi
+  #echo "tailStr:$str"
+  #echo "ret:$3"
+ else
+  flag=0
+ fi
+ echo $flag
+}
+
+function checkError(){
+ flag=1
+ if [ 0 -eq $1 ]; then
+  flag=0
+ else
+  str=`echo "$2" | grep "$3"`
+  if [ "$str" == "" ]; then
+   flag=0
+  fi
+ fi
+ echo $flag
+}
+

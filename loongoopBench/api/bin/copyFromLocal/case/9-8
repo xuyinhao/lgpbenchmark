@@ -1,0 +1,8 @@
+#!/bin/sh
+dstPath="$apiPath/cfl9-8"
+realPath=`getLeofsRealPath $dstPath`
+mkdir "$tmpDir/cfl9-8"
+echo "aa" > $realPath
+ret=`$cfl -f "$tmpDir/cfl9-8" $dstPath 2>&1`
+#echo "$ret"
+checkError $? "$ret" "Is not a directory"

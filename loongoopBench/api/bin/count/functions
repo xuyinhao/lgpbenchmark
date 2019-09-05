@@ -1,0 +1,53 @@
+#!/bin/bash
+function clear(){
+  $rm $1 1>/dev/null 2>&1
+  $mkdir $1 1>/dev/null 2>&1
+}
+function countOkCheck() {
+  ret=`$count $1 2>/dev/null`
+  array=($ret)
+  ret=${array[@]:0}
+  #echo "ret:$ret"
+  if [ $? -eq 0 ]; then
+    #echo "2:$2"
+    if [ "$ret" == "$2" ]; then
+      return 1
+    fi
+    return 0
+  fi
+  return 0
+}
+function countSomeOkCheck() {
+  ret=`$count $1 2>&1`
+  array=($ret)
+  ret=${array[@]:0}
+  #echo "ret:$ret"
+  #echo "code:$?"
+  if [ $? -eq 0 ]; then
+    #echo "2:$2"
+    str=`echo $ret | grep "$2"`
+    if [ "$str" == "" ]; then
+      return 0
+    fi
+    return 1
+  fi
+  return 0
+}
+function countErrCheck() {
+  ret=`$count $1 2>&1`
+  #echo "ret:$ret"
+  #echo "code:$?"
+  if [ $? -ne 0 ]; then
+    str=`echo $ret | grep "$2"`
+    #echo "str:$str"
+    if [ "$str" == "" ]; then
+      return 0
+    fi
+    return 1
+  fi
+  return 0
+}
+function getErrMsg() {
+  echo "count: \`$1': No such file or directory"
+}
+countArgMsg="-count: Not enough arguments: expected 1 but got 0"

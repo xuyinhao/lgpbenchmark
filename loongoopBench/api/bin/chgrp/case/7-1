@@ -1,0 +1,5 @@
+#!/bin/sh
+`groupadd chgrp7-1g`
+ret=`$chgrp chgrp7-1g $apiPath/chgrp7-1 2>&1`
+checkError $? "$ret" "No such file or directory"
+`groupdel chgrp7-1g`

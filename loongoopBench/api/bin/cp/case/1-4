@@ -1,0 +1,5 @@
+#!/bin/sh
+`$touchz $apiPath/cp1-4f 2>/dev/null`
+`$mdir $apiPath/cp1-4p 2>/dev/null`
+ret=`$cp $apiPath/cp1-4p $apiPath/cp1-4f 2>&1`
+checkError $? "$ret" "File exists"

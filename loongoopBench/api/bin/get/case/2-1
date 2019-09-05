@@ -1,0 +1,6 @@
+#!/bin/sh
+str=`genString 249`
+srcPath=`touchFile ctl2-1$str`
+dstPath="$tmpDir/ctl2-1"
+`$get $srcPath $dstPath 2>/dev/null`
+checkOk $? $dstPath $srcPath

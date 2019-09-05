@@ -1,0 +1,12 @@
+#!/bin/sh
+`$mkdir $apiPath/rm4-3 2>/dev/null`
+fileName1="$apiPath/rm4-3/rm4-3a"
+fileName2="$apiPath/rm4-3/rm4-3b"
+`$touchz $fileName1 $fileName2 2>/dev/null`
+`$rm $apiPath/rm4-3/* 1>/dev/null 2>&1`
+ret=`checkOk $? "$fileName1"`
+if [ 1 -eq $ret ]; then
+ checkOk $? "$fileName2"
+else
+ echo 0
+fi

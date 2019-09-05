@@ -1,0 +1,10 @@
+#!/bin/sh
+str=`genString 250`
+filePath="$apiPath/mv2-1$str"
+realPath=`getLeofsRealPath $filePath`
+echo "aa" > $realPath
+srcMd5=`getMd5 $realPath`
+dstPath="$apiPath/mv2-1dst"
+realDstPath=`getLeofsRealPath $dstPath`
+`$mv $filePath $dstPath 2>/dev/null`
+checkOk $? "$srcMd5" "$realDstPath"

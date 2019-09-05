@@ -1,0 +1,20 @@
+#!/bin/sh
+srcPath1=`touchFile "cp11-5a"`
+srcPath2=`touchFile "cp11-5b"`
+distPath="$apiPath/cp11-5dist"
+`$mkdir $distPath 2>/dev/null`
+`$cp $srcPath1 $distPath 2>/dev/null`
+ret=`$cp $srcPath1 $srcPath2 $distPath 2>&1`
+result=$?
+ret1=`checkError $result "File exists"`
+if [ 1 -eq $ret1 ]; then
+  ret=`checkOk 0 $srcPath1 $distPath/cp11-5a`
+  if [ 1 -eq $ret ]; then
+   ret=`checkOk 0 $srcPath2 $distPath/cp11-5b`
+   echo $ret
+  else
+   echo 0
+  fi
+else
+ echo 0
+fi

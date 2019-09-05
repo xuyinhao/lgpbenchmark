@@ -1,0 +1,8 @@
+#!/bin/sh
+dstPath="$apiPath/put9-1"
+realPath=`getLeofsRealPath $dstPath`
+echo "aa" > "/put9-1"
+echo "aa" > $realPath
+ret=`$put "/put9-1" $dstPath 2>&1`
+#echo "$ret"
+checkError $? "$ret" "File exists"

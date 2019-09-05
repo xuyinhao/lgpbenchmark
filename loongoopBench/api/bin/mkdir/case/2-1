@@ -1,0 +1,8 @@
+#!/bin/sh
+pathName=`genString 255`
+ret=`$mkdir $apiPath/$pathName 2>/dev/null`
+`okCheck $?`
+if [ 1 -eq $? ]; then
+ `fileExitCheck $apiPath/$pathName`
+fi
+echo $?

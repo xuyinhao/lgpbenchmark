@@ -1,0 +1,7 @@
+#!/bin/sh
+deepPath=`genDeepPath 5 5`
+`$mkdir -p $apiPath/cfl3-1/$deepPath 2>/dev/null`
+srcPath=`touchFile "cfl3-1f"`
+distPath="$apiPath/cfl3-1/$deepPath"
+`$cfl $srcPath $distPath 2>/dev/null`
+checkOk $? "$srcPath" "$distPath/cfl3-1f"

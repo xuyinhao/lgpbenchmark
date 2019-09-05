@@ -1,0 +1,5 @@
+#!/bin/sh
+srcPath=`touchFile "cp12-8"`
+realPath=`getLeofsRealPath $srcPath`
+`$put -f "$realPath" "$srcPath" 2>/dev/null`
+checkFileNature $? $srcPath $srcPath "1 3 6"

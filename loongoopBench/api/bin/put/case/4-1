@@ -1,0 +1,6 @@
+#!/bin/sh
+srcPath="$apiPath/cp4-1/a/b/c"
+`$mkdir -p $srcPath 2>/dev/null`
+realPath=`getLeofsRealPath $srcPath`
+`$put $realPath $apiPath/cp4-1dist 2>/dev/null`
+checkOkForPath $? $apiPath/"cp4-1dist"

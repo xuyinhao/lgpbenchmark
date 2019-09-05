@@ -1,0 +1,12 @@
+#!/bin/sh
+`$touchz $apiPath/chgrp7-2 2>/dev/null`
+`groupadd chgrp7-2g`
+ret=`$chgrp chgrp7-2g $apiPath/chgrp7-2 $apiPath/chgrp7-2a 2>&1`
+result=`checkError $? "$ret" "No such file or directory"`
+if [ 1 -eq $result ]; then
+ checkOk 0 "chgrp7-2g" "$apiPath/chgrp7-2"
+else
+ echo 0
+fi
+`$rm -f $apiPath/chgrp7-2 1>/dev/null 2>&1`
+`groupdel chgrp7-2g`

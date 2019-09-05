@@ -1,0 +1,17 @@
+#!/bin/sh
+str1=`genString 100`
+filePath="$apiPath/cat6-2"
+`$mkdir $filePath 2>/dev/null`
+realPath=`getLeofsRealPath $filePath`
+`echo $str1 > $realPath/a`
+str2=`genString 100`
+`echo $str2 > $realPath/b`
+ret=`$cat $filePath/* 2>&1`
+re=$?
+result=`checkOk $re $str1 "$ret"`
+if [ 1 -eq $result ]; then
+ checkOk $re $str1 "$ret"
+else
+ echo 0
+fi
+

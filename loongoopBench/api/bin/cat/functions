@@ -1,0 +1,27 @@
+#!/bin/sh
+function checkOk(){
+ flag=1
+ if [ 0 -ne $1 ]; then
+  flag=0
+ else
+  str=`echo "$3"|grep "$2"`
+  if [ "$str" == "" ]; then
+   flag=0
+  fi
+ fi
+ echo $flag
+}
+
+function checkError(){
+ flag=1
+ if [ 0 -eq $1 ]; then
+  flag=0
+ else
+  str=`echo "$2"|grep "$3"`
+  if [ "$str" == "" ]; then
+   flag=0
+  fi
+ fi
+ echo $flag
+}
+

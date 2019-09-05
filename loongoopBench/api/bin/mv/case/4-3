@@ -1,0 +1,9 @@
+#!/bin/sh
+filePath="$apiPath/mv4-3\$"
+realPath=`getLeofsRealPath $filePath`
+echo "aa" > $realPath
+srcMd5=`getMd5 $realPath`
+dstPath="$apiPath/mv4-3"
+realDstPath=`getLeofsRealPath $dstPath`
+`$mv $filePath $dstPath 2>/dev/null`
+checkOk $? "$srcMd5" "$realDstPath"

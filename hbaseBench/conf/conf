@@ -1,0 +1,20 @@
+#!/bin/sh
+rowNum=1000000
+moreRowNum=100000
+queryRowNum=1000
+updateRowNum=20000
+nodeList="master slave1 slave2"
+threadNum=50
+queryThreadNum=50
+insertThreadNum=10
+iwcRowNum=10000
+iwcThreadNum=10
+iwcRowFamilyNum=1
+#static
+tableName="test"
+iwcTableName="iwcTestTable"
+batch=1000
+dirPath="/tmp/"
+columnName="col1"
+hadoopPath="/opt2/loongoop-0.0.5/bin/hadoop"
+hbasePath="/opt2/hbase-1.2.2/bin/hbase"

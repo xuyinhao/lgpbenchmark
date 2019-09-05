@@ -1,0 +1,8 @@
+#!/bin/sh
+pathName=`genString 512`
+ret=`$mkdir $apiPath/$pathName 2>&1`
+`okCheck $?`
+if [ 0 -eq $? ]; then
+ `messageCheck "$ret" "File name too long"`
+fi
+echo $?

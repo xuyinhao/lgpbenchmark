@@ -1,0 +1,11 @@
+#!/bin/sh
+`$test -d "file:///a" 2>/dev/null`
+if [ 0 -eq $? ]; then
+ `$rmdir "file:///a" 2>/dev/null`
+fi
+`$mkdir file:///a 2>/dev/null`
+`okCheck $?`
+if [ 1 -eq $? ]; then
+ `fileExitCheck file:///a`
+fi
+echo $?

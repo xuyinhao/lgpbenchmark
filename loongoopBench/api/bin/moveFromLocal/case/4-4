@@ -1,0 +1,23 @@
+#!/bin/sh
+filePath="$tmpDir/mflaaa"
+filePath1="$tmpDir/mflAaa"
+filePath2="$tmpDir/mflAAA"
+echo "aa" > $filePath
+echo "aa" > $filePath1
+echo "aa" > $filePath2
+srcMd5=`getMd5 $filePath`
+dstPath="$apiPath/mflaaa"
+realDstPath=`getLeofsRealPath $dstPath`
+`$mfl $filePath $dstPath 2>/dev/null`
+result=$?
+test -f $filePath1
+if [ 0 -ne $? ]; then
+ echo 0
+ return
+fi
+test -f $filePath2
+if [ 0 -ne $? ]; then
+ echo 0
+ return
+fi
+checkOk $result "$srcMd5" "$realDstPath" 

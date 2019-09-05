@@ -1,0 +1,5 @@
+#!/bin/sh
+fileName="$apiPath/rm4-5文件夹"
+`$mkdir $fileName 2>/dev/null`
+`$rmr $fileName 1>/dev/null 2>&1`
+checkOkForPath $? "$fileName"

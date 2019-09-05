@@ -1,0 +1,5 @@
+#!/bin/sh
+str=`genString 255`
+filePath="$apiPath/$str"
+`$touchz $filePath 2>/dev/null`
+checkOk $? $filePath

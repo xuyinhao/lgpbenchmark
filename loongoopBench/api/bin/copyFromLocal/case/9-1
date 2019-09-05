@@ -1,0 +1,8 @@
+#!/bin/sh
+dstPath="$apiPath/cfl9-1"
+realPath=`getLeofsRealPath $dstPath`
+echo "aa" > "$tmpDir/cfl9-1"
+echo "aa" > $realPath
+ret=`$cfl "$tmpDir/cfl9-1" $dstPath 2>&1`
+#echo "$ret"
+checkError $? "$ret" "File exists"

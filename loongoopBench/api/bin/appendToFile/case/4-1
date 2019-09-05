@@ -1,0 +1,9 @@
+#!/bin/sh
+str=`genString 100`
+echo $str > "atf4-1src"
+fileName=`genString 246`
+`$touchz "$apiPath/atf4-1dst$fileName" 2>/dev/null`
+`$atf "$path/atf4-1src" "$apiPath/atf4-1dst$fileName" 2>/dev/null`
+checkOk $? "$str" "$apiPath/atf4-1dst$fileName"
+`rm -f $path/atf4-1src`
+`$rm "$apiPath/atf4-1dst$fileName" 1>/dev/null 2>&1`

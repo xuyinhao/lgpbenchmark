@@ -1,0 +1,5 @@
+#!/bin/sh
+dirPath="$apiPath/rmdir4-2"
+`$mkdir -p $dirPath/a $dirPath/b 2>/dev/null`
+`$rmdir $dirPath/? 2>/dev/null`
+checkOk $? $dirPath/?

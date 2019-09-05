@@ -1,0 +1,6 @@
+#!/bin/sh
+filePath="$tmpDir/mv5-1"
+echo "aa" > $filePath
+dstPath="$apiPath/mv5-1dst"
+ret=`$mv "file:///$filePath" "leofs:///$dstPath" 2>&1`
+checkError $? "$ret" "Does not match target filesystem"

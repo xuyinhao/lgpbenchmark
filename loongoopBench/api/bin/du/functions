@@ -1,0 +1,28 @@
+#!/bin/bash
+function duOkCheck() {
+  ret=`$du $1 2>/dev/null`
+  array=($ret)
+  ret=${array[@]:0}
+  #echo "ret:$ret"
+  if [ $? -eq 0 ]; then
+    #echo "2:$2"
+    if [ "$ret" == "$2" ]; then
+      return 1
+    fi
+    return 0
+  fi
+  return 0
+}
+
+function duErrorCheck(){
+ ret=`$du $1 2>&1`
+ #echo "$ret"
+ if [ 0 -eq $? ]; then
+  return 0
+ fi
+ str=`echo "$ret"|grep "$2"`
+ if [ "" == "$str" ]; then
+  return 0
+ fi
+ return 1
+}

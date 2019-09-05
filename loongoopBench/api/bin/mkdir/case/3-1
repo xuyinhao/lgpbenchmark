@@ -1,0 +1,9 @@
+#!/bin/sh
+path=`genDeepPath 2 5`
+ret=`$mkdir $apiPath$path  2>&1`
+okCheck $?
+if [ 0 -eq $? ]; then
+ `messageCheck "$ret" "No such file or directory"`
+fi
+echo $?
+

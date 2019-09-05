@@ -1,0 +1,5 @@
+#!/bin/sh
+`$mkdir ${apiPath}/"ls4-5文件夹" 2>/dev/null`
+`$touchz ${apiPath}/"ls4-5文件夹/aa" 2>/dev/null`
+ret=`$ls ${apiPath}/"ls4-5文件夹" 2>/dev/null`
+okCheck $? "$ret" "aa"

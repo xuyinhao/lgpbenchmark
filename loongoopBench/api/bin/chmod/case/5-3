@@ -1,0 +1,11 @@
+#!/bin/sh
+filePath1="$apiPath/chmod5-3a"
+filePath2="$apiPath/chmod5-3b"
+`$touchz $filePath1 2>/dev/null`
+ret=`$chmod 777 $filePath1 $filePath2 2>&1`
+result=`checkError $? "$ret" "No such file or directory"`
+if [ 1 -eq $result ]; then
+ checkOk 0 777 $filePath1
+else
+ echo 0
+fi

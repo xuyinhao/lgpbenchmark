@@ -1,0 +1,8 @@
+#!/bin/sh
+`$test -d "file:///ls5-1" 2>/dev/null`
+if [ 0 -eq $? ]; then
+ `$rm -R "file:///ls5-1" 1>/dev/null 2>&1`
+fi
+`$mkdir -p file:///"ls5-1"/a 2>/dev/null`
+ret=`$ls file:///"ls5-1" 2>/dev/null`
+checkOkForLocal $? "$ret" "/ls5-1"

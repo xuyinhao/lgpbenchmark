@@ -1,0 +1,14 @@
+#!/bin/sh
+`$mkdir $apiPath/text9-1p 1>/dev/null 2>&1`
+str=`genString 100`
+filePath="$apiPath/text9-1f"
+realPath=`getLeofsRealPath $filePath`
+echo $str > $realPath
+ret=`$text $apiPath/cat9-1p $filePath 2>&1`
+result=`checkError $? "$ret" ""`
+if [ 1 -eq $result ]; then
+ checkOk 0 $str "$ret"
+else
+ echo 0
+fi
+

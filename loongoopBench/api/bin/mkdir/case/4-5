@@ -1,0 +1,8 @@
+#!/bin/sh
+`$mkdir $apiPath/aaa 2>/dev/null`
+`$mkdir $apiPath/Aaa 2>/dev/null`
+`okCheck $?`
+if [ 1 -eq $? ]; then
+ `fileExitCheck $apiPath/Aaa`
+fi
+echo $?

@@ -1,0 +1,7 @@
+#!/bin/sh
+filePath="$tmpDir/tail5-1"
+str=`genString 1200`
+echo $str > $filePath
+ret=`$tail file:///$filePath 2>/dev/null`
+#echo $ret
+checkOk $? "$str" "$ret"

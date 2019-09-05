@@ -1,0 +1,30 @@
+#!/bin/sh
+filePath="$apiPath/test3-1"
+realPath=`getLeofsRealPath $filePath`
+touch $realPath
+`$test -d leofs://$filePath 2>/dev/null`
+if [ 0 -eq $? ]; then
+ echo 0
+ return
+fi
+`$test -f leofs://$filePath  2>/dev/null`
+if [ 1 -eq $? ]; then
+ echo 0
+ return
+fi 
+`$test -e leofs://$filePath 2>/dev/null`
+if [ 1 -eq $? ]; then
+ echo 0
+ return
+fi 
+`$test -s leofs://$filePath 2>/dev/null`
+if [ 0 -eq $? ]; then
+ echo 0
+ return
+fi 
+`$test -z leofs://$filePath 2>/dev/null`
+if [ 1 -eq $? ]; then
+ echo 0
+ return
+fi 
+echo 1

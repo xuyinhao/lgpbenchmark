@@ -1,0 +1,6 @@
+#!/bin/sh
+filePath="$apiPath/mv8-1"
+realPath=`getLeofsRealPath $filePath`
+echo "aa" > $realPath
+ret=`$mv $filePath $filePath 2>&1`
+checkError $? "$ret" "File exists"

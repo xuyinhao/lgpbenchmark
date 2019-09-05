@@ -1,0 +1,12 @@
+#!/bin/sh
+filePath1="$apiPath/chmod5-2a"
+filePath2="$apiPath/chmod5-2b"
+`$touchz $filePath1 2>/dev/null`
+`$mkdir $filePath2 2>/dev/null`
+`$chmod 777 $filePath1 $filePath2 2>/dev/null`
+ret=`checkOk $? 777 $filePath1`
+if [ 1 -eq $ret ]; then
+ checkOk 0 777 $filePath2
+else
+ echo 0
+fi

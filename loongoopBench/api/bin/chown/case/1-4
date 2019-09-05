@@ -1,0 +1,8 @@
+#!/bin/sh
+`groupadd chownG1-4 2>/dev/null`
+filePath="$apiPath/chown1-4"
+`$mkdir $filePath 2>/dev/null`
+`$chown root:chownG1-4 $filePath 2>/dev/null`
+checkOk $? "root:chownG1-4" $filePath
+`$rmr $filePath 1>/dev/null 2>&1`
+`groupdel chownG1-4`

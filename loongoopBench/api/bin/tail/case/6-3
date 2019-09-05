@@ -1,0 +1,4 @@
+#!/bin/sh
+ret=`$tail -x 2>&1`
+#echo "$ret"
+checkError $? "$ret" "Illegal option"

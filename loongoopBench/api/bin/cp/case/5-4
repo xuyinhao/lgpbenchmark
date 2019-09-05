@@ -1,0 +1,6 @@
+#!/bin/sh
+srcPath=$apiPath/"cp5-4文件夹"
+`$mkdir $srcPath 2>/dev/null`
+distPath="$apiPath/cp5-4dist文件夹"
+`$cp $srcPath $distPath 2>/dev/null`
+checkOkForPath $? $distPath

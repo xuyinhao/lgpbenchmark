@@ -1,0 +1,6 @@
+#!/bin/sh
+str=`genString 100`
+filePath=`getLeofsRealPath "/cat5-1"`
+`echo $str > $filePath`
+ret=`$cat "leofs:///cat5-1" 2>&1`
+checkOk $? "$str" "$ret"

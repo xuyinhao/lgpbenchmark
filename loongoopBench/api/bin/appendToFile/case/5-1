@@ -1,0 +1,9 @@
+#!/bin/sh
+str=`genString 100`
+echo $str > "atf5-1src"
+fileName="$apiPath/!@#$%^&\*()_+\{}-=\[];\"\\|<>\?,.'"
+`$touchz "$fileName" 2>/dev/null`
+`$atf "$path/atf5-1src" "$fileName" 2>/dev/null`
+checkOk $? "$str" "$apiPath/!@#$%^&*()_+{}-=\[];\"\|<>\?,.'"
+rm -f $path/atf5-1src`
+$rm $fileName 2>/dev/null`

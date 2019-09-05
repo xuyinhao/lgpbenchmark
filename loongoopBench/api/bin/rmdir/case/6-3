@@ -1,0 +1,11 @@
+#!/bin/sh
+dirPath="$apiPath/rmdir6-3"
+`$mkdir -p $dirPath/ab 2>/dev/null`
+`$touchz $dirPath/ba 2>/dev/null`
+ret=`$rmdir $dirPath/ab $dirPath/ba 2>&1`
+ret=`checkError $? "$ret" "Is not a directory"`
+if [ 1 -eq $ret ]; then
+ checkOk 0 $dirPath/ab
+else
+ echo 0
+fi

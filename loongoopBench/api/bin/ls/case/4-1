@@ -1,0 +1,7 @@
+#!/bin/sh
+fileName="ls4-1!@#$%^&\*()_+\{}-=\[];\"\\|<>\?,.'"
+`$touchz $apiPath/$fileName 1>/dev/null  2>&1`
+ret=`$ls $apiPath/$fileName  2>&1`
+#echo "ret:$ret"
+okCheck $? "$ret" "$apiPath/cp4-1!@#$%^&*()_+{}-=\\[];\"\|<>?,.'"
+#checkOkForFile $? "$ret" $apiPath/$fileName

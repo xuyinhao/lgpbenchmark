@@ -1,0 +1,8 @@
+#!/bin/sh
+filedir="$apiPath/du3-1/a/b/c"
+realPath=`getLeofsRealPath $filedir`
+mkdir -p $realPath
+f1="$realPath/du_t_f3-1"
+echo "123456789" > $f1
+duOkCheck "$filedir/du_t_f3-1" "10 $filedir/du_t_f3-1"
+echo $?

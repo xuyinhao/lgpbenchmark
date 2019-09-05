@@ -1,0 +1,7 @@
+#!/bin/sh
+str=`genString 255`
+`$mkdir $apiPath/$str 2>/dev/null`
+str1=`genString 255`
+`$touchz $apiPath/$str/$str1 2>/dev/null`
+ret=`$ls $apiPath/$str 2>/dev/null`
+okCheck $? "$ret" "$str1"

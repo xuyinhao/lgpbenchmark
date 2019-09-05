@@ -1,0 +1,14 @@
+#!/bin/sh
+str=`genString 1025`
+#echo "str:$str"
+filePath1="$apiPath/tail3-5aaa"
+filePath2="$apiPath/tail3-5Aaa"
+filePath3="$apiPath/tail3-5AAA"
+realPath1=`getLeofsRealPath $filePath1`
+realPath2=`getLeofsRealPath $filePath2`
+realPath3=`getLeofsRealPath $filePath3`
+echo $str > $realPath1
+ret=`$tail $filePath1 2>/dev/null`
+#echo "ret:$ret"
+#echo $ret|wc -L
+checkOk $? "$str" "$ret"

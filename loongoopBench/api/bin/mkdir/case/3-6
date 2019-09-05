@@ -1,0 +1,13 @@
+#!/bin/sh
+path1=`genDeepPath 2 5`
+path2=`genDeepPath 3 5`
+`$mkdir -p $apiPath$path1 $apiPath$path2 2>/dev/null`
+okCheck $?
+if [ 1 -eq $? ]; then
+ `fileExitCheck "$apiPath$path1"`
+ if [ 1 -eq $? ]; then
+  `fileExitCheck "$apiPath$path2"`
+ fi
+fi
+echo $?
+

@@ -1,0 +1,15 @@
+#!/bin/sh
+num=50
+deepPath="count_t_d2-2"
+firstPath="$apiPath/$deepPath"
+for((i=0; i<$num; i++))
+do
+  str=`genString 1`
+  deepPath="$deepPath/$str"
+done
+d1="$apiPath/$deepPath"
+`$mkdir -p $d1 2>/dev/null`
+f1="$d1/count_t_f2-2"
+`$touchz $f1 2>/dev/null`
+countOkCheck $f1 "0 1 0 $f1"
+echo $?

@@ -1,0 +1,22 @@
+#!/bin/sh
+srcPath1=`touchFile "put11-5a"`
+realPath1=`getLeofsRealPath $srcPath1`
+srcPath2=`touchFile "put11-5b"`
+realPath2=`getLeofsRealPath $srcPath2`
+distPath="$apiPath/put11-5dist"
+`$mkdir $distPath 2>/dev/null`
+`$put $realPath1 $distPath 2>/dev/null`
+ret=`$put $realPath1 $realPath2 $distPath 2>&1`
+result=$?
+ret1=`checkError $result "File exists"`
+if [ 1 -eq $ret1 ]; then
+  ret=`checkOk 0 $srcPath1 $distPath/put11-5a`
+  if [ 1 -eq $ret ]; then
+   ret=`checkOk 0 $srcPath2 $distPath/put11-5b`
+   echo $ret
+  else
+   echo 0
+  fi
+else
+ echo 0
+fi

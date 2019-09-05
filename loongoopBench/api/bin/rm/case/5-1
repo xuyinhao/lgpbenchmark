@@ -1,0 +1,9 @@
+#!/bin/sh
+`$test -d "file:///rm5-1a" 2>/dev/null`
+if [ 0 -eq $? ]; then
+ `$rmdir "file:///rm5-1a" 2>/dev/null`
+fi
+`$mkdir "file:///rm5-1a" 2>/dev/null`
+ret=`$rm "file:///rm5-1a" 2>&1`
+checkError $? "$ret" "Is a directory"
+`$rmr "file:///rm5-1a" 1>/dev/null 2>&1`

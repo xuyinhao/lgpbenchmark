@@ -1,0 +1,4 @@
+#!/bin/sh
+ret=`$ls / 2>/dev/null`
+#echo "$ret"
+okCheckForPath $? "$ret" "/"

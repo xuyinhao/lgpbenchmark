@@ -1,0 +1,4 @@
+#!/bin/sh
+ret=`$tail 2>&1`
+#echo "$ret"
+checkError $? "$ret" "Not enough arguments"

@@ -1,0 +1,5 @@
+#!/bin/sh
+fileName="$apiPath/rm4-6文件"
+`$touchz $fileName 2>/dev/null`
+`$rm $fileName 1>/dev/null 2>&1`
+checkOk $? "$fileName"

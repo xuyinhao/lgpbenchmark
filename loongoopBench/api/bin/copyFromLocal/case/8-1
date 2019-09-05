@@ -1,0 +1,4 @@
+#!/bin/sh
+ret=`$cfl 2>&1`
+#echo "$ret"
+checkError $? "$ret" "Not enough arguments: expected 1 but got 0"

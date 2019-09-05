@@ -1,0 +1,7 @@
+#!/bin/sh
+str=`genString 100`
+filePath="$apiPath/cat4-1!@#$%^&*()_+}-=];\"\\|<>\?,.'"
+realPath=`getLeofsRealPath "$apiPath/cat4-1!@#$%^&*()_+}-=];\"|<>?,.'"`
+`echo $str > "$realPath"`
+ret=`$cat "$filePath" 2>&1`
+checkOk $? $str "$ret"

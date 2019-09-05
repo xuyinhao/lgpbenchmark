@@ -1,0 +1,7 @@
+#!/bin/sh
+srcPath="$apiPath/put4-2/a/b/c"
+`$mkdir -p $srcPath 2>/dev/null`
+realPath=`getLeofsRealPath $srcPath`
+`$mkdir -p $apiPath/put4-2/b/a/c 2>/dev/null`
+`$put $realPath $apiPath/put4-2/b/a/c/put4-2dist 2>/dev/null`
+checkOkForPath $? "$apiPath/put4-2/b/a/c/put4-2dist"

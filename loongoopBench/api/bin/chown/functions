@@ -1,0 +1,79 @@
+#!/bin/sh
+function getFileUserAndGroup(){
+ realPath=`getLeofsRealPath $1`
+ us=`stat -c %U $realPath`
+ grp=`stat -c %G $realPath`
+ echo "$us:$grp"
+}
+
+function getLocalFileUserAndGroup(){
+ us=`stat -c %U $1`
+ grp=`stat -c %G $1`
+ echo "$us:$grp"
+}
+
+
+function checkOk(){
+ flag=1
+ if [ 0 -eq $1 ];then
+  ug=`getFileUserAndGroup $3`
+  #echo "$ug"
+  if [ "$2" != "$ug" ]; then
+   flag=0
+  fi
+ else
+  flag=0
+ fi
+ echo $flag
+}
+
+function checkOkForLocalPath(){
+ flag=1
+ if [ 0 -eq $1 ];then
+  ug=`getLocalFileUserAndGroup $3`
+  #echo "$ug"
+  if [ "$2" != "$ug" ]; then
+   flag=0
+  fi
+ else
+  flag=0
+ fi
+ echo $flag
+
+}
+
+function checkOkForDeepPath(){
+ flag=1
+ if [ 0 -eq $1 ]; then
+  realPath=`getLeofsRealPath $3`
+  paths=`ls -R $realPath`
+  for pa in $paths
+  do
+   if  test -d "$pa" ||  test -f "$pa" ; then
+    ret=`checkOkForLocalPath 0 "$2" "$pa"`
+    if [ 0 -eq $ret ]; then
+     flag=0
+     break
+    fi
+   fi
+  done
+ else
+  flag=0
+ fi
+ echo $flag
+}
+
+
+function checkError(){
+ flag=1
+ if [ 0 -eq $1 ]; then
+  flag=0
+ else
+  str=`echo "$2"|grep "$3"`
+  if [ "$str" == "" ]; then
+   flag=0
+  fi
+ fi
+ echo $flag
+}
+

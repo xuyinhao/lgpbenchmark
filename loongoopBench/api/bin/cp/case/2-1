@@ -1,0 +1,8 @@
+#!/bin/sh
+srcFileName=`genString 255`
+distFileName=`genString 2`
+srcPath=`touchFile "$srcFileName"`
+distPath="$apiPath/$distFileName"
+ret=`$cp $srcPath $distPath 2>&1`
+#echo "$ret"
+checkOk $? $srcPath $distPath

@@ -1,0 +1,52 @@
+#!/bin/sh
+function md5Check(){
+ dstMd5=`getMd5 $2`
+ #echo "dst:$dstMd5"
+ if [ $1 == $dstMd5 ]; then
+  return 1
+ else
+  return 0
+ fi
+}
+
+function checkOk(){
+ flag=1
+ if [ 0 -eq $1 ]; then
+  md5Check $2 $3
+  flag=$?
+ else
+  flag=0
+ fi
+ echo $flag
+}
+
+function checkOkForPath(){
+ flag=1
+ test -d $2
+ if [ 0 -eq $? ]; then
+  echo 0
+  return
+ fi
+ if [ 0 -eq $1 ]; then
+  test -d $3
+  if [ 0 -ne $? ]; then
+   flag=0
+  fi
+ else
+  flag=0
+ fi
+ echo $flag
+}
+
+function checkError(){
+ flag=1
+ if [ 0 -eq $1 ]; then
+  flag=0
+ else
+  str=`echo "$2" | grep "$3"`
+  if [ "$str" == "" ]; then
+   flag=0
+  fi
+ fi
+ echo $flag
+}

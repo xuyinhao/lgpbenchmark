@@ -1,0 +1,4 @@
+#!/bin/sh
+filePath="$apiPath/touchz1-1"
+`$touchz $filePath 2>/dev/null`
+checkOk $? $filePath

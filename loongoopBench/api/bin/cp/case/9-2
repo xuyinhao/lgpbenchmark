@@ -1,0 +1,4 @@
+#!/bin/sh
+`$mkdir $apiPath/cp9-2 2>/dev/null`
+ret=`$cp $apiPath/cp9-2 $apiPath/cp9-2 2>&1`
+checkError $? "$ret" "is a subdirectory of itself"

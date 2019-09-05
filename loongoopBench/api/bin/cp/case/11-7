@@ -1,0 +1,7 @@
+#!/bin/sh
+srcPath1=`touchFile "cp11-7a"`
+srcPath2="$apiPath/cp11-7b"
+`$mkdir $srcPath2 2>/dev/null`
+distPath=`touchFile "/cp11-7dist"`
+ret=`$cp $srcPath1 $srcPath2 $distPath 2>&1`
+checkError $? "$ret" "Is not a directory"

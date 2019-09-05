@@ -1,0 +1,7 @@
+#!/bin/sh
+filePath="$tmpDir/mv5-1"
+echo "aa" > $filePath
+srcMd5=`getMd5 $filePath`
+dstPath="$tmpDir/mv5-1dst"
+`$mv "file:///$filePath" "file:///$dstPath" 2>/dev/null`
+checkOk $? "$srcMd5" "$dstPath"

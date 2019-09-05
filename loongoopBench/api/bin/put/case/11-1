@@ -1,0 +1,16 @@
+#!/bin/sh
+srcPath1=`touchFile "put11-1a"`
+realPath1=`getLeofsRealPath $srcPath1`
+srcPath2=`touchFile "put11-1b"`
+realPath2=`getLeofsRealPath $srcPath2`
+distPath="$apiPath/put11-1dist"
+`$mkdir $distPath 2>/dev/null`
+`$put $realPath1 $realPath2 $distPath 2>/dev/null`
+result=$?
+ret=`checkOk $result $srcPath1 $distPath/put11-1a`
+if [ 1 -eq $ret ]; then
+ ret=`checkOk $result $srcPath2 $distPath/put11-1b`
+ echo $ret
+else
+ echo 0
+fi

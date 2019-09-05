@@ -1,0 +1,5 @@
+#!/bin/sh
+str=`genString 100`
+echo $str > "/text5-2"
+ret=`$text "file:///text5-2" 2>&1`
+checkOk $? "$str" "$ret"

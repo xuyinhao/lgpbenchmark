@@ -1,0 +1,11 @@
+#!/bin/sh
+filePath1="$tmpDir/touchz6-3"
+filePath2="$apiPath/touchz6-3"
+realPath=`getLeofsRealPath $filePath2`
+`$touchz file:///$filePath1 leofs://$filePath2 2>/dev/null`
+ret=`checkOkForLocal $? $filePath1`
+if [ 1 -eq $ret ]; then
+ checkOkForLocal 0 $realPath
+else
+ echo 0
+fi

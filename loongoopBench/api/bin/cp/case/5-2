@@ -1,0 +1,5 @@
+#!/bin/sh
+srcPath=`touchFile "cp5-2文件"`
+distPath="$apiPath/cp5-2dist"
+`$cp $srcPath $distPath 2>/dev/null`
+checkOk $? $srcPath $distPath

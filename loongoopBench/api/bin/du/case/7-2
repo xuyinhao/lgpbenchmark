@@ -1,0 +1,15 @@
+#!/bin/sh
+d1="$apiPath/du_t_d1-2"
+reald1=`getLeofsRealPath $d1`
+rm -rf $reald1
+mkdir $reald1
+f1="$d1/du_t_f1-2"
+realf1="$reald1/du_t_f1-2"
+str=`genString 20000`
+echo $str > $realf1
+f2="$d1/du_t_f1-2_2"
+realf2="$reald1/du_t_f1-2_2"
+str=`genString 40000`
+echo $str > $realf2
+duOkCheck "-h $d1" "19.5 K $f1 39.1 K $f2"
+echo $?

@@ -1,0 +1,5 @@
+#!/bin/sh
+mkdir -p ${mountPath}/user/root
+ret=`$ls   2>/dev/null`
+#echo "$ret"
+okCheckForPath $? "$ret" ""

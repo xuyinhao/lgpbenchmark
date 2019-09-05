@@ -1,0 +1,6 @@
+#!/bin/sh
+`$mkdir -p $apiPath/a/b/c 2>/dev/null`
+filePath="$apiPath/a/b/c/chmod2-1"
+`$touchz $filePath 2>/dev/null`
+`$chmod 777 $filePath 2>/dev/null`
+checkOk $? 777 $filePath

@@ -1,0 +1,8 @@
+#!/bin/sh
+deepPath=`genDeepPath 5 5`
+`$mkdir -p $apiPath$deepPath 2>/dev/null`
+srcPath=`touchFile "$deepPath/ctl3-2"`
+#echo "$srcPath"
+dstPath="$tmpDir/ctl3-2p"
+`$get $apiPath$deepPath $dstPath 2>/dev/null`
+checkOk $? "$dstPath/ctl3-2" $srcPath

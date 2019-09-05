@@ -1,0 +1,5 @@
+#!/bin/sh
+`$mkdir "$apiPath/rm4-2!@#$%^&\*()_+\{}-=\[];\"\\|<>\?,.'" 2>/dev/null`
+filePath="$apiPath/rm4-2!@#$%^&\*()_+\{}-=\[];\"\\|<>\?,.'"
+`$rmr "$filePath" 1>/dev/null 2>&1`
+checkOk $? "$filePath"

@@ -1,0 +1,5 @@
+#!/bin/sh
+filePath="$apiPath/chmod7-2"
+`$touchz $filePath 2>/dev/null`
+ret=`$chmod 888 $filePath 2>&1`
+checkError $? "$ret" "does not match the expected pattern"

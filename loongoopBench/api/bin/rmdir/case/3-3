@@ -1,0 +1,6 @@
+#!/bin/sh
+dirPath="$apiPath/rmdir3-3/a/b/c"
+`$mkdir -p $dirPath 2>/dev/null`
+`$touchz $dirPath/d 2>/dev/null`
+`$rmdir $dirPath 2>/dev/null`
+checkOkForNotEmpty $? "$dirPath"

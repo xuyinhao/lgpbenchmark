@@ -1,0 +1,8 @@
+#!/bin/sh
+str=`genString 100`
+echo $str > "atf5-2src"
+`$touchz "$apiPath/atf5-2中文dst" 2>/dev/null`
+`$atf "$path/atf5-2src" "$apiPath/atf5-2中文dst" 2>/dev/null`
+checkOk $? "$str" "$apiPath/atf5-2中文dst"
+`rm -f $path/atf5-2src`
+`$rm "$apiPath/atf5-2中文dst" 1>/dev/null 2>&1`

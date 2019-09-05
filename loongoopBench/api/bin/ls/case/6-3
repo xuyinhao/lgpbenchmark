@@ -1,0 +1,5 @@
+#!/bin/sh
+`$mkdir -p $apiPath/ls6-3pa/a 2>/dev/null`
+`$touchz $apiPath/ls6-3fb 2>/dev/null`
+ret=`$ls $apiPath/ls6-3pa $apiPath/ls6-3fb  2>&1`
+checkOkForMore $? "$ret" "a $apiPath/ls6-3fb"

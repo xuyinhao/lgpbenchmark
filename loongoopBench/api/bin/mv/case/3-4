@@ -1,0 +1,8 @@
+#!/bin/sh
+deepPath="$apiPath/mv3-4/a/b/c/d"
+realPath=`getLeofsRealPath $deepPath`
+mkdir -p $realPath
+dstPath="$apiPath/mv3-4/a/b/mv3-4dst"
+realDstPath=`getLeofsRealPath $dstPath`
+`$mv $deepPath $dstPath 2>/dev/null`
+checkOkForPath $? "$realPath" "$realDstPath"

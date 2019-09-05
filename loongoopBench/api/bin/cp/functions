@@ -1,0 +1,79 @@
+#!/bin/bash
+function touchFile(){
+ filePath=`getLeofsRealPath $apiPath/"$1"`;
+ `touch $filePath 1>/dev/null 2>&1`
+ str=`genString 100`
+ echo $str > $filePath
+ echo $apiPath/"$1"
+}
+
+function checkOk(){
+ flag=1
+ if [ 0 -ne $1 ]; then
+  flag=0
+ else
+  srcRealPath=`getLeofsRealPath "$2"`
+  #echo "1:$srcRealPath"
+  distRealPath=`getLeofsRealPath "$3"`
+  srcMd5=`md5sum -t $srcRealPath`
+  srcMd5=${srcMd5% *}
+  #echo "2:$srcMd5"
+  distMd5=`md5sum -t $distRealPath`
+  distMd5=${distMd5% *}
+  if [ "$srcMd5" != "$distMd5" ]; then
+   flag=0
+  fi
+ fi
+echo $flag
+}
+
+function checkOkForPath(){
+ flag=1
+ if [ 0 -ne $1 ]; then
+  flag=0
+ else
+  `$test -d $2 1>/dev/null 2>&1`
+  if [ 0 -ne $? ]; then
+   flag=0
+  fi
+ fi
+ echo $flag
+}
+
+function checkError(){
+ flag=1
+ if [ 0 -eq $1 ]; then
+  flag=0
+ else
+  str=`echo "$2" | grep "$3"`
+  if [ "$str" == "" ]; then
+   flag=0
+  fi
+ fi
+ echo $flag 
+}
+
+function checkFileNature(){
+ flag=1
+ if [ 0 -ne $1 ]; then
+  flag=0
+ else
+  srcRealPath=`getLeofsRealPath "$2"`
+  distRealPath=`getLeofsRealPath "$3"`
+  indexs=($4)
+  srcNature=`ls -l $srcRealPath`
+  srcNature=${srcNature%$apiPath*}
+  srcNatures=($srcNature)
+  distNature=`ls -l $distRealPath`
+  distNature=${distNature%$apiPath*}
+  distNatures=($distNature)
+  for index in $indexs
+  do
+   if [ "$srcNatures[$index]" != "$distNatures[$index]" ]; then
+    flag=0
+    break
+   fi
+  done
+ fi
+echo $flag
+}

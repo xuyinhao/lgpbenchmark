@@ -1,0 +1,4 @@
+#!/bin/sh
+filePath="$apiPath/touchz!@#$%^&\*()_+\{}-=\[];\"\\|<>\?,.'"
+`$touchz $filePath 2>/dev/null`
+checkOk $? "$apiPath/touchz!@#$%^&*()_+{}-=\[];\"\|<>\?,.'"

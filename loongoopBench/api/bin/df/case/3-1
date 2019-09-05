@@ -1,0 +1,3 @@
+#!/bin/sh
+dfErrCheck "-k" "$dfArgMsg"
+echo $?

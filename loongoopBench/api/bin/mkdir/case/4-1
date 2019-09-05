@@ -1,0 +1,9 @@
+#!/bin/sh
+`$mkdir $apiPath/"!@#$%^&\*()_+\{}-=\[];\"\\|<>\?,.'" 2>/dev/null`
+okCheck $?
+if [ 1 -eq $? ]; then
+ path=$apiPath/"!@#$%^&\*()_+\{}-=\[];\"\\|<>\?,.'"
+ `fileExitCheck "$path"`
+fi
+echo $?
+

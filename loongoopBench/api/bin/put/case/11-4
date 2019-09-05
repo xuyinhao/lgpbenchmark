@@ -1,0 +1,9 @@
+#!/bin/sh
+srcPath1="$apiPath/put11-4a"
+realPath1=`getLeofsRealPath $srcPath1`
+srcPath2="$apiPath/put11-4b"
+realPath2=`getLeofsRealPath $srcPath2`
+mkdir $realPath1 $realPath2
+distPath=`touchFile "/put11-4dist"`
+ret=`$put $realPath1 $realPath2 $distPath 2>&1`
+checkError $? "$ret" "Is not a directory"

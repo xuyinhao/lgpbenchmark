@@ -1,0 +1,5 @@
+#!/bin/sh
+f1="$apiPath/count_t_f4-1!@#$%^&\*()_+\{}-=\[];\"\\|<>\?,."
+`$touchz $f1 2>/dev/null`
+countOkCheck "$f1" "0 1 0 $apiPath/count_t_f4-1!@#$%^&*()_+{}-=[];\"|<>?,."
+echo $?

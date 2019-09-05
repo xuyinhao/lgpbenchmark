@@ -1,0 +1,6 @@
+#!/bin/sh
+srcPath=`touchFile "put12-1"`
+realPath=`getLeofsRealPath $srcPath`
+distPath="$apiPath/put12-1dist"
+`$put -p "$realPath" "$distPath" 2>/dev/null`
+checkFileNature $? $srcPath $distPath "1 3 6"

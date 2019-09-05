@@ -1,0 +1,10 @@
+#!/bin/sh
+`$mkdir $apiPath/ctl8-2p1 2>/dev/null`
+`$mkdir $apiPath/ctl8-2p2 2>/dev/null`
+`$ctl $apiPath/ctl8-2p1 $apiPath/ctl8-2p2 $tmpDir 2>/dev/null`
+ret=`checkOkForPath $? $apiPath/ctl8-2p1`
+if [ 1 -eq $ret ]; then
+ checkOkForPath 0 "$apiPath/ctl8-2p2"
+else
+ echo 0
+fi

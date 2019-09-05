@@ -1,0 +1,6 @@
+#!/bin/sh
+str=`genString 250`
+pathName="$apiPath/rm2-2$str"
+`$mkdir "$pathName" 2>/dev/null`
+`$rmr "$pathName" 1>/dev/null 2>&1`
+checkOkForPath $? "$pathName"

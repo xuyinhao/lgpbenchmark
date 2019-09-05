@@ -1,0 +1,23 @@
+#!/bin/sh
+filePath1="$apiPath/mv9-1a"
+filePath2="$apiPath/mv9-1b"
+realPath1=`getLeofsRealPath $filePath1`
+realPath2=`getLeofsRealPath $filePath2`
+echo "aa" > $realPath1
+echo "bb" > $realPath2
+src1Md5=`getMd5 $realPath1`
+src2Md5=`getMd5 $realPath2`
+#echo "src:$srcMd5"
+dstPath="$apiPath/mv9-1"
+realDstPath=`getLeofsRealPath $dstPath`
+mkdir $realDstPath
+dstPath1="$apiPath/mv9-1/mv9-1a"
+dstPath2="$apiPath/mv9-1/mv9-1b"
+realDstPath1=`getLeofsRealPath $dstPath1`
+realDstPath2=`getLeofsRealPath $dstPath2`
+`$mv $filePath1 $filePath2 $dstPath 2>/dev/null`
+flag=`checkOk $? "$src1Md5" $realDstPath1`
+if [ 1 -eq $flag ]; then
+ flag=`checkOk 0 "$src2Md5" $realDstPath2`
+fi
+echo $flag

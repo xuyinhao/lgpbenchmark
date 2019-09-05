@@ -1,0 +1,7 @@
+#!/bin/sh
+srcPath=$apiPath/"put5-4文件夹"
+realPath=`getLeofsRealPath $srcPath`
+`$mkdir $srcPath 2>/dev/null`
+distPath="$apiPath/put5-4dist文件夹"
+`$put $realPath $distPath 2>/dev/null`
+checkOkForPath $? $distPath

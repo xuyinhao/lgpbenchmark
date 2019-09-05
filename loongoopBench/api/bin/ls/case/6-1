@@ -1,0 +1,5 @@
+#!/bin/sh
+`$touchz $apiPath/ls6-1a 2>/dev/null`
+`$touchz $apiPath/ls6-1b 2>/dev/null`
+ret=`$ls $apiPath/ls6-1a $apiPath/ls6-1b  2>/dev/null`
+checkOkForMore $? "$ret" "$apiPath/ls6-1a $apiPath/ls6-1b"

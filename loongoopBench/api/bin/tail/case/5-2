@@ -1,0 +1,8 @@
+#!/bin/sh
+filePath="$apiPath/tail5-1"
+realPath=`getLeofsRealPath $filePath`
+str=`genString 1200`
+echo $str > $realPath
+ret=`$tail leofs:///$filePath 2>/dev/null`
+#echo $ret
+checkOk $? "$str" "$ret"

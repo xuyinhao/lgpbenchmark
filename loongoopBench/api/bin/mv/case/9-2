@@ -1,0 +1,19 @@
+#!/bin/sh
+filePath1="$apiPath/mv9-2a"
+filePath2="$apiPath/mv9-2b"
+realPath1=`getLeofsRealPath $filePath1`
+realPath2=`getLeofsRealPath $filePath2`
+mkdir $realPath1 $realPath2
+dstPath="$apiPath/mv9-2"
+realDstPath=`getLeofsRealPath $dstPath`
+mkdir $realDstPath
+dstPath1="$apiPath/mv9-2/mv9-2a"
+dstPath2="$apiPath/mv9-2/mv9-2b"
+realDstPath1=`getLeofsRealPath $dstPath1`
+realDstPath2=`getLeofsRealPath $dstPath2`
+`$mv $filePath1 $filePath2 $dstPath 2>/dev/null`
+flag=`checkOkForPath $? "$realPath1" $realDstPath1`
+if [ 1 -eq $flag ]; then
+ flag=`checkOkForPath 0 "$realPath2" $realDstPath2`
+fi
+echo $flag

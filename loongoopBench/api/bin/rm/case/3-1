@@ -1,0 +1,7 @@
+#!/bin/sh
+pathName="$apiPath/rm3-1/a/b/c"
+`$mkdir -p $pathName 2>/dev/null`
+fileName="$pathName/rm3-1"
+`$touchz $fileName 2>/dev/null`
+`$rm $fileName 1>/dev/null 2>&1`
+checkOk $? "$fileName"

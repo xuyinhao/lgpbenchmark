@@ -1,0 +1,8 @@
+#!/bin/sh
+filePath="$apiPath/test5-1"
+`$test -d $filePath 2>/dev/null`
+if [ 0 -eq $? ]; then
+ echo 0
+else
+ echo 1
+fi

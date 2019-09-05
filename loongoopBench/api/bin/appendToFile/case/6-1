@@ -1,0 +1,8 @@
+#!/bin/sh
+str=`genString 100`
+`echo $str > /atf6-1src`
+`$touchz leofs:///atf6-1dst 2>/dev/null`
+`$atf file:///atf6-1src leofs:///atf6-1dst 2>/dev/null`
+checkOk $? $str "/atf6-1dst"
+`rm -f /atf6-1src`
+`$rm -f /atf6-1dst 1>/dev/null 2>&1`

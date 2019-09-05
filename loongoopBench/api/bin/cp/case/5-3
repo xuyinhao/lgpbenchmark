@@ -1,0 +1,13 @@
+#!/bin/sh
+srcPath1=`touchFile "cp5-3a"`
+srcPath2=`touchFile "cp5-3A"`
+distPath="$apiPath/cp5-3dist"
+`$mkdir $distPath 1>/dev/null 2>&1`
+`$cp $srcPath1 $srcPath2 $distPath 2>/dev/null`
+ret=`checkOk $? $srcPath1 $distPath/"cp5-3a"`
+if [ 1 -eq $ret ]; then
+ ret=`checkOk $? $srcPath2 $distPath/"cp5-3A"`
+ echo $ret
+else
+ echo $ret
+fi

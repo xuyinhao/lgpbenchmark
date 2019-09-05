@@ -1,0 +1,16 @@
+#!/bin/sh
+fileName1="$apiPath/test1-3a"
+fileName2="$apiPath/test1-3b"
+realPath1=`getLeofsRealPath $fileName1`
+realPath2=`getLeofsRealPath $fileName2`
+mkdir $realPath1
+touch $realPath2
+`$test -f $fileName1 2>/dev/null`
+ret1=$?
+`$test -f $fileName2 2>/dev/null`
+ret2=$?
+if [ 1 -eq $ret1 ] && [ 0 -eq $ret2 ]; then
+ echo 1
+else
+ echo 0
+fi

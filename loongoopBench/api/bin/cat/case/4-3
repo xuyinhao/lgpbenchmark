@@ -1,0 +1,22 @@
+#!/bin/sh
+str=`genString 100`
+filePath1="$apiPath/cat4-3aa"
+realPath1=`getLeofsRealPath $filePath1`
+str2=`genString 101`
+filePath2="$apiPath/cat4-3Aa"
+realPath2=`getLeofsRealPath $filePath2`
+`echo $str > $realPath1`
+`echo $str2 > $realPath2`
+ret1=`$cat $filePath1 2>&1`
+result1=`checkOk $? "$str1" "$ret1"`
+ret2=`$cat $filePath2 2>&1`
+result2=`checkOk $? "$str2" "$ret2"`
+if [ 1 -eq $result1 ] && [ 1 -eq $result2 ]; then
+ if [ "$str1" != "$str2" ]; then
+  echo 1
+ else
+  echo 0
+ fi
+else
+ echo 0
+fi

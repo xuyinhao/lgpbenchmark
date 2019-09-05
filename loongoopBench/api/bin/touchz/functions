@@ -1,0 +1,50 @@
+#!/bin/sh
+function checkOk(){
+ #echo "dd:$1"
+ flag=1
+ realPath=`getLeofsRealPath $2`
+ #echo "relPath:$realPath"
+ if [ 0 -eq $1 ]; then
+  test -f $realPath
+  #echo "ret:$?"
+  if [ 0 -ne $? ]; then
+   flag=0
+  fi 
+ else
+  flag=0
+ fi
+ if [ "" != "$realPath" ]; then
+  rm -f $realPath
+ fi
+ echo $flag
+}
+
+function checkOkForLocal(){
+ flag=1
+ if [ 0 -eq $1 ]; then
+  test -f $2
+  if [ 0 -ne $? ]; then
+   flag=0
+  fi
+ else
+  flag=0
+ fi
+ if [ "" != "$2" ]; then
+  rm -f $2
+ fi
+ echo $flag
+
+}
+function checkError(){
+ flag=1
+ if [ 0 -eq $1 ]; then
+  flag=0
+ else
+  str=`echo "$2" | grep "$3"`
+  if [ "$str" == "" ]; then
+   flag=0
+  fi
+ fi
+ echo $flag
+}
+

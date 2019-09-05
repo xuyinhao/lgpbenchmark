@@ -1,0 +1,10 @@
+#!/bin/sh
+`$mkdir $apiPath/da2 $apiPath/da2/a 2>/dev/null`
+`okCheck $?`
+if [ 1 -eq $? ]; then
+ `fileExitCheck $apiPath/da2`
+ if [ 1 -eq $? ]; then
+  `fileExitCheck $apiPath/da2/a`
+ fi
+fi
+echo $?

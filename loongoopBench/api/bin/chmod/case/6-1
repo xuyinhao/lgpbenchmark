@@ -1,0 +1,4 @@
+#!/bin/sh
+filePath="$apiPath/chmod6-1"
+ret=`$chmod 777 $filePath 2>&1`
+checkError $? "$ret" "No such file or directory"

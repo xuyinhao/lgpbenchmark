@@ -1,0 +1,4 @@
+#!/bin/sh
+filePath="$apiPath/中文"
+`$touchz $filePath 2>/dev/null`
+checkOk $? $filePath

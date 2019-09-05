@@ -1,0 +1,4 @@
+#!/bin/sh
+filePath="$tmpDir/touchz6-1"
+`$touchz file:///$filePath 2>/dev/null`
+checkOkForLocal $? $filePath

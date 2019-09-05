@@ -1,0 +1,6 @@
+#!/bin/sh
+srcPath=`touchFile "get4-1@\$!&*()+-=;',."`
+dstPath="$tmpDir/get4-1"
+ret=`$get "$srcPath" $dstPath 2>&1`
+#echo "$ret"
+checkOk $? $dstPath "$srcPath"

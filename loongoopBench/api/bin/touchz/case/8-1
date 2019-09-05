@@ -1,0 +1,11 @@
+#!/bin/sh
+filePath1="$apiPath/touchz8-1"
+filePath2="$apiPath/touchz/touchz8-1a"
+ret=`$touchz $filePath1 $filePath2 2>&1`
+#echo "$ret"
+ret=`checkError $? "$ret" "No such file or directory"`
+if [ 1 -eq $ret ]; then
+ checkOk 0 "$filePath1"
+else
+ echo 0
+fi

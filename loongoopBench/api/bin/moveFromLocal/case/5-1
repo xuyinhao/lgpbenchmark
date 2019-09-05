@@ -1,0 +1,5 @@
+#!/bin/sh
+`$touchz $apiPath/mfl5-1 2>/dev/null`
+ret=`$mfl leofs:/$apiPath/mfl5-1 $apiPath 2>&1`
+#echo "$ret"
+checkError $? "$ret" "No such file or directory"

@@ -1,0 +1,9 @@
+#!/bin/sh
+fileName="cp5-1!@#$%^&*()_+{}-=[];\"|<>?,.'"
+srcPath=`touchFile $fileName`
+#echo $srcPath
+distPath="$apiPath/cp5-1dist"
+ret=`$cp $apiPath/"cp5-1\!\@#\$%\^\&\*\(\)_+\{\}-\=\[\]\;\"\|\<\>\?\,.\'" $distPath 2>&1`
+#echo "$ret"
+checkOk $? $apiPath/$fileName $distPath
+

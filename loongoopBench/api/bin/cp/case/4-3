@@ -1,0 +1,5 @@
+#!/bin/sh
+`$mkdir  $apiPath/cp4-3dist 2>/dev/null`
+`$mkdir -p $apiPath/cp4-3/a/b/c 2>/dev/null`
+`$cp $apiPath/cp4-3dist $apiPath/cp4-3/a/b/c 2>/dev/null`
+checkOkForPath $? "$apiPath/cp4-3/a/b/c/cp4-3dist"

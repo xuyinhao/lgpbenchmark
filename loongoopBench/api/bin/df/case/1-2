@@ -1,0 +1,8 @@
+#!/bin/sh
+f1="$apiPath/df_t_f1-2"
+realf1=`getLeofsRealPath $f1`
+#echo $realf1
+`touch $realf1 2>/dev/null`
+info=`datapoolDf`
+dfOkCheck $f1 "$info"
+echo $?

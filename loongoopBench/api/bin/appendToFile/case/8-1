@@ -1,0 +1,5 @@
+#!/bin/sh
+`$touchz "$apiPath/atf8-1dst" 2>/dev/null`
+ret=`$atf "$path/atf8-1src" "$apiPath/atf8-1dst" 2>&1`
+checkError $? "$ret" "No such file or directory"
+`$rm "$apiPath/atf8-1dst" 1>/dev/null 2>&1`

@@ -1,0 +1,5 @@
+#!/bin/sh
+filePath="$tmpDir/cfl1-2"
+mkdir $filePath
+`$cfl $filePath $apiPath/cfl1-2dist 2>/dev/null`
+checkOkForPath $? "$apiPath/cfl1-2dist"

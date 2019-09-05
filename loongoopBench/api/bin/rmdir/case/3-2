@@ -1,0 +1,6 @@
+#!/bin/sh
+dirPath="$apiPath/rmdir3-2/a/b/c"
+`$mkdir -p $dirPath 2>/dev/null`
+`$touchz $dirPath/d 2>/dev/null` 
+ret=`$rmdir $dirPath 2>&1`
+checkError $? "$ret" "Directory is not empty"

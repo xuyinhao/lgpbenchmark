@@ -1,0 +1,8 @@
+#!/bin/sh
+`$mkdir ${apiPath}/ff 2>/dev/null`
+ret=`$mkdir ${apiPath}/ff 2>&1`
+`okCheck $?`
+if [ 0 -eq $? ]; then
+ `messageCheck "$ret" "File exists"`
+fi
+echo $?

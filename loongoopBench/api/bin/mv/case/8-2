@@ -1,0 +1,6 @@
+#!/bin/sh
+filePath="$apiPath/mv8-2"
+realPath=`getLeofsRealPath $filePath`
+mkdir $realPath
+ret=`$mv $filePath $filePath 2>&1`
+checkError $? "$ret" "is a subdirectory of itself"

@@ -1,0 +1,3 @@
+#!/bin/sh
+`$rm -f "$apiPath/rm7-2" 1>/dev/null 2>&1`
+checkOk $? "rm7-2"

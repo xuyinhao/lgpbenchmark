@@ -1,0 +1,5 @@
+#!/bin/sh
+`$mkdir -p $apiPath/ls6-2fa/a 2>/dev/null`
+`$mkdir -p $apiPath/ls6-2fb/b 2>/dev/null`
+ret=`$ls $apiPath/ls6-2fa $apiPath/ls6-2fb  2>/dev/null`
+checkOkForMore $? "$ret" "a b"

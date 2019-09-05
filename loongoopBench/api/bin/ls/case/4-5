@@ -1,0 +1,4 @@
+#!/bin/sh
+`$touchz ${apiPath}/"ls4-5文件" 2>/dev/null`
+ret=`$ls ${apiPath}/"ls4-5文件" 2>/dev/null`
+okCheck $? "$ret" "${apiPath}/ls4-5文件"

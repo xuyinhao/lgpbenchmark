@@ -1,0 +1,6 @@
+#!/bin/sh
+deepPath="$apiPath/a/b/c/d"
+filePath="$deepPath/touchz4-2"
+ret=`$touchz $filePath 2>&1`
+#echo "$ret"
+checkError $? "$ret" "No such file or directory"

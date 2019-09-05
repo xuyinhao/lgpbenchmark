@@ -1,0 +1,62 @@
+#!/bin/bash
+function checkOk(){
+ flag=1
+ if [ 0 -eq $1 ]; then
+  filePath=`getLeofsRealPath "$3"`
+  txt=`cat $filePath`
+  #echo "txt:$?"
+  str=`echo "$txt"|grep "$2"`
+  if [ "$str" == "" ]; then
+   flag=0
+  fi
+ else
+  flag=0
+ fi
+ echo $flag
+}
+
+function checkOkForAllEmpty(){
+ flag=1
+ if [ 0 -ne $1 ]; then
+  flag=0
+ else
+  distRealPath=`getLeofsRealPath "$3"`
+  srcMd5=`md5sum -t $2`
+  srcMd5=${srcMd5% *}
+  distMd5=`md5sum -t $distRealPath`
+  distMd5=${distMd5% *}
+  if [ "$srcMd5" != "$distMd5" ]; then
+   flag=0
+  fi
+ fi
+echo $flag
+}
+
+function checkOkForSrcEmpty(){
+ flag=1
+ if [ 0 -ne $1 ]; then
+  flag=0
+ else
+  distRealPath=`getLeofsRealPath "$3"`
+  distMd5=`md5sum -t $distRealPath`
+  distMd5=${distMd5% *}
+  if [ "$2" != "$distMd5" ]; then
+   flag=0
+  fi
+ fi
+echo $flag
+}
+
+function checkError(){
+ flag=1
+ if [ 0 -eq $1 ]; then
+  flag=0
+ else
+  str=`echo "$2"|grep "$3"`
+  if [ "$str" == "" ]; then
+   flag=0
+  fi
+ fi
+ echo $flag
+}
+

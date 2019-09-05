@@ -1,0 +1,6 @@
+#!/bin/sh
+srcPath="$tmpDir/cfl4-4文件夹"
+mkdir $srcPath
+distPath="$apiPath/cfl4-4dist文件夹"
+`$cfl $srcPath $distPath 2>/dev/null`
+checkOkForPath $? $distPath

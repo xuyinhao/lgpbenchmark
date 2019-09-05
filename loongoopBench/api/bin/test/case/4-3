@@ -1,0 +1,9 @@
+#!/bin/sh
+filePath1="$apiPath/test4-3a"
+filePath2="$apiPath/test4-3b"
+realPath1=`getLeofsRealPath $filePath1`
+realPath2=`getLeofsRealPath $filePath2`
+touch $realPath1 $realPath2
+ret=`$test -e $filePath1 $filePath2 2>&1`
+#echo "$ret"
+checkError $? "$ret" "Too many arguments"

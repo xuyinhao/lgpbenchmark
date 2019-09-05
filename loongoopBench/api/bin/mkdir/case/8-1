@@ -1,0 +1,8 @@
+#!/bin/sh
+`$touchz ${apiPath}/fa 2>/dev/null` 
+ret=`$mkdir ${apiPath}/fa 2>&1`
+`okCheck $?`
+if [ 0 -eq $? ]; then
+ `messageCheck "$ret" "Is not a directory"`
+fi
+echo $?

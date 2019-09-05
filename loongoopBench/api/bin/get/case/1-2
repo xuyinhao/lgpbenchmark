@@ -1,0 +1,6 @@
+#!/bin/sh
+`$mkdir $apiPath/ctl1-2p 2>/dev/null`
+srcPath=`touchFile ctl1-2p/ctl1-2`
+dstPath="$tmpDir/ctl1-2p/ctl1-2"
+`$get $apiPath/ctl1-2p $tmpDir 2>/dev/null`
+checkOk $? $dstPath $srcPath

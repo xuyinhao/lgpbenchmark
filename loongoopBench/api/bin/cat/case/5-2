@@ -1,0 +1,5 @@
+#!/bin/sh
+str=`genString 100`
+`echo $str > "/cat5-2"`
+ret=`$cat "file:///cat5-2" 2>&1`
+checkOk $? "$str" "$ret"

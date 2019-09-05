@@ -1,0 +1,8 @@
+#!/bin/sh
+`groupadd chownG1-2 2>/dev/null`
+filePath="$apiPath/chown1-2"
+`$touchz $filePath 2>/dev/null`
+`$chown root:chownG1-2 $filePath 2>/dev/null`
+checkOk $? "root:chownG1-2" $filePath
+`$rm -f $filePath 1>/dev/null 2>&1`
+`groupdel chownG1-2`

@@ -1,5 +1,6 @@
 #!/bin/sh
-filePath="/du5-1"
-echo "111" > $filePath
-duOkCheck "file://$filePath" "4 file://$filePath"
+filePath="du5-1"
+echo "111" > ${tmpDir}/$filePath
+duOkCheck "file://${tmpDir}/$filePath" "4 file://${tmpDir}/$filePath"
 echo $?
+rm -f /${tmpDir}/$filePath

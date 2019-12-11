@@ -1,6 +1,6 @@
 #!/bin/sh
-filePath="leofs:///du5-2"
-realPath=`getLeofsRealPath "/du5-2"`
+filePath="leofs://${apiPath}/du5-2"
+realPath=`getLeofsRealPath "${apiPath}/du5-2"`
 echo "111" > $realPath
 duOkCheck "$filePath" "4 $filePath"
 echo $?

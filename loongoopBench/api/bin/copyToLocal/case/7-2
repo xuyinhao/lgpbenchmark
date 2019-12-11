@@ -1,3 +1,3 @@
 #!/bin/sh
-ret=`$ctl -P 2>&1`
+ret=`$ctl -P /f /f 2>&1`
 checkError $? "$ret" "Illegal option"

@@ -1,7 +1,11 @@
 #!/bin/sh
+## copyToLocal 到不存在的路径
+
+LANG=en_US.UTF-8
+
 filePath="$apiPath/ctl6-2"
 realPath=`getLeofsRealPath $filePath`
 echo "bb" > $realPath
-dstPath="/ctl6-2dst/aa"
+dstPath="${tmpDir}/ctl6-2dst/aa"
 ret=`$ctl $filePath $dstPath 2>&1`
 checkError $? "$ret" "No such file or directory"

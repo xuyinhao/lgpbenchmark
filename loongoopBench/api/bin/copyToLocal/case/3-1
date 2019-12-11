@@ -5,3 +5,4 @@ srcPath=`touchFile $deepPath/ctl3-1`
 dstPath="$tmpDir/ctl3-1"
 `$ctl $srcPath $dstPath 2>/dev/null`
 checkOk $? $dstPath $srcPath
+rm -rf $dstPath

@@ -1,10 +1,10 @@
 #!/bin/sh
-`touch "atf2-2src"`
+`touch "${tmpDir}/atf2-2src"`
 `$touchz "$apiPath/atf2-2dst" 2>/dev/null`
 realPath=`getLeofsRealPath "$apiPath/atf2-2dst"`
 `echo "aaa" > $realPath`
 md5=`getMd5 $realPath`
-`$atf "$path/atf2-2src" "$apiPath/atf2-2dst" 2>/dev/null`
+`$atf "${tmpDir}/atf2-2src" "$apiPath/atf2-2dst" 2>/dev/null`
 checkOkForSrcEmpty $? "$md5" "$apiPath/atf2-2dst"
-`rm -f $path/atf2-2src`
+`rm -f ${tmpDir}/atf2-2src`
 `$rm "$apiPath/atf2-2dst" 1>/dev/null 2>&1`

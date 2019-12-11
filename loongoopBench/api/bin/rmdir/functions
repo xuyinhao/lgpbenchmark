@@ -25,7 +25,20 @@ function checkOkForNotEmpty(){
  echo $flag
 
 }
-
+function checkOkForIgnoreNotEmpty(){
+flag=1
+if [ 0 -eq $1 ]; then
+   str=`echo "$2"|grep "$3"`
+  if [ "$str" == "" ]; then
+   flag=1
+  else 
+	flag=0
+  fi
+else
+ flag=0 
+fi
+echo $flag
+}
 function checkError(){
  flag=1
  if [ 0 -eq $1 ]; then

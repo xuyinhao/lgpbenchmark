@@ -1,4 +1,5 @@
 #!/bin/sh
-echo "aa" > "/ctl5-2"
-`$get file:///ctl5-2 $tmpDir 2>/dev/null`
-checkOkForAllLocal $? "$tmpDir/ctl5-2" "/ctl5-2"
+echo "aa" > "/get5-2"
+`$get file:///get5-2 $tmpDir 2>/dev/null`
+checkOkForAllLocal $? "$tmpDir/get5-2" "/get5-2"
+rm -f /get5-2

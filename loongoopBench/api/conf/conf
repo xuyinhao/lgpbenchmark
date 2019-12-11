@@ -1,6 +1,9 @@
 #!/bin/sh
-loongoopPath="/opt/loongoop-1.0.0"
+loongoopPath="/loongoop/loongoop-1.0.4-v2.7.2"
 leofsSitePath="${loongoopPath}/etc/hadoop/leofs-site.xml"
-loongoopfs="${loongoopPath}/bin/hadoop fs"
+coreSitePath="${loongoopPath}/etc/hadoop/core-site.xml"
+
 rootPath="/testxyh"
 tmpDir="/opt/tmpDir"
+
+loongoopfs="${loongoopPath}/bin/hadoop fs"

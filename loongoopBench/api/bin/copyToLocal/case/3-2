@@ -6,3 +6,4 @@ srcPath=`touchFile "$deepPath/ctl3-2"`
 dstPath="$tmpDir/ctl3-2p"
 `$ctl $apiPath$deepPath $dstPath 2>/dev/null`
 checkOk $? "$dstPath/ctl3-2" $srcPath
+rm -rf $dstPath

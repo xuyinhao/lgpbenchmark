@@ -1,4 +1,5 @@
 #!/bin/sh
+## 为大小写区分做测试
 f1="$apiPath/aaa"
 `$touchz $f1 2>/dev/null`
 countOkCheck $f1 "0 1 0 $f1"

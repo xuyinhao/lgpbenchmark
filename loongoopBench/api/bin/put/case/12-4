@@ -4,4 +4,4 @@ realPath=`getLeofsRealPath $srcPath`
 distPath="$apiPath/cp12-7dist"
 `$mkdir $distPath 2>/dev/null`
 `$put -p "$realPath" "$distPath" 2>/dev/null`
-checkFileNature $? $srcPath $distPath/"cp12-7" "1 3 6"
+checkFileNatureNeedWinacl $? $realPath $distPath/"cp12-7"

@@ -1,15 +1,15 @@
 #!/bin/sh
 str1=`genString 100`
-`echo $str1 > "atf7-1src1"`
+`echo $str1 > "${tmpDir}/atf7-1src1"`
 str2=`genString 100`
-`echo $str2 > "atf7-1src2"`
+`echo $str2 > "${tmpDir}/atf7-1src2"`
 `$touchz "$apiPath/atf7-1dst" 2>/dev/null`
-`$atf "$path/atf7-1src1" "$path/atf7-1src2"  "$apiPath/atf7-1dst" 2>/dev/null`
+`$atf "${tmpDir}/atf7-1src1" "${tmpDir}/atf7-1src2"  "$apiPath/atf7-1dst" 2>/dev/null`
 ret=`checkOk $? "$str1" "$apiPath/atf7-1dst"`
 if [ 1 -eq $ret ]; then
  checkOk 0 "$str2" "$apiPath/atf7-1dst"
 else
  echo $ret
 fi
-`rm -f $path/atf7-1*`
+`rm -f ${tmpDir}/atf7-1*`
 `$rm "$apiPath/atf7-1dst" 1>/dev/null 2>&1`

@@ -1,4 +1,6 @@
 #!/bin/sh
+#某一个文件不存在
+LANG=en_US.UTF-8
 f1="$apiPath/count_t_f9-2"
 f2="$apiPath/count_t_f9-2_2"
 `$touchz $f1 2>/dev/null`

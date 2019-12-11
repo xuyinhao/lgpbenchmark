@@ -1,5 +1,5 @@
 #!/bin/sh
-#count dir
+#count many dir
 d1="$apiPath/count_t_d7-2"
 d2="$apiPath/count_t_d7-2_2"
 `$mkdir $d1 $d2 2>/dev/null`

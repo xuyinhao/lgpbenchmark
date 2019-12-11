@@ -1,11 +1,11 @@
 #!/bin/sh
-`$test -d "leofs:///a"  2>/dev/null`
+`$test -d "leofs:///${apiPath}/a"  2>/dev/null`
 if [ 0 -eq $? ]; then
- `$rmdir "leofs:///a"  2>/dev/null`
+ `$rmdir "leofs:///${apiPath}/a"  2>/dev/null`
 fi
-`$mkdir leofs:///a 2>/dev/null`
+`$mkdir leofs:///${apiPath}/a 2>/dev/null`
 `okCheck $?`
 if [ 1 -eq $? ]; then
- `fileExitCheck "leofs:///a"`
+ `fileExitCheck "leofs:///${apiPath}/a"`
 fi
 echo $?

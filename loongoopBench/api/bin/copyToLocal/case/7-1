@@ -1,4 +1,7 @@
 #!/bin/sh
+## 后端datapool创建一个文件，
+## 再通过copyToLocal传输到本地，比较文件属性
+
 filePath="$apiPath/ctl7-1"
 realPath=`getLeofsRealPath $filePath`
 touch $realPath

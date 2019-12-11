@@ -81,7 +81,7 @@ function checkFileNature(){
   distNatures=($distNature)
   for index in $indexs
   do
-   if [ "$srcNatures[$index]" != "$distNatures[$index]" ]; then
+   if [ "${srcNatures[$index]}" != "${distNatures[$index]}" ]; then
     flag=0
     break
    fi

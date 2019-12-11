@@ -1,4 +1,6 @@
 #!/bin/sh
-echo "aa" > "/ctl5-2"
-`$ctl file:///ctl5-2 $tmpDir 2>/dev/null`
-checkOkForAllLocal $? "$tmpDir/ctl5-2" "/ctl5-2"
+## copyToLocal 本地数据到本地
+echo "aa" > "/tmp/ctl5-2"
+`$ctl file:///tmp/ctl5-2 $tmpDir 2>/dev/null`
+checkOkForAllLocal $? "$tmpDir/ctl5-2" "/tmp/ctl5-2"
+rm -f /tmp/ctl5-2 2>/dev/null

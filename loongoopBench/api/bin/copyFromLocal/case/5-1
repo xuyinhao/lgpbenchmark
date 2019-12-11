@@ -1,9 +1,10 @@
 #!/bin/sh
-`$rm -f leofs:///cfl5-1 1>/dev/null 2>&1`
-`$rm -f leofs:///cfl5-1dist 1>/dev/null 2>&1`
-`$touchz leofs:///cfl5-1 2>/dev/null`
-realpath=`getLeofsRealPath "/cfl5-1"`
+LANG=en_US.UTF-8
+`$rm -f leofs:///${apiPath}/cfl5-1 1>/dev/null 2>&1`
+`$rm -f leofs:///${apiPath}/cfl5-1dist 1>/dev/null 2>&1`
+`$touchz leofs:///${apiPath}/cfl5-1 2>/dev/null`
+realpath=`getLeofsRealPath "/${apiPath}/cfl5-1"`
 echo "aa" > $realpath
-ret=`$leofs leofs:///cfl5-1 leofs:///cfl5-1dist 2>&1`
+ret=`$leofs leofs:///${apiPath}/cfl5-1 leofs:///${apiPath}/cfl5-1dist 2>&1`
 #echo "$ret"
 checkError $? "$ret" "No such file or directory"

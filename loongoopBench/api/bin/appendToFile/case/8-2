@@ -1,3 +1,6 @@
 #!/bin/sh
-ret=`$atf "$path/atf8-2src" "$apiPath/atf8-2dst" 2>&1`
+ LANG=en_US.UTF-8
+ret=`$atf "$tmpDir/atf8-2src" "$apiPath/atf8-2dst" 2>&1`
 checkError $? "$ret" "No such file or directory"
+`$rm "$apiPath/atf8-2dst" 1>/dev/null 2>&1`
+

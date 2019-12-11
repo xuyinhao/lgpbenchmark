@@ -1,4 +1,7 @@
 #!/bin/sh
+## copyToLocal 到不是目录的路径地址
+
+LANG=en_US.UTF-8
 srcPath1=`touchFile "ctl8-3a"`
 srcPath2=`touchFile "ctl8-3b"`
 touch "$tmpDir/ctl8-3aa"

@@ -1,4 +1,5 @@
 #!/bin/sh
+## 检查长字符路径的dir的统计
 name255=`genString 255`
 d1="$apiPath/$name255"
 `$mkdir $d1 2>/dev/null`

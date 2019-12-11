@@ -1,10 +1,10 @@
 #!/bin/sh
-srcPath1=`touchFile ctl8-1`
-srcPath2=`touchFile ctl8-2`
+srcPath1=`touchFile get8-1`
+srcPath2=`touchFile get8-2`
 `$get $srcPath1 $srcPath2 $tmpDir 2>/dev/null`
-ret=`checkOk $? $tmpDir/ctl8-1 $srcPath1`
+ret=`checkOk $? $tmpDir/get8-1 $srcPath1`
 if [ 1 -eq $ret ]; then
- checkOk 0 "$tmpDir/ctl8-2" $srcPath2
+ checkOk 0 "$tmpDir/get8-2" $srcPath2
 else
  echo 0
 fi

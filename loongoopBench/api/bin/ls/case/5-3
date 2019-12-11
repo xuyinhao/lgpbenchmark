@@ -1,0 +1,9 @@
+#!/bin/sh
+defaultfs=`getDefaultFs`
+`$test -d "$defaultfs/${apiPath}/ls5-3" 2>/dev/null`
+if [ 0 -eq $? ]; then
+ `$rm -R "$defaultfs/${apiPath}/ls5-3" 1>/dev/null 2>&1`
+fi
+`$mkdir -p "$defaultfs/${apiPath}/ls5-3"/a 2>/dev/null`
+ret=`$ls "$defaultfs/${apiPath}/ls5-3" 2>&1`
+okCheckForPath $? "$ret" "/${apiPath}/ls5-3"

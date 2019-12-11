@@ -1,5 +1,6 @@
 #!/bin/sh
-#count dir
+##count dir
+
 d1="$apiPath/count_t_d1-2"
 `$mkdir $d1 2>/dev/null`
 countOkCheck $d1 "1 0 0 $d1"

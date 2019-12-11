@@ -1,6 +1,9 @@
 #!/bin/sh
-`$rm -f file:///cfl5-4 1>/dev/null 2>&1`
-`$rm -f file:///cfl5-4dist 1>/dev/null 2>&1`
-echo "aa" > "/cfl5-4"
-`$cfl file:///cfl5-3 file:///cfl5-4dist 2>/dev/null`
-checkOkForAllLocal $? "/cfl5-4" "/cfl5-4dist"
+`$rm -f file://${tmpDir}/cfl5-4 1>/dev/null 2>&1`
+`$rm -f file://${tmpDir}/cfl5-4dist 1>/dev/null 2>&1`
+echo "aa" > "/${tmpDir}/cfl5-4"
+`$cfl file://${tmpDir}/cfl5-4 file://${tmpDir}/cfl5-4dist 2>/dev/null`
+checkOkForAllLocal $? "/${tmpDir}/cfl5-4" "/${tmpDir}/cfl5-4dist"
+`$rm -f file://${tmpDir}/cfl5-4 1>/dev/null 2>&1`
+`$rm -f file://${tmpDir}/cfl5-4dist 1>/dev/null 2>&1`
+

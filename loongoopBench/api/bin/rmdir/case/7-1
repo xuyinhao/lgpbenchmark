@@ -1,3 +1,5 @@
 #!/bin/sh
+## 删除不存在的dir
+LANG="en_US.UTF-8"
 ret=`$rmkdir $apiPath/rmdir7-1 2>&1`
 checkError $? "$ret" "No such file or directory"

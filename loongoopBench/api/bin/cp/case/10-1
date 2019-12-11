@@ -1,3 +1,5 @@
 #!/bin/sh
+
+LANG=en_US.UTF-8
 ret=`$cp 2>&1`
 checkError $? "$ret" "Not enough arguments"

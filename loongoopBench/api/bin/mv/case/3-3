@@ -2,7 +2,7 @@
 deepPath="$apiPath/mv3-3/a/b/c/d"
 realPath=`getLeofsRealPath $deepPath`
 mkdir -p $realPath
-dstPath="/mv3-3dstPath"
+dstPath="${apiPath}/mv3-3dstPath"
 realDstPath=`getLeofsRealPath $dstPath`
 rm -rf $realDstPath
 `$mv $deepPath $dstPath 2>/dev/null`

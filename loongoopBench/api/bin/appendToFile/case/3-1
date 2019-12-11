@@ -1,10 +1,11 @@
 #!/bin/sh
 str=`genString 100`
-echo $str > "atf3-1src"
+echo $str > "${tmpDir}/atf3-1src"
 filePath="$apiPath/atf3-1/a/b"
 `$mkdir -p "$filePath" 2>/dev/null`
 `$touchz "$filePath/atf3-1dst" 2>/dev/null`
-`$atf "$path/atf3-1src" "$filePath/atf3-1dst" 2>/dev/null`
+`$atf "$tmpDir/atf3-1src" "$filePath/atf3-1dst" 2>/dev/null`
 checkOk $? "$str" "$filePath/atf3-1dst"
-`rm -f $path/atf3-1src`
-`$rm "$filePath/atf3-1dst" 2>/dev/null`
+`rm -f $tmpDir/atf3-1src`
+$rm "$filePath/atf3-1dst" >/dev/null 2>&1
+

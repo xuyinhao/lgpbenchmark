@@ -1,3 +1,4 @@
 #!/bin/sh
+LANG=en_US.UTF-8
 ret=`$cp -P 2>&1`
 checkError $? "$ret" "Illegal option"

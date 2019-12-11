@@ -19,6 +19,7 @@ function checkOk(){
   distMd5=${distMd5% *}
   if [ "$srcMd5" != "${distMd5}" ]; then
    flag=0
+   echo "check failed"
   fi
  fi
 echo $flag

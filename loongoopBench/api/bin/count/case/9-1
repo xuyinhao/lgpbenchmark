@@ -1,4 +1,6 @@
 #!/bin/sh
+## 文件不存在
+LANG=en_US.UTF-8
 file="$apiPath/count_t_f9-1"
 msg=`getErrMsg $file`
 countErrCheck $file "$msg"

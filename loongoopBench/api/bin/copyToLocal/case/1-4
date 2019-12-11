@@ -4,3 +4,4 @@ srcPath=`touchFile ctl1-4p/ctl1-4`
 dstPath="$tmpDir/ctl1-4pdst"
 `$ctl $apiPath/ctl1-4p $dstPath 2>/dev/null`
 checkOk $? "$dstPath/ctl1-4" $srcPath
+rm -rf $srcPath $dstPath

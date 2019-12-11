@@ -23,6 +23,23 @@ function clearTmpDir(){
  rm -rf $1/*
 }
 
+
+function getDefaultFs(){
+if [[ "$coreSitePath" == "" ]] ;then
+   echo "no coreSitePath set"
+   exit 1
+fi
+
+if  [ ! -f $coreSitePath ];then
+   echo "no coreSitePath set"
+   exit 1
+fi
+defaultfs=$(grep -A3 "<name>fs.defaultFS</name>" $coreSitePath | \
+	grep -oP "(?<=<value>)(leofs:[/]{1,3}\w*)(?=[/]{0,2}</value>)")
+echo $defaultfs
+}
+
+
 function genString(){
   j=0;
   for i in {a..z};do array[$j]=$i;j=$(($j+1));done
@@ -47,7 +64,32 @@ function getMountPath(){
  str=`sed -n "${val}p" ${leofsSitePath}`
  str=${str#*<value>}
  str=${str%</value>*}
- echo $str
+ if [[ "$str" == "" ]];then
+    echo "/datapool/loongoop"
+ else
+    echo $str
+ fi
+}
+
+
+#获取loongoop是否设置了winacl
+function getWinacl(){
+	local val
+	val=$(grep -A3 "leofs.permission" ${leofsSitePath} |grep -oP "(?<=<value>)(.*)(?=</value>)" 2>&1)
+	if [ $? -eq 0 ];then
+		if [[ "$val" == "true" ]];then
+			winaclIsSet=true
+		else
+			winaclIsSet=false
+		fi
+	elif [[ "$val" == "" ]];then
+		 winaclIsSet=true
+	else
+		 echo "get Winacl Error"
+		 exit 1
+	fi
+			
+	echo $winaclIsSet
 }
 
 function getLeofsRealPath(){
@@ -64,3 +106,107 @@ function getMd5(){
  md5=${md5% *}
  echo "$md5"
 }
+## $1 : 命令执行flag
+## $2 : src路径，本地路径格式
+## $3 : dst路径。本地路径格式
+function checkDirNatureNeedWinacl(){
+ flag=1
+ if [ 0 -ne $1 ]; then
+  flag=0
+ else
+  distRealPath=`getLeofsRealPath "$3"`
+  indexs=(0 1 2 3 4 5 6)
+  srcNature=`ls -l $(dirname $2)|grep $(basename $2)`
+  srcNature=${srcNature%$tmDir*}
+  srcNatures=($srcNature)
+  distNature=`ls -l $(dirname $distRealPath)|grep $(basename $distRealPath)`
+  distNature=${distNature%$apiPath*}
+  distNatures=($distNature)
+ 
+  if [[ "`getWinacl`" == "false" ]];then
+   for index in $indexs
+   do
+     if [ "${srcNatures[$index]}" != "${distNatures[$index]}" ]; then
+       flag=0
+        break
+     fi
+    done
+   fi
+
+
+   if [[ "`getWinacl`" == "true" ]];then
+  for i in 0
+   do
+        if [ "drwxrwxrwx" != "${distNatures[0]}" ]; then
+      flag=0
+      echo $flag
+      exit
+       fi
+    flag=1
+  done
+
+ for index in {1..6}
+ do
+  if [ "${srcNatures[$index]}" != "${distNatures[$index]}" ]; then
+    flag=0
+    echo $flag
+    exit
+  fi
+ flag=1
+ done
+ fi
+echo $flag
+fi
+}
+
+function checkFileNatureNeedWinacl(){
+ flag=1
+ if [ 0 -ne $1 ]; then
+  flag=0
+ else
+  distRealPath=`getLeofsRealPath "$3"`
+  indexs=(0 1 2 3 4 5 6)
+  srcNature=`ls -l $2`
+  srcNature=${srcNature%$tmDir*}
+  srcNatures=($srcNature)
+  distNature=`ls -l $distRealPath`
+  distNature=${distNature%$apiPath*}
+  distNatures=($distNature)
+ 
+  if [[ "`getWinacl`" == "false" ]];then
+   for index in $indexs
+   do
+     if [ "${srcNatures[$index]}" != "${distNatures[$index]}" ]; then
+       flag=0
+        break
+     fi
+    done
+   fi
+
+
+ if [[ "`getWinacl`" == "true" ]];then
+  for i in 0 
+   do
+		if [ "-rwxrwxrwx" != "${distNatures[0]}" ]; then
+      flag=0
+      echo $flag
+	  exit 
+	   fi
+ 	flag=1
+  done
+ 
+ for index in {1..6}
+ do
+  if [ "${srcNatures[$index]}" != "${distNatures[$index]}" ]; then
+    flag=0
+	echo $flag
+    exit
+  fi
+ flag=1
+ done
+
+ echo $flag
+ fi
+fi
+}
+

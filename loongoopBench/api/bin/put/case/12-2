@@ -2,4 +2,4 @@
 srcPath=`touchFile "cp12-5"`
 distPath="$apiPath/cp12-5dist"
 `$cp -pa "$srcPath" "$distPath" 2>/dev/null`
-checkFileNature $? $srcPath $distPath "1 3 6"
+checkFileNatureNeedWinacl $? `getLeofsRealPath $srcPath` $distPath 

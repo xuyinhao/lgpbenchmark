@@ -1,8 +1,8 @@
 #!/bin/sh
-`$test -f "file:///rm5-3a" 2>/dev/null`
+`$test -f "file:///${tmpDir}/rm5-3a" 2>/dev/null`
 if [ 0 -eq $? ]; then
- `$rm "file:///rm5-3a" 2>/dev/null`
+ `$rm "file:///${tmpDir}/rm5-3a" 2>/dev/null`
 fi
-`$touchz "file:///rm5-3a" 2>/dev/null`
-`$rm "file:///rm5-3a" 1>/dev/null 2>&1`
-checkOk $? "rm5-3a"
+`$touchz "file:///${tmpDir}/rm5-3a" 2>/dev/null`
+`$rm "file:///${tmpDir}/rm5-3a" 1>/dev/null 2>&1`
+checkOk $? "${tmpDir}/rm5-3a"

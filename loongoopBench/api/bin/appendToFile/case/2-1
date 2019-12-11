@@ -1,7 +1,7 @@
 #!/bin/sh
-`touch "atf2-1src"`
+`touch "${tmpDir}/atf2-1src"`
 `$touchz "$apiPath/atf2-1dst" 2>/dev/null`
-ret=`$atf "$path/atf2-1src" "$apiPath/atf2-1dst" 2>&1`
-checkOkForAllEmpty $? "$path/atf2-1src" "$apiPath/atf2-1dst"
-`rm -f $path/atf2-1src`
+ret=`$atf "${tmpDir}/atf2-1src" "$apiPath/atf2-1dst" 2>&1`
+checkOkForAllEmpty $? "${tmpDir}/atf2-1src" "$apiPath/atf2-1dst"
+`rm -f ${tmpDir}/atf2-1src`
 `$rm "$apiPath/atf2-1dst"  1>/dev/null 2>&1`

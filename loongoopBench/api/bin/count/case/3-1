@@ -1,4 +1,5 @@
 #!/bin/sh
+## 检查长字符名字路径的 统计
 name255=`genString 255`
 f1="$apiPath/$name255"
 `$touchz $f1 2>/dev/null`

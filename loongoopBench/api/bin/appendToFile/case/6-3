@@ -1,6 +1,6 @@
 #!/bin/sh
 str=`genString 100`
-`$touchz leofs:///atf6-3src leofs:///atf6-3dst 2>/dev/null`
-ret=`$atf leofs:///atf6-3src leofs:///6-3dst 2>&1`
+`$touchz leofs:///${apiPath}/atf6-3src leofs:///${apiPath}/atf6-3dst 2>/dev/null`
+ret=`$atf leofs:///${apiPath}/atf6-3src leofs:///${apiPath}/6-3dst 2>&1`
 checkError $? "$ret" ""
-`$rm -f /atf6-3* 1>/dev/null 2>&1`
+`$rm -f /${apiPath}/atf6-3* 1>/dev/null 2>&1`

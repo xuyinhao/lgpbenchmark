@@ -1,12 +1,12 @@
 #!/bin/sh
-`$rmdir leofs:///cp6-2 2>/dev/null`
-`$rmdir lefofs:///cp6-2dist 2>/dev/null`
-`$mkdir leofs:///cp6-2 2>/dev/null`
-`$cp leofs:///cp6-2 leofs:///cp6-2dist 2>/dev/null`
+`$rmdir leofs://${apiPath}/cp6-2 2>/dev/null`
+`$rmdir lefofs://${apiPath}/cp6-2dist 2>/dev/null`
+`$mkdir leofs://${apiPath}/cp6-2 2>/dev/null`
+`$cp leofs://${apiPath}/cp6-2 leofs://${apiPath}/cp6-2dist 2>/dev/null`
 if [ 0 -ne $? ]; then
  echo 0
 else
- `$test -d "/cp6-2dist" 2>/dev/null`
+ `$test -d "${apiPath}/cp6-2dist" 2>/dev/null`
  if [ 0 -eq $? ]; then
   echo 1
  else

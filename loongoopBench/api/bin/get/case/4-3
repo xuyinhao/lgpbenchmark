@@ -1,14 +1,14 @@
 #!/bin/sh
-srcPath=`touchFile ctl4-3AAA`
-otherPath1=`touchFile ctl4-3aaa`
-otherPath2=`touchFile ctl4-3Aaa`
-dstPath="$tmpDir/ctl4-3AAA"
+srcPath=`touchFile get4-3AAA`
+otherPath1=`touchFile get4-3aaa`
+otherPath2=`touchFile get4-3Aaa`
+dstPath="$tmpDir/get4-3AAA"
 `$get $srcPath $tmpDir 2>/dev/null`
 ret=`checkOk $? $dstPath $srcPath`
 if [ 1 -eq $ret ]; then
- test -f "$tmpDir/ctl4-3aaa"
+ test -f "$tmpDir/get4-3aaa"
  ret1=$?
- test -f "$tmpDir/ctl4-3Aaa"
+ test -f "$tmpDir/get4-3Aaa"
  ret2=$?
  if [ 0 -eq $ret1 ] || [ 0 -eq $ret2 ]; then
   echo 0

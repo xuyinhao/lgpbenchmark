@@ -2,5 +2,5 @@
 #count dir
 d1="$apiPath/count_t_d8-2"
 `$mkdir $d1 2>/dev/null`
-countOkCheck $leofs$d1 "1 0 0 $leofs$d1"
+countOkCheck $d1 "1 0 0 $d1"
 echo $?

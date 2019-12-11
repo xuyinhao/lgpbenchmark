@@ -1,6 +1,6 @@
 #!/bin/sh
-`$mkdir $apiPath/ctl1-4p 2>/dev/null`
-srcPath=`touchFile ctl1-4p/ctl1-4`
-dstPath="$tmpDir/ctl1-4pdst"
-`$get $apiPath/ctl1-4p $dstPath 2>/dev/null`
-checkOk $? "$dstPath/ctl1-4" $srcPath
+`$mkdir $apiPath/get1-4p 2>/dev/null`
+srcPath=`touchFile get1-4p/get1-4`
+dstPath="$tmpDir/get1-4pdst"
+`$get $apiPath/get1-4p $dstPath 2>/dev/null`
+checkOk $? "$dstPath/get1-4" $srcPath

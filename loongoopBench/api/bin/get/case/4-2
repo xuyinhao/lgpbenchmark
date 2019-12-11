@@ -1,5 +1,5 @@
 #!/bin/sh
-srcPath=`touchFile ctl4-2中文`
-dstPath="$tmpDir/ctl4-2"
+srcPath=`touchFile get4-2中文`
+dstPath="$tmpDir/get4-2"
 `$get $srcPath $dstPath 2>/dev/null`
 checkOk $? $dstPath $srcPath

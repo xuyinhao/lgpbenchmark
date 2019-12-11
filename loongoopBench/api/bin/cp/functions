@@ -69,7 +69,7 @@ function checkFileNature(){
   distNatures=($distNature)
   for index in $indexs
   do
-   if [ "$srcNatures[$index]" != "$distNatures[$index]" ]; then
+   if [ "${srcNatures[$index]}" != "${distNatures[$index]}" ]; then
     flag=0
     break
    fi
@@ -77,3 +77,106 @@ function checkFileNature(){
  fi
 echo $flag
 }
+
+function checkDirNatureNeedWinacl(){
+ flag=1
+ if [ 0 -ne $1 ]; then
+  flag=0
+ else
+  distRealPath=`getLeofsRealPath "$3"`
+  indexs=(0 1 2 3 4 5 6)
+  srcNature=`ls -l $(dirname $2)|grep $(basename $2)`
+  srcNature=${srcNature%$tmDir*}
+  srcNatures=($srcNature)
+  distNature=`ls -l $(dirname $distRealPath)|grep $(basename $distRealPath)`
+  distNature=${distNature%$apiPath*}
+  distNatures=($distNature)
+ 
+  if [[ "`getWinacl`" == "false" ]];then
+   for index in $indexs
+   do
+     if [ "${srcNatures[$index]}" != "${distNatures[$index]}" ]; then
+       flag=0
+        break
+     fi
+    done
+   fi
+
+
+   if [[ "`getWinacl`" == "true" ]];then
+  for i in 0
+   do
+        if [ "drwxrwxrwx" != "${distNatures[0]}" ]; then
+      flag=0
+      echo $flag
+      exit
+       fi
+    flag=1
+  done
+
+ for index in {1..6}
+ do
+  if [ "${srcNatures[$index]}" != "${distNatures[$index]}" ]; then
+    flag=0
+    echo $flag
+    exit
+  fi
+ flag=1
+ done
+ fi
+echo $flag
+fi
+}
+
+function checkFileNatureNeedWinacl(){
+ flag=1
+ if [ 0 -ne $1 ]; then
+  flag=0
+ else
+  distRealPath=`getLeofsRealPath "$3"`
+  indexs=(0 1 2 3 4 5 6)
+  srcNature=`ls -l $2`
+  srcNature=${srcNature%$tmDir*}
+  srcNatures=($srcNature)
+  distNature=`ls -l $distRealPath`
+  distNature=${distNature%$apiPath*}
+  distNatures=($distNature)
+ 
+  if [[ "`getWinacl`" == "false" ]];then
+   for index in $indexs
+   do
+     if [ "${srcNatures[$index]}" != "${distNatures[$index]}" ]; then
+       flag=0
+        break
+     fi
+    done
+   fi
+
+
+ if [[ "`getWinacl`" == "true" ]];then
+  for i in 0 
+   do
+		if [ "-rwxrwxrwx" != "${distNatures[0]}" ]; then
+      flag=0
+      echo $flag
+	  exit 
+	   fi
+ 	flag=1
+  done
+ 
+ for index in {1..6}
+ do
+  if [ "${srcNatures[$index]}" != "${distNatures[$index]}" ]; then
+    flag=0
+	echo $flag
+    exit
+  fi
+ flag=1
+ done
+
+ echo $flag
+ fi
+fi
+}
+
+

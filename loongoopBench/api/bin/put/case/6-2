@@ -1,6 +1,6 @@
 #!/bin/sh
-`$rmdir leofs:///put6-2 2>/dev/null`
-`$rmdir lefofs:///put6-2dist 2>/dev/null`
-`$mkdir leofs:///put6-2 2>/dev/null`
-ret=`$put leofs:///put6-2 leofs:///put6-2dist 2>&1`
+`$rmdir leofs:///${apiPath}/put6-2 2>/dev/null`
+`$rmdir lefofs:///${apiPath}/put6-2dist 2>/dev/null`
+`$mkdir leofs:///${apiPath}/put6-2 2>/dev/null`
+ret=`$put leofs:///${apiPath}/put6-2 leofs:///${apiPath}/put6-2dist 2>&1`
 checkError $? "$ret" "No such file or directory"

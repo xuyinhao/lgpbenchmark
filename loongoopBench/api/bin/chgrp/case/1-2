@@ -2,4 +2,4 @@
 `groupdel chgrp1-1g  2>/dev/null`
 `$touchz $apiPath/chgrp1-2 2>/dev/null`
 ret=`$chgrp chgrp1-1g $apiPath/chgrp1-2  2>&1`
-checkOk $? "$ret" ""
+checkError $? "$ret" ""

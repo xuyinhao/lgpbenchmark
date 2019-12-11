@@ -7,9 +7,9 @@ rmdir
 df
 cat
 appendToFile
-chgrp
-chmod
-chown
+#chgrp
+#chmod
+#chown
 du
 put
 copyFromLocal

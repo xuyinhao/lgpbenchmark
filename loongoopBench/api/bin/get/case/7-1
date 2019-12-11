@@ -1,6 +1,6 @@
 #!/bin/sh
-filePath="$apiPath/ctl7-1"
+filePath="$apiPath/get7-1"
 realPath=`getLeofsRealPath $filePath`
 touch $realPath
 `$get $filePath $tmpDir 2>/dev/null`
-checkFileNature $? "$tmpDir/ctl7-1" $filePath "1 3 6"
+checkFileNature $? "$tmpDir/get7-1" $filePath "1 3 6"

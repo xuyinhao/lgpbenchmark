@@ -1,3 +1,5 @@
 #!/bin/sh
+## copyToLocal 不存在的数据 到本地 
+LANG=en_US.UTF-8
 ret=`$ctl $apiPath/ctl6-1 $tmpDir 2>&1`
 checkError $? "$ret" "No such file or directory"

@@ -1,4 +1,5 @@
 #!/bin/sh
+## 深层路径的count 检查
 num=50
 deepPath="count_t_d2-1"
 firstPath="$apiPath/$deepPath"

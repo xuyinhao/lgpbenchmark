@@ -3,6 +3,8 @@ function clear(){
   $rm $1 1>/dev/null 2>&1
   $mkdir $1 1>/dev/null 2>&1
 }
+
+# $1 count的路径
 function countOkCheck() {
   ret=`$count $1 2>/dev/null`
   array=($ret)

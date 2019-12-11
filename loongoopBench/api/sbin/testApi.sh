@@ -49,7 +49,10 @@ if [ "" == "$rootPath" ] || [ "" == "$tmpDir" ]; then
  echo "rootPath and tmpDir are not set!"
  exit 0
 fi
+logTime="$(date +'%Y-%m-%d_%T')"
 apiPath="$rootPath/$apiName"
+echo $logTime  $apiName $cases |tee -a /tmp/lgp.log
+
 clearTmpDir $tmpDir
 clearDir $apiPath
-runCase $apiName "${cases}"
+runCase $apiName "${cases}" |tee -a /tmp/lgp.log

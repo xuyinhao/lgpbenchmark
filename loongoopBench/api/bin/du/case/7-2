@@ -1,6 +1,4 @@
 #!/bin/sh
-# du -h 测试
-
 d1="$apiPath/du_t_d1-2"
 reald1=`getLeofsRealPath $d1`
 rm -rf $reald1

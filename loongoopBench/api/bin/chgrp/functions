@@ -32,6 +32,56 @@ function checkOk(){
  fi
  echo $flag
 }
+getFileHdfs(){
+	local hdfsPath="$1"
+	hdfsInfo=`$ls $hdfsPath 2>/dev/null |grep "${1}$" `
+	hdfsInfos=($hdfsInfo)
+	echo ${hdfsInfos[$2]}
+	
+
+}
+getDirHdfs(){
+	local hdfsPath="$1"
+	hdfsPathP="${hdfsPath%/*}" 		#获取path的父级目录
+	hdfsInfo=`$ls $hdfsPathP 2>/dev/null |grep "${1}$"`
+    hdfsInfos=($hdfsInfo)
+    echo ${hdfsInfos[$2]}
+
+}
+############################
+# $1:$? $2:grpname should check 
+# $3:hdfspath    $4:是否为dir路径校验 1,0
+#########################
+function checkOkNeedWinacl(){
+flag=1
+dirPath=$4
+ if `getWinacl`;then
+ 	if [ 0 -eq $1 ];then
+		if [ $dirPath ];then
+			grp=`getDirHdfs $3 3`
+		else
+			grp=`getFileHdfs $3 3`
+		fi
+		if [ "$2" != "$grp" ];then
+			flag=0
+		fi
+	else
+		flag=0
+	fi	
+ 
+ else
+ 	if [ 0 -eq $1 ]; then
+  		grp=`getFileNature $3 3`
+  		if [ "$2" != "$grp" ]; then
+   			flag=0
+  		fi
+ 	else
+  		flag=0
+ 	fi
+
+ fi
+  echo $flag
+}
 
 function checkOkForLocalFile(){
  flag=1
@@ -60,19 +110,22 @@ function checkOkForPath(){
  echo $flag
 }
 
+
 function checkOkForDeepPath(){
  flag=1
  if [ 0 -eq $1 ]; then
-  paths=`$ls -R "$3" 2>&1`
+  paths=`$ls -R "$3" 2>/dev/null |grep ${rootPath} |awk '{print $8}'`
   for pa in $paths
   do
-   `$test -d "$pa" 1>/dev/null 2>&1`
+   $test -d "$pa" >/dev/null 2>&1
    if [ 0 -eq $? ]; then
-    flag=`checkOkForPath $1 "$2" "$pa"`
+    flag=`checkOkNeedWinacl $1 "$2" "$pa" 1`
    else
-    `$test -f "$pa" 1>/dev/null 2>&1`
+    $test -f "$pa" >/dev/null 2>&1
     if [ 0 -eq $? ]; then
-     flag=`checkOk $1 "$2" "$pa"`
+     flag=`checkOkNeedWinacl $1 "$2" "$pa"`
+	else 
+	 flag=0
     fi
    fi
    if [ 0 -eq $flag ]; then

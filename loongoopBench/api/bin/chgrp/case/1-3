@@ -1,7 +1,8 @@
 #!/bin/sh
-`$mkdir $apiPath/chgrp1-3 2>/dev/null`
-`groupadd chgrp1-3g`
-`$chgrp chgrp1-3g $apiPath/chgrp1-3 2>/dev/null`
-checkOkForPath $? "chgrp1-3g" "$apiPath/chgrp1-3"
-`$rmdir $apiPath/chgrp1-3 2>/dev/null`
-`groupdel chgrp1-3g`
+
+groupdel chgrp1-3g
+$mkdir $apiPath/chgrp1-3 2>/dev/null
+groupadd chgrp1-3g
+$chgrp chgrp1-3g $apiPath/chgrp1-3 2>/dev/null
+checkOkNeedWinacl $? "chgrp1-3g" "$apiPath/chgrp1-3" 1
+

@@ -1,12 +1,14 @@
 #!/bin/sh
-`$rm $apiPath/chgrp6-1* 1>/dev/null 2>&1`
-`groupdel chgrp6-1g 2>/dev/null`
-`$touchz $apiPath/chgrp6-1a 2>/dev/null`
-`$touchz $apiPath/chgrp6-1b 2>/dev/null`
-`groupadd chgrp6-1g`
-`$chgrp chgrp6-1g $apiPath/chgrp6-1a $apiPath/chgrp6-1b 2>/dev/null`
+$rm $apiPath/chgrp6-1* 1>/dev/null 2>&1
+groupdel chgrp6-1g 2>/dev/null
+$touchz $apiPath/chgrp6-1a 2>/dev/null
+$touchz $apiPath/chgrp6-1b 2>/dev/null
+groupadd chgrp6-1g
+$chgrp chgrp6-1g $apiPath/chgrp6-1a $apiPath/chgrp6-1b 2>/dev/null
 result=$?
-ret=`checkOk $result "chgrp6-1g" "$apiPath/chgrp6-1a"`
+ret=`checkOkNeedWinacl $result "chgrp6-1g" "$apiPath/chgrp6-1a"`
 if [ 1 -eq $ret ]; then
- checkOk $result "chgrp6-1g" "$apiPath/chgrp6-1b"
+ checkOkNeedWinacl $result "chgrp6-1g" "$apiPath/chgrp6-1b"
+else
+	echo 0
 fi

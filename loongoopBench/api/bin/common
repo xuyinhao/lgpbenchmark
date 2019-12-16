@@ -75,7 +75,7 @@ function getMountPath(){
 #获取loongoop是否设置了winacl
 function getWinacl(){
 	local val
-	val=$(grep -A3 "leofs.permission" ${leofsSitePath} |grep -oP "(?<=<value>)(.*)(?=</value>)" 2>&1)
+	val=$(grep -A3 "leofs.permission<" ${leofsSitePath} |grep -oP "(?<=<value>)(.*)(?=</value>)" 2>&1)
 	if [ $? -eq 0 ];then
 		if [[ "$val" == "true" ]];then
 			winaclIsSet=true

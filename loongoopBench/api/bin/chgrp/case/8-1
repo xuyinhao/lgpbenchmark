@@ -1,9 +1,8 @@
 #!/bin/sh
-filePath="$apiPath/chgrp8-1p/a/b/c"
-`$mkdir -p $filePath 2>/dev/null`
-`$touchz $filePath/chgrp8-1 2>/dev/null`
-`groupadd chgrp8-1g`
-`$chgrp -R "chgrp8-1g" "$apiPath/chgrp8-1p" 2>/dev/null`
+groupdel chgrp8-1g >/dev/null 2>&1
+dirPath="$apiPath/chgrp8-1p/a/b/c"
+$mkdir -p $dirPath >/dev/null 2>&1
+$touchz $dirPath/chgrp8-1 >/dev/null 2>&1
+groupadd chgrp8-1g
+$chgrp -R "chgrp8-1g" "$apiPath/chgrp8-1p" >/dev/null 2>&1
 checkOkForDeepPath $? "chgrp8-1g" "$apiPath/chgrp8-1p"
-`groupdel chgrp8-1g`
-

@@ -1,13 +1,15 @@
 #!/bin/sh
-`$mkdir $apiPath/chgrp6-3a 2>/dev/null`
-`$mkdir $apiPath/chgrp6-3b 2>/dev/null`
-`groupadd chgrp6-3g`
-`$chgrp chgrp6-3g $apiPath/chgrp6-3a $apiPath/chgrp6-3b 2>/dev/null`
+$rm $apiPath/chgrp6-3a > /dev/null 2>&1
+$rmr $apiPath/chagrp6-3b > /dev/null 2>&1
+groupdel chgrp6-3g 2>/dev/null
+$mkdir $apiPath/chgrp6-3a > /dev/null 2>&1
+$mkdir $apiPath/chgrp6-3b > /dev/null 2>&1
+groupadd chgrp6-3g
+$chgrp chgrp6-3g $apiPath/chgrp6-3a $apiPath/chgrp6-3b 2>/dev/null
 result=$?
-ret=`checkOkForPath $result "chgrp6-3g" "$apiPath/chgrp6-3a"`
+ret=`checkOkNeedWinacl $result "chgrp6-3g" "$apiPath/chgrp6-3a" 1`
 if [ 1 -eq $ret ]; then
- checkOkForPath $result "chgrp6-3g" "$apiPath/chgrp6-3b"
+ checkOkNeedWinacl $result "chgrp6-3g" "$apiPath/chgrp6-3b" 1
+else
+	echo 0
 fi
-`$rm $apiPath/chgrp6-3a 1>/dev/null 2>&1`
-`$rmr $apiPath/chagrp6-3b 1>/dev/null 2>&1`
-`groupdel chgrp6-3g`

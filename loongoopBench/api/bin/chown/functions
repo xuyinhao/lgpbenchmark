@@ -12,6 +12,59 @@ function getLocalFileUserAndGroup(){
  echo "$us:$grp"
 }
 
+getFileUserAndGroupOnHdfs(){
+    local hdfsPath="$1"
+    hdfsInfo=`$ls $hdfsPath 2>/dev/null |grep "${1}$" `
+    hdfsInfos=($hdfsInfo)
+	## user:group
+    echo "${hdfsInfos[2]}:${hdfsInfos[3]}"
+}
+
+getDirUserAndGroupOnHdfs(){
+    local hdfsPath="$1"
+    hdfsPathP="${hdfsPath%/*}"      #获取path的父级目录
+    hdfsInfo=`$ls $hdfsPathP 2>/dev/null |grep "${1}$"`
+    hdfsInfos=($hdfsInfo)
+    echo "${hdfsInfos[2]}:${hdfsInfos[3]}"
+}
+
+userAndGroupCheck(){
+	local userAndGroup=$1
+	local ug=$2
+	if [ "$userAndGroup" != "$ug" ]; then
+    	flag=0
+    fi  
+}
+
+
+function checkOkNeedWinacl(){
+	local retFlag=$1
+	local userAndGroup=$2
+	local checkPath=$3
+	local isDirPath=$4
+	flag=1
+	if [ 0 -eq $retFlag ];then
+		if `getWinacl`;then
+			if [ $isDirPath ];then
+				ug=`getDirUserAndGroupOnHdfs $checkPath`
+				userAndGroupCheck $userAndGroup $ug
+			else
+				ug=`getFileUserAndGroupOnHdfs $checkPath`
+				userAndGroupCheck $userAndGroup $ug
+				#if [ "$userAndGroup" != "$ug" ]; then
+                #	flag=0
+            	#fi	 
+			fi
+		else
+			ug=`getFileUserAndGroup $checkPath`
+  			#echo "$ug"
+			userAndGroupCheck $userAndGroup $ug
+		fi
+	else
+		flag=0
+	fi
+ 	echo $flag
+}
 
 function checkOk(){
  flag=1

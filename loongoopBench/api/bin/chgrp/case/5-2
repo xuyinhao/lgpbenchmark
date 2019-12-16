@@ -1,7 +1,7 @@
 #!/bin/sh
-`$rm -f "/chgrp5-2" 1>/dev/null 2>&1`
-`groupdel "chgrp5-2g 2>/dev/null"`
-`$touchz "leofs:///chgrp5-2" 2>/dev/null`
-`groupadd "chgrp5-2g"`
-`$chgrp "chgrp5-2g" "leofs:///chgrp5-2" 2>/dev/null`
-checkOk $? "chgrp5-2g" "/chgrp5-2"
+$rm -f "${apiPath}/chgrp5-2" 1>/dev/null 2>&1
+groupdel "chgrp5-2g" 2>/dev/null
+$touchz "leofs://${apiPath}/chgrp5-2" 2>/dev/null
+groupadd "chgrp5-2g" 
+$chgrp "chgrp5-2g" "leofs://${apiPath}/chgrp5-2" 2>/dev/null
+checkOkNeedWinacl $? "chgrp5-2g" "${apiPath}/chgrp5-2"

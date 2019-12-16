@@ -4,4 +4,4 @@ groupadd chownG1-4 2>/dev/null
 filePath="$apiPath/chown1-4"
 $mkdir $filePath 2>/dev/null
 $chown root:chownG1-4 $filePath 2>/dev/null
-checkOkNeedWinacl $? "root:chownG1-4" $filePath
+checkOkNeedWinacl $? "root:chownG1-4" $filePath 1

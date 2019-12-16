@@ -1,16 +1,16 @@
 #!/bin/sh
+userdel chownU3-2 2>/dev/null
+useradd chownU3-2 2>/dev/null
+
 filedir="$apiPath/chown3-2/a/b/c"
 filePath="$filedir/chown3-2"
-`$mkdir -p $filedir 2>/dev/null`
-`$touchz $filePath 2>/dev/null`
-`useradd chownU3-2 2>/dev/null`
-`$chown -R "chownU3-2:root" $apiPath/chown3-2 2>/dev/null`
-ret=`checkOkForDeepPath $? "chownU3-2:root" "$apiPath/chown3-2"`
+$mkdir -p $filedir 2>/dev/null
+$touchz $filePath 2>/dev/null
+$chown -R "chownU3-2:root" $apiPath/chown3-2 2>/dev/null
+
+ret=`checkOkForDeepPathNeedWinacl $? "chownU3-2:root" "$apiPath/chown3-2"`
 if [ 1 -eq $ret ]; then
- checkOk 0 "chownU3-2:root" $filePath
+ checkOkNeedWinacl 0 "chownU3-2:root" $filePath
 else
  echo 0
 fi
-`$rm -f $filePath 1>/dev/null 2>&1`
-`$rmdir $apiPath/chown* 2>/dev/null`
-`userdel chownU3-2`

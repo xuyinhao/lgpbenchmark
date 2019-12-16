@@ -1,4 +1,6 @@
 #!/bin/sh
+## 不存在的组 chown
 `$touchz $apiPath/chown5-3 2>/dev/null`
 ret=`$chown root:chownG5-3 $apiPath/chown5-3 2>&1`
-checkError $? "$ret" "chown: invalid group"
+#checkError $? "$ret" "chown: invalid group"
+checkOkNeedWinacl $? "root:chownG5-3" "$apiPath/chown5-3"

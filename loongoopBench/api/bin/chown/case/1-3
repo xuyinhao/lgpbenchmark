@@ -1,7 +1,8 @@
 #!/bin/sh
 userdel chownU1-3 2>/dev/null
 useradd chownU1-3 2>/dev/null
+
 filePath="$apiPath/chown1-3"
 $mkdir $filePath 1>/dev/null 2>&1
 $chown chownU1-3:root $filePath 2>/dev/null
-checkOkNeedWinacl $? "chownU1-3:root" $filePath
+checkOkNeedWinacl $? "chownU1-3:root" $filePath 1

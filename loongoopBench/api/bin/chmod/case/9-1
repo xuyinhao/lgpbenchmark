@@ -1,6 +1,6 @@
 #!/bin/sh
 filePath="$apiPath/chmod9-1"
-`$touchz $filePath 2>/dev/null`
-`$chmod 777 $filePath 2>/dev/null`
-`$chmod o-r,g-r $filePath 2>/dev/null`
-checkOk $? 733 $filePath
+$touchz $filePath 2>/dev/null
+$chmod 477 $filePath 2>/dev/null
+$chmod o-r,g-r $filePath 2>/dev/null
+checkOkNeedWinacl $? 433 $filePath

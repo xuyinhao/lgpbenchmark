@@ -14,7 +14,7 @@ function getLocalFileUserAndGroup(){
 
 getFileUserAndGroupOnHdfs(){
     local hdfsPath="$1"
-    hdfsInfo=`$ls $hdfsPath 2>/dev/null |grep "${1}$" `
+    hdfsInfo=`$ls $hdfsPath 2>/dev/null  `
     hdfsInfos=($hdfsInfo)
 	## user:group
     echo "${hdfsInfos[2]}:${hdfsInfos[3]}"
@@ -95,6 +95,35 @@ function checkOkForLocalPath(){
 
 }
 
+function checkOkForDeepPathNeedWinacl(){
+	local flag=1
+	local retFlag=$1
+	local userAndGroup=$2
+	local path=$3	
+	
+	if [ 0 -eq $retFlag ];then
+		paths=`$ls -R "$3" 2>/dev/null |grep ${rootPath} |awk '{print $8}'`
+		for pa in $paths
+		do
+			$test -d "$pa" >/dev/null 2>&1
+   			if [ 0 -eq $? ]; then
+    			flag=`checkOkNeedWinacl $retFlag "$userAndGroup" "$pa" 1`
+   			else
+    			$test -f "$pa" >/dev/null 2>&1
+    			if [ 0 -eq $? ]; then
+     				flag=`checkOkNeedWinacl $retFlag "$userAndGroup" "$pa"`
+    			else
+     				flag=0
+    			fi
+			fi
+		done
+	else
+		flag=0
+	fi
+	echo $flag
+}
+
+##暂时不用了 使用checkOkForDeepPathNeedWinacl
 function checkOkForDeepPath(){
  flag=1
  if [ 0 -eq $1 ]; then

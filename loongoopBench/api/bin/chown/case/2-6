@@ -1,9 +1,8 @@
 #!/bin/sh
+groupdel $str
 str=`genString 32`
-`groupadd $str 2>/dev/null`
+groupadd $str 2>/dev/null
 filePath="$apiPath/chown2-6"
-`$touchz $filePath 2>/dev/null`
-`$chown root:${str} $filePath 2>/dev/null`
-checkOk $? "root:${str}" $filePath
-`$rm -f $filePath 1>/dev/null 2>&1`
-`groupdel $str`
+$touchz $filePath 2>/dev/null
+$chown root:${str} $filePath 2>/dev/null
+checkOkNeedWinacl $? "root:${str}" $filePath

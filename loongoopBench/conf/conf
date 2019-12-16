@@ -1,0 +1,18 @@
+#!/bin/sh
+##common conf
+loongoopPath="/loongoop/loongoop-1.0.4-v2.7.2"
+leofsSitePath="${loongoopPath}/etc/hadoop/leofs-site.xml"
+coreSitePath="${loongoopPath}/etc/hadoop/core-site.xml"
+exampleJarPath="${loongoopPath}/share/hadoop/mapreduce/hadoop-mapreduce-examples-2.7.2.jar"
+testJarPath="${loongoopPath}/share/hadoop/mapreduce/hadoop-mapreduce-client-jobclient-2.7.2-tests.jar"
+
+## api conf
+rootPath="/testxyh"
+tmpDir="/opt/tmpDir"
+loongoopfs="${loongoopPath}/bin/hadoop fs"
+
+## wordcount conf
+nodeList="master slave1 slave2"			#节点
+wordcount_filePath="/wordscount" 		#hdfs path
+reduceNum=2								#wordcount MR reduce num
+

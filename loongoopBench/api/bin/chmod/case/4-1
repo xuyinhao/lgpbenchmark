@@ -1,5 +1,5 @@
 #!/bin/sh
-`$touchz leofs:///chmod4-1 2>/dev/null`
-`$chmod 755 leofs:///chmod4-1 2>/dev/null`
-checkOk $? 755 "/chmod4-1"
-`$rm -f leofs:///chmod4-1 1>/dev/null 2>&1`
+$touchz leofs:///chmod4-1 2>/dev/null
+$chmod 755 leofs:///chmod4-1 2>/dev/null
+checkOkNeedWinacl $? 755 "/chmod4-1"
+$rm -f leofs:///chmod4-1 1>/dev/null 2>&1

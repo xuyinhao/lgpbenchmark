@@ -1,9 +1,8 @@
 #!/bin/sh
-`groupadd chownG2-2 2>/dev/null`
+groupdel chownG2-2 2>/dev/null
+groupadd chownG2-2 2>/dev/null
 str=`genString 247`
 filePath="$apiPath/chown2-2$str"
-`$touchz $filePath 2>/dev/null`
-`$chown root:chownG2-2 $filePath 2>/dev/null`
-checkOk $? "root:chownG2-2" $filePath
-`$rm -f $filePath 1>/dev/null 2>&1`
-`groupdel chownG2-2`
+$touchz $filePath 2>/dev/null
+$chown root:chownG2-2 $filePath 2>/dev/null
+checkOkNeedWinacl $? "root:chownG2-2" $filePath

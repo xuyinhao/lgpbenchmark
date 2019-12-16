@@ -1,7 +1,7 @@
 #!/bin/sh
 path=`dirname $0`
 path=`cd $path;cd "..";pwd`
-. "${path}/conf/conf"
+. "${path}/../conf/conf"
 . "${path}/bin/commands"
 . "${path}/bin/common"
 caseConfDir="$path/conf/caseConf"

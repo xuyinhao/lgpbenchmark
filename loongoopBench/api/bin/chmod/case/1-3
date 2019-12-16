@@ -1,0 +1,5 @@
+#!/bin/sh
+filePath="$apiPath/chmod1-3"
+`$touchz $filePath 2>/dev/null`
+`$chmod 000 $filePath 2>/dev/null`
+checkOkNeedWinacl $? 000 $filePath

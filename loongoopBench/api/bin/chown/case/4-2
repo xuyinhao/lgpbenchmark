@@ -1,6 +1,6 @@
 #!/bin/sh
-`useradd chownU4-2 2>/dev/null`
-`$touchz file:///chown4-2 2>/dev/null`
-`$chown chownU4-2:root file:///chown4-2 2>/dev/null`
-checkOkForLocalPath $? "chownU4-2:root" "/chown4-2"
-`userdel chownU4-2`
+userdel chownU4-2 2>/dev/null
+useradd chownU4-2 2>/dev/null
+$touchz file://${tmpDir}/chown4-2 2>/dev/null
+$chown chownU4-2:root file://${tmpDir}/chown4-2 2>/dev/null
+checkOkForLocalPath $? "chownU4-2:root" "${tmpDir}/chown4-2"

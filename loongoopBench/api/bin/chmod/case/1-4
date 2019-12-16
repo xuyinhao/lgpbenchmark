@@ -1,0 +1,5 @@
+#!/bin/sh
+filePath="$apiPath/chmod1-4"
+$mkdir $filePath 2>/dev/null
+$chmod 701 $filePath 2>/dev/null
+checkOkNeedWinacl $? 701 $filePath 1

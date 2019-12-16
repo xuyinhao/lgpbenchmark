@@ -8,11 +8,13 @@ cpath=`dirname $0`
 cpath=`cd "${cpath}";cd "..";pwd`
 spath=`dirname $0`
 spath=`cd "${spath}";cd "../..";pwd`
-if [ ! -f ${cpath}/conf/conf ]; then
-    echo "conf is not exist !"
+if [ ! -f ${cpath}/../conf/conf ]; then
+    echo "conf is not exist !" |tee -a $WC_LOG
     exit 0
 fi
-. ${cpath}/conf/conf
+. ${cpath}/../conf/conf
+WC_LOG=/tmp/lgp-wc.log
+
 nodes=(${nodeList})
 `java -jar ${spath}/lib/benchmark-loongoop.jar createPath`
 
@@ -22,13 +24,13 @@ for node in ${nodes[@]} ; do
  index=`expr ${index} + 1`
 done
 wait
-echo "write file success"
+echo "write file success"|tee -a $WC_LOG
 fileExit=`${loongoopPath}/bin/hadoop fs -test -d wordcountOutput 1>/dev/null 2>&1`
 if [ 0 -eq $? ]; then
-  `${loongoopPath}/bin/hadoop fs -rm -R wordcountOutput 1>/dev/null 2>&1`
+  ${loongoopPath}/bin/hadoop fs -rm -R wordcountOutput 1>/dev/null 2>&1
 fi
-`${loongoopPath}/bin/hadoop jar ${exampleJarPath} wordcount -D mapreduce.job.reduces=${reduceNum}  ${wordcount_filePath} wordcountOutput`
-`rm -f ${cpath}/output 1>/dev/null 2>&1`
-`touch ${cpath}/output 1>/dev/null 2>&1`
-`${loongoopPath}/bin/hadoop fs -cat wordcountOutput/* > ${cpath}/output 1>/dev/null 2>&1`
-echo "`java -jar ${spath}/lib/benchmark-loongoop.jar wordscheck`"
+${loongoopPath}/bin/hadoop jar ${exampleJarPath} wordcount -D mapreduce.job.reduces=${reduceNum}  ${wordcount_filePath} wordcountOutput
+rm -f ${cpath}/output 1>/dev/null 2>&1
+touch ${cpath}/output 1>/dev/null 2>&1
+${loongoopPath}/bin/hadoop fs -cat wordcountOutput/* > ${cpath}/output 1>/dev/null 2>&1
+echo "`java -jar ${spath}/lib/benchmark-loongoop.jar wordscheck`"|tee -a $WC_LOG

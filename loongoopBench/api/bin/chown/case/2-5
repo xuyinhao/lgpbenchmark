@@ -1,9 +1,8 @@
 #!/bin/sh
+userdel $str 2>/dev/null
 str=`genString 32`
-`useradd $str 2>/dev/null`
+useradd $str 2>/dev/null
 filePath="$apiPath/chown2-5"
-`$touchz $filePath 2>/dev/null`
-`$chown ${str}:root $filePath 2>/dev/null`
-checkOk $? "${str}:root" $filePath
-`$rm -f $filePath 1>/dev/null 2>&1`
-`userdel $str`
+$touchz $filePath 2>/dev/null
+$chown ${str}:root $filePath 2>/dev/null
+checkOkNeedWinacl $? "${str}:root" $filePath

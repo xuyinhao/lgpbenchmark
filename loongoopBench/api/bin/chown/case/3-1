@@ -1,12 +1,13 @@
 #!/bin/sh
+userdel chownU3-1 2>/dev/null
+useradd chownU3-1 2>/dev/null
+
 filedir="$apiPath/chown3-1/a/b/c"
 filePath="$filedir/chown3-1"
-`$mkdir -p $filedir 2>/dev/null`
-`$touchz $filePath 2>/dev/null`
-`useradd chownU3-1 2>/dev/null`
-`$chown "chownU3-1:root" $filePath 2>/dev/null`
-checkOk $? "chownU3-1:root" $filePath
-`$rm -f $filePath 1>/dev/null 2>&1`
-`$rmdir $filedir 2>/dev/null`
-`userdel chownU3-1`
+
+$mkdir -p $filedir 2>/dev/null
+$touchz $filePath 2>/dev/null
+$chown "chownU3-1:root" $filePath 2>/dev/null
+
+checkOkNeedWinacl  $? "chownU3-1:root" $filePath
 

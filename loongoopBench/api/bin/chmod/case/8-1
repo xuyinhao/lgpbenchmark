@@ -1,7 +1,7 @@
 #!/bin/sh
 filePath="$apiPath/chmod8-1"
-`$touchz $filePath 2>/dev/null`
-`$chmod 777 $filePath 2>/dev/null`
-`$chmod 777 $filePath 2>/dev/null`
-`$chmod 777 $filePath 2>/dev/null`
-checkOk $? 777 $filePath
+$touchz $filePath 2>/dev/null
+$chmod 077 $filePath 2>/dev/null
+$chmod 077 $filePath 2>/dev/null
+$chmod 077 $filePath 2>/dev/null
+checkOkNeedWinacl $? 077 $filePath

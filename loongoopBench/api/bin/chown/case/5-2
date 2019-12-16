@@ -1,4 +1,6 @@
 #!/bin/sh
+## chown不存在的用户，也可以的
 `$touchz $apiPath/chown5-2 2>/dev/null`
 ret=`$chown chownU5-2:root $apiPath/chown5-2 2>&1`
-checkError $? "$ret" "chown: invalid user"
+#checkError $? "$ret" "chown: invalid user"
+checkOkNeedWinacl $? "chownU5-2:root" "$apiPath/chown5-2"

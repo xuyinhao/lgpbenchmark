@@ -3,7 +3,7 @@ dirPath="$apiPath/chgrp3-1p/a/b/c"
 $mkdir -p $dirPath 2>/dev/null
 $touchz $dirPath/chgrp3-1 2>/dev/null
 groupdel chgrp3-1g 2>/dev/null
-groupadd chgrp3-1g
+groupadd chgrp3-1g 2>/dev/null
 $chgrp chgrp3-1g $dirPath/chgrp3-1 2>/dev/null
 ret=`checkOkNeedWinacl $? "chgrp3-1g" "$dirPath/chgrp3-1"`
 if [ 1 -eq $ret ]; then

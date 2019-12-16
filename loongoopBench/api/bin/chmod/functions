@@ -9,6 +9,44 @@ function getLocalFileMode(){
  mode=`stat -c %a $1`
  echo $mode
 }
+## get hdfs path permission
+## stat %a 暂时不支持获取？
+genNumByRwx(){
+	local rwxValue=$1
+	local modeNum
+	o_num=0
+	for i in  "${1:0:3}"  "${1:3:3}" "${1:6:3}"
+	do
+		num=0
+		if [[ "$i" =~ "r" ]];then
+			let num+=4
+		fi
+		if [[ "$i" =~ "w" ]];then
+			let num+=2
+		fi
+		if [[ "$i" =~ "x" ]];then
+			let num+=1
+		fi
+		modesum[$o_num]=$num
+		let o_num+=1
+	done
+	echo ${modesum[0]}${modesum[1]}${modesum[2]}
+}
+getDirOnHdfs(){
+	local hdfsPath="$1"
+    hdfsPathP="${hdfsPath%/*}"      #获取path的父级目录
+    hdfsInfo=`$ls $hdfsPathP 2>/dev/null |grep "${1}$"`
+    hdfsInfos=($hdfsInfo)
+    genNumByRwx ${hdfsInfos[0]:1:9}
+}
+
+getFileOnHdfs(){
+	local hdfsPath="$1"
+    hdfsInfo=`$ls $hdfsPath 2>/dev/null `
+    hdfsInfos=($hdfsInfo)
+    genNumByRwx ${hdfsInfos[0]:1:9}
+}
+
 
 function checkOk(){
  flag=1
@@ -21,6 +59,40 @@ function checkOk(){
   flag=0
  fi
  echo $flag
+}
+function checkOkNeedWinacl(){
+	local flag=1
+	local retFlag=$1
+	local modInfo=$2
+	local path=$3
+	local isDirPath=$4
+	
+	if [ 0 -eq $retFlag ];then
+		if [ `getWinacl` ];then
+			##winacl=true , check by hdfs info
+			if [ $isDirPath ];then
+				modGet=`getDirOnHdfs $path`	
+				if [ $modInfo -ne $modGet ]; then
+                flag=0
+            fi
+			else 
+				modGet=`getFileOnHdfs $path`
+				if [ $modInfo -ne $modGet ]; then
+                flag=0
+            	fi
+			fi
+		else
+			## winacl=false, check by nature datapool
+			modGet=`getFileMode $3`
+			if [ $modInfo -ne $modGet ]; then
+				flag=0
+  			fi
+		fi
+	else
+		flag=0
+	fi
+	echo $flag	
+
 }
 
 function checkOkForLocalFile(){

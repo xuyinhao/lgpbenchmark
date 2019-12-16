@@ -1,5 +1,5 @@
 #!/bin/sh
 filePath="$apiPath/chmod3-1!@#$%^&\*()_+\{}-=\[];\"\\|<>\?,.'"
-`$touchz $filePath 2>/dev/null`
-`$chmod 777 $filePath 2>/dev/null`
-checkOk $? 777 "$apiPath/chmod3-1!@#$%^&*()_+\{}-=\[];\"|<>?,.'"
+$touchz "$filePath" 2>/dev/null
+$chmod 577 "$filePath" 2>/dev/null
+checkOkNeedWinacl $? 577 "$apiPath/chmod3-1\!@#$%^&*()_+\{}-=\[];\"|<>?,.'"

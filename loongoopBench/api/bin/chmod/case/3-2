@@ -1,11 +1,11 @@
 #!/bin/sh
 filePath1="$apiPath/chmod3-2aaa"
 filePath2="$apiPath/chmod3-2Aaa"
-`$touchz $filePath1 $filePath2 2>/dev/null`
-`$chmod 777 $filePath1 2>/dev/null`
-ret=`checkOk $? 777 $filePath1`
+$touchz $filePath1 $filePath2 2>/dev/null
+$chmod 577 $filePath1 2>/dev/null
+ret=`checkOkNeedWinacl $? 577 $filePath1`
 if [ 1 -eq $ret ]; then
- ret=`checkOk 0 777 $filePath2`
+ ret=`checkOkNeedWinacl 0 577 $filePath2`
  if [ 0 -eq $ret ];then
   echo 1
  else

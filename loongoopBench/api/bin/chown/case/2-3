@@ -1,9 +1,8 @@
 #!/bin/sh
-`useradd chownU2-3 2>/dev/null`
+userdel chownU2-3 2>/dev/null
+useradd chownU2-3 2>/dev/null
 str=`genString 247`
 filePath="$apiPath/chown2-3$str"
-`$mkdir $filePath 2>/dev/null`
-`$chown chownU2-3:root $filePath 2>/dev/null`
-checkOk $? "chownU2-3:root" $filePath
-`$rmr $filePath 1>/dev/null 2>&1`
-`userdel chownU2-3`
+$mkdir $filePath 2>/dev/null
+$chown chownU2-3:root $filePath 2>/dev/null
+checkOkNeedWinacl $? "chownU2-3:root" $filePath 1

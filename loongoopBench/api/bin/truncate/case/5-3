@@ -1,0 +1,9 @@
+#!/bin/bash
+## 截取一个长文件名文件，255字节长度
+ 
+nfilePath=${apiPath}/`genString 255`
+touch8kLeoFile $nfilePath
+$truncate 1001 $nfilePath  >/dev/null 2>&1
+checkLenAndValueOk $? 1001  $nfilePath
+
+

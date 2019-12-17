@@ -1,0 +1,13 @@
+#!/bin/bash
+## 截取一个特殊字符的文件,含有中文
+nfilePath="${apiPath}/tc-5-2.中文!@#$%^&\*()_+\{}-=\[];\"\\|<>\?,.'"
+touch8kLeoFile "${apiPath}/tc-5-2.中文!@#$%^&*()_+{}-=[];\"|<>?,.'"
+
+$truncate 8001 $nfilePath   >/dev/null 2>&1
+checkLenAndValueOk $? 8001  "${apiPath}/tc-5-2.中文!@#$%^&*()_+{}-=[];\"|<>?,.'"
+
+
+## filePath="$apiPath/touchz!@#$%^&\*()_+\{}-=\[];\"\\|<>\?,.'"
+#`$touchz $filePath 2>/dev/null`
+# checkOk $? "$apiPath/touchz!@#$%^&*()_+{}-=\[];\"\|<>\?,.'"
+##

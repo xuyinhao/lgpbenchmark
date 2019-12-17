@@ -1,0 +1,12 @@
+#!/bin/bash
+## 截取一个深层路径的文件 
+ndirPath=${apiPath}/a/b/c/d/e
+$mkdir -p $ndirPath >/dev/null  2>&1
+nfileName=tc-5-1
+
+touch8kLeoFile $ndirPath/$nfileName
+
+$truncate 8001 $ndirPath/$nfileName  >/dev/null 2>&1
+checkLenAndValueOk $? 8001  $ndirPath/$nfileName
+
+

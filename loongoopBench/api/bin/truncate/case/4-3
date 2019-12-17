@@ -1,0 +1,8 @@
+#!/bin/bash
+## 截取一个leofs相对路径的文件 fs -truncate file
+$mkdir -p test >/dev/null 2>&1
+nfilePath=tc4-3
+touch8kLeoFile $nfilePath
+ret=`$truncate 8000 $nfilePath  2>&1`
+checkLenAndValueOk $? 8000 $nfilePath
+

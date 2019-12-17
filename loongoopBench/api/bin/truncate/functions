@@ -1,0 +1,111 @@
+#!/bin/bash
+
+## 在datapool下面创建一个文件
+function touch8kLeoFile(){
+	filePath=`getLeofsRealPath "$1"`
+	local fileName=`basename "$1"`
+	str=`genString 8192`
+	echo $str > $filePath
+	rm -rf ${tmpDir}/$fileName; echo y | cp  $filePath ${tmpDir}/$fileName > /dev/null 2>&1
+	#echo "$1"
+}
+
+## file:///本地目录创建一个文件
+function touch1kLocalFile(){
+	local filePath="$1"
+    local str=`genString 1024`
+    echo $str > $filePath
+}
+
+
+function touch10MLeoFile(){
+	filePath=`getLeofsRealPath "$1"`
+    str=`genString 10240`
+	for i in {1..1000}
+	do
+    	echo $str >> $filePath
+	done
+#    echo "$1"
+}
+getNatureLen(){
+	local filePath=`getLeofsRealPath "$1"`
+	len=`ls -l $filePath |awk '{print $5}'`
+	echo $len
+}
+checkLen(){
+	local len1=$1
+	local len2=$2
+	if [ $len1 -eq  $len2 ];then
+		echo 1
+	else
+		echo 0
+	fi
+}
+
+## 只能当测试文件是8K时才可以使用。[touch8kLeoFile]
+## 检查长度并检查内容和本地truncate是否一致
+function checkLenAndValueOk(){
+	local flag=1
+	local retFlag=$1
+    local slen=$2
+    local path=$3
+	fileName=`basename $path`
+	if [ 0 -eq $retFlag ];then
+	  if [ $(checkOk $retFlag $slen $path) ];then
+		truncate --size $slen ${tmpDir}/$fileName 
+		if [ $? -ne 0 ];then echo 0;return 1;fi
+		diff ${tmpDir}/$fileName `getLeofsRealPath $path` >/dev/null 2>&1
+		if [ $? -eq 0 ];then
+  			flag=1
+		else
+			flag=0
+		fi
+	  else
+		flag=0
+	  fi
+	else
+	  flag=0
+	fi
+	echo $flag
+}
+
+## 检查文件的长度是否被truncate正确
+## 
+function checkOk(){
+	flag=1
+	local retFlag=$1
+	local slen=$2
+	local path=$3
+	if [ 0 -eq $retFlag ];then
+		ret=$(getNatureLen  $path)
+		if [ $slen -eq $ret ];then
+        	flag=1
+		else	
+			flag=0
+		fi
+	else
+		flag=0
+	fi
+
+	echo $flag
+}
+
+## 检查错误反馈，并比较 错误信息
+## $1 :ret   $2 : real message,  $3: should message info 
+function checkError(){
+	flag=1
+	local retFlag=$1
+	local rMsg=$2
+	local sMsg=$3
+	if [ $retFlag -eq 0 ];then
+		flag=0
+	else
+		if [[ "$rMsg" =~ "$sMsg" ]];then
+			flag=1
+		else
+			flag=0
+		fi
+	fi
+	echo $flag
+}
+

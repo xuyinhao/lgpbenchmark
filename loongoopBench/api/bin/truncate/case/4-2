@@ -1,0 +1,7 @@
+#!/bin/bash
+## 截取一个leofs绝对路径文件 leofs://
+nfilePath=${apiPath}/tc4-2
+touch8kLeoFile $nfilePath
+ret=`$truncate 700 leofs://$nfilePath  2>&1`
+checkLenAndValueOk $? 700 $nfilePath
+

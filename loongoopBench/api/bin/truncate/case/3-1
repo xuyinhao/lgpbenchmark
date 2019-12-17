@@ -1,0 +1,24 @@
+#!/bin/bash
+## 截取多个文件
+
+DO_NUM=5
+genPath=""
+
+for i in $(seq 1 $DO_NUM)
+do
+	nfilePath[$i]=${apiPath}/tc3-1.$i
+	touch8kLeoFile ${nfilePath[$i]} &
+	genPath=$( echo -e $genPath  ${nfilePath[$i]})
+done
+wait
+$truncate 4096 $genPath >/dev/null 2>&1
+
+for j in $(seq 1 $DO_NUM)
+do
+	rett=`checkLenAndValueOk $? 4096 ${nfilePath[$j]}`
+	if [ $rett -ne 1 ];then
+		echo 0 
+		break
+	fi
+done
+echo $rett

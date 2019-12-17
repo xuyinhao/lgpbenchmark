@@ -1,0 +1,7 @@
+#!/bin/bash
+## 截取文件大于当前大小
+ndirPath=${apiPath}/tc6-2d
+$mkdir -p $ndirPath >/dev/null 2>&1
+ret=`$truncate 0 $ndirPath  2>&1`
+checkError $? "$ret" "Is a directory"
+

@@ -1,0 +1,8 @@
+#!/bin/bash
+## 生成8K文件，然后截取为4K
+nfilePath=${apiPath}/tc1-1
+touch8kLeoFile $nfilePath
+ret=`$truncate 4096 $nfilePath >/dev/null 2>&1`
+checkLenAndValueOk $? 4096 $nfilePath
+
+

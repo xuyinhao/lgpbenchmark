@@ -1,0 +1,6 @@
+#!/bin/bash
+## 截取路径不存在
+ndirPath=${apiPath}/tc6-3n
+ret=`$truncate 2 $ndirPath  2>&1`
+checkError $? "$ret" "No such file or directory"
+

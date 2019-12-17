@@ -1,0 +1,7 @@
+#!/bin/bash
+## 截取一个本地文件 file:///
+nfilePath1=${tmpDir}/tc4-1
+touch1kLocalFile $nfilePath1
+ret=`$truncate 700 file://$nfilePath1  2>&1`
+checkError $? "$ret" "truncate: Not supported"
+

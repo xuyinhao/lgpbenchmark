@@ -1,0 +1,20 @@
+#!/bin/bash
+## 截取多个文件,，中间的文件不存在
+nfilePath1=${apiPath}/tc3-2.1
+nfilePath2=${apiPath}/tc3-2.2		#not touch
+nfilePath3=${apiPath}/tc3-2.3
+touch8kLeoFile $nfilePath1
+touch8kLeoFile $nfilePath3
+$truncate 7777 $nfilePath1 $nfilePath2 $nfilePath3 >/dev/null 2>&1
+if [ $? -eq 1 ];then  			#因为有不存在的目录，所以会return 1
+	rett=`checkLenAndValueOk 0  7777 $nfilePath3`
+	if [ $rett -eq 1 ];then
+		checkLenAndValueOk $? 7777 $nfilePath1
+	else
+		echo 0
+	fi
+else
+	echo 0
+fi
+
+

@@ -1,0 +1,14 @@
+#!/bin/bash
+## 生成10M文件，然后截取为1K,再0
+nfilePath=${apiPath}/tc1-2
+touch10MLeoFile $nfilePath
+ret=`$truncate 1024 $nfilePath >/dev/null 2>&1`
+rett=`checkOk $? 1024 $nfilePath 2>&1`
+if [ $rett -eq 1 ];then
+	ret=`$truncate 0 $nfilePath >/dev/null 2>&1`
+    checkOk $? 0 $nfilePath
+else
+	echo 0
+fi
+
+

@@ -1,0 +1,8 @@
+#!/bin/bash
+## 截取文件大于当前大小
+nfilePath=${apiPath}/tc6-1
+touch8kLeoFile $nfilePath
+
+ret=`$truncate 9999 $nfilePath  2>&1`
+checkError $? "$ret" "Cannot truncate to a larger file size"
+

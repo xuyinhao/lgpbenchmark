@@ -1,0 +1,9 @@
+#!/bin/bash
+## 截取一个长文件名文件，256字节长度
+ ## 暂未实现
+
+nfilePath=${apiPath}/tc5-4.`genString 250`
+$truncate 101 $nfilePath  >/dev/null 2>&1
+checkError $?   $nfilePath
+
+

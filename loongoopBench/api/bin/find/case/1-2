@@ -1,0 +1,11 @@
+#!/bin/bash
+##
+nfilePath="${apiPath}/find-1-2.中文!@#$%^&\*()_+\{}-=\[];\"\\|<>\?,.'f"
+ndirPath="${apiPath}/find-1-2.中文!@#$%^&\*()_+\{}-=\[];\"\\|<>\?,.'d"
+
+$touchz $nfilePath 2>/dev/null
+$mkdir -p  $ndirPath  2>/dev/null
+
+rett=`$find ${apiPath} -name "find-1-2.中文!@#$%^&\*()_+\{}-=\[];\"\\|<>\?,.'*" 2>&1`
+checkOk $? "$rett" $apiPath "find-1-2*"
+

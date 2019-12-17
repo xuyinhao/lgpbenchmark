@@ -1,0 +1,11 @@
+#!/bin/bash
+##
+nfilePath1=${apiPath}/FIND4-4.f1
+ndirPath1=${apiPath}/FIND4-4.d1
+
+$touchz $nfilePath1   2>/dev/null
+$mkdir -p  $ndirPath1   2>/dev/null
+
+rett=`$find ${apiPath} -iname "find4-4*" 2>&1`
+checkOk $? "$rett" ${apiPath} "FIND4-4*" 
+

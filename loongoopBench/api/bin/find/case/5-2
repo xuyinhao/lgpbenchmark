@@ -1,0 +1,7 @@
+#!/bin/bash
+##
+nfilePath1=${apiPath}/find5-2.f1
+
+rett=`$find ${apiPath} -name "find5-2*"  2>&1`
+checkOk $? "$rett" "${apiPath}" "find5-2*"
+

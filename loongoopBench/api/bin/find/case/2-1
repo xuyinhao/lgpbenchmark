@@ -1,0 +1,14 @@
+#!/bin/bash
+##
+deepPath=${apiPath}/a/b/c/d/e/f
+$mkdir -p $deepPath 2>/dev/null
+
+nfilePath1=${deepPath}/fd2-1f
+ndirPath1=${deepPath}/fd2-1d
+
+$touchz $nfilePath1  2>/dev/null
+$mkdir -p  $ndirPath1  2>/dev/null
+
+rett=`$find ${apiPath} -name "fd2-1*" 2>&1`
+checkOk $? "$rett" $apiPath "fd2-1*"
+

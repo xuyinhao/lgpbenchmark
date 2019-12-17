@@ -1,0 +1,122 @@
+#!/bin/bash
+checkNumEqual(){
+	if [ $1 -ne $2 ];then
+		echo 0
+	else 
+		echo 1
+	fi
+}
+## $1:retFlag $2:retinfo  $3:find path
+checkOk(){
+	flag=1
+	local retFlag=$1
+	local retInfo="$2"
+	local filePath=$3
+	local findKey=$4
+ if [ $retFlag -eq 0 ];then
+	natureFilePath=`getLeofsRealPath $filePath`
+	sWcNum=`find  $natureFilePath -name $findKey |wc -l`
+	rWcNum=`echo $retInfo |wc -w` 		#路径不可以有空格
+	retN=`checkNumEqual $sWcNum $rWcNum`
+
+	if [ $retN -ne 1 ];then
+		echo 0
+		exit 1
+	fi
+	LeoFind=$(find  $natureFilePath -name $findKey)
+		for j in $retInfo
+		do
+		  if [[ "$LeoFind" =~ "$j" ]];then
+			:
+			else
+				echo 0
+				exit 1
+		  fi
+		done		
+ else
+	flag=0
+ fi
+ echo $flag
+}
+
+checkOkPrint0(){
+ flag=1
+    local retFlag=$1
+    local retInfo="$2"
+    local filePath=$3
+    local findKey=$4
+ if [ $retFlag -eq 0 ];then
+    natureFilePath=`getLeofsRealPath $filePath`
+    sWcNum=`find  $natureFilePath -name $findKey -print0 |wc -w`
+    rWcNum=`echo $retInfo |wc -w`       #路径不可以有空格
+    retN=`checkNumEqual $sWcNum $rWcNum`
+	if [ $retN -eq 1 ];then
+		flag=1
+	else
+		flag=0
+	fi
+  else
+	flag=0
+  fi
+  echo $flag
+}
+
+checkOkByFs(){
+	flag=1
+	local retFlag=$1
+    local retInfo="$2"
+    local filePath=$3
+    local findKey=$4
+	local FS=$5
+	if [ "$FS" == "leofs" ];then
+		filePath=`getLeofsRealPath $filePath`
+	else
+		filePath=$filePath
+	fi
+	
+	if [ $retFlag -eq 0 ];then
+		sWcNum=`find  $filePath  -name $findKey |wc -l`
+    	rWcNum=`echo $retInfo |wc -w`       #路径不可以有空格
+    	retN=`checkNumEqual $sWcNum $rWcNum`
+		
+		if [ $retN -ne 1 ];then
+        	echo 0
+        	exit 1
+	    fi
+    		LeoFind=$(find  $filePath -name $findKey)
+        for j in $retInfo
+        do
+          if [[ "$LeoFind" =~ "${j:8}" ]];then
+            :
+            else
+                echo 0
+                exit 1
+          fi
+        done
+	
+	else
+		flag=0
+	fi
+	echo $flag
+}
+## 检查错误反馈，并比较 错误信息
+## $1 :ret   $2 : real message,  $3: should message info 
+function checkError(){
+    flag=1
+    local retFlag=$1
+    local rMsg=$2
+    local sMsg=$3
+    if [ $retFlag -eq 0 ];then
+        flag=0
+    else
+        if [[ "$rMsg" =~ "$sMsg" ]];then
+            flag=1
+        else
+            flag=0
+        fi
+    fi
+    echo $flag
+}
+
+
+

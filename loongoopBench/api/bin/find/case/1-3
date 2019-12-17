@@ -1,0 +1,12 @@
+#!/bin/bash
+##
+str=`genString 250`
+nfilePath1=${apiPath}/fd13f${str}
+ndirPath1=${apiPath}/fd13d${str}
+
+$touchz $nfilePath1   2>/dev/null
+$mkdir -p  $ndirPath1  2>/dev/null
+
+rett=`$find ${apiPath} -name "fd13*" 2>&1`
+checkOk $? "$rett" $apiPath "fd13*"
+

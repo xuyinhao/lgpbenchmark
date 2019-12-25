@@ -7,3 +7,4 @@ $touchz $filePath 2>/dev/null
 $chown "chownU1-1:root" $filePath 2>/dev/null
 
 checkOkNeedWinacl $? "chownU1-1:root" $filePath
+userdel chownU1-1 2>/dev/null

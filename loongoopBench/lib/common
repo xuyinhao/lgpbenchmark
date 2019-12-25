@@ -1,0 +1,19 @@
+cpath=`dirname $0`
+cpath=`cd "${cpath}";cd "..";pwd`
+
+. ${cpath}/conf/conf
+function getPathNoMountpoint(){
+ val=`grep -n 'leofs.mountpoint.dir' ${leofsSitePath}`
+ val=`expr ${val:0:1} + 1`
+ str=`sed -n "${val}p" ${leofsSitePath}`
+ str=${str#*<value>}
+ str=${str%</value>*}
+ if [[ "$str" == "" ]];then
+    echo "/loongoop"
+ else
+    aa=`echo ${str#*/}`
+	echo /${aa#*/}
+ fi
+}
+getPathNoMountpoint
+

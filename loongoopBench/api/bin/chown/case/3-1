@@ -11,3 +11,4 @@ $chown "chownU3-1:root" $filePath 2>/dev/null
 
 checkOkNeedWinacl  $? "chownU3-1:root" $filePath
 
+userdel chownU3-1 2>/dev/null

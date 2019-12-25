@@ -5,3 +5,4 @@ filePath="$apiPath/chown1-2"
 $touchz $filePath 2>/dev/null
 $chown root:chownG1-2 $filePath 2>/dev/null
 checkOkNeedWinacl $? "root:chownG1-2" $filePath
+groupdel chownG1-2 2>/dev/null

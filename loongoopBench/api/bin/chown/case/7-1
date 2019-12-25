@@ -11,3 +11,4 @@ $chown chownU7-1:root $filePath 2>/dev/null
 
 checkOkNeedWinacl $? "chownU7-1:root" $filePath
 $rm -f $filePath 1>/dev/null 2>&1
+userdel chownU7-1 2>/dev/null

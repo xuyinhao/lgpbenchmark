@@ -1,0 +1,13 @@
+function getMountPath(){
+ val=`grep -n 'leofs.mountpoint.dir' ${leofsSitePath}`
+ val=`expr ${val:0:1} + 1`
+ str=`sed -n "${val}p" ${leofsSitePath}`
+ str=${str#*<value>}
+ str=${str%</value>*}
+ if [[ "$str" == "" ]];then
+    echo "/datapool/loongoop"
+ else
+    echo $str
+ fi
+}
+

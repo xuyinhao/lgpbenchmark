@@ -3,3 +3,4 @@ userdel chownU5-1 2>/dev/null
 useradd chownU5-1 2>/dev/null
 ret=`$chown chownU5-1:root $apiPath/chown5-1 2>&1`
 checkError $? "$ret" "No such file or directory"
+userdel chownU5-1 2>/dev/null

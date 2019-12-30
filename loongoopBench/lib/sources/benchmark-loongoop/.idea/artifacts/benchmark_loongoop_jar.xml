@@ -1,8 +1,0 @@
-<component name="ArtifactManager">
-  <artifact type="jar" name="benchmark-loongoop:jar">
-    <output-path>$PROJECT_DIR$/out/artifacts/benchmark_loongoop_jar</output-path>
-    <root id="archive" name="benchmark-loongoop.jar">
-      <element id="module-output" name="benchmark-loongoop" />
-    </root>
-  </artifact>
-</component>

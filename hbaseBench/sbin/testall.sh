@@ -1,16 +1,37 @@
 #!/bin/sh
-retNum=0
+if [ $# -le 0 ];then
+	echo """Usage:
+	$0 runlevel [runtimes]
+	Example:
+	    $0 small 
+	    $0 middle 2
+	    $0 big
+"""
+exit 1
+fi
+
+declare runlevel=$1
+declare -i runtimes=$2
+declare -i retNum=1
+
 cpath=`dirname $0`
 cpath=`cd "${cpath}";cd "..";pwd`
+. ${cpath}/lib/log_tool.sh
+declare retLog=${cpath}/ret/$retNum.log 
+
 if [ -d "${cpath}/ret" ]; then
 rm -rf "${cpath}/ret/"
 fi
-mkdir "${cpath}/ret"
-retLog=ret/$retNum.log
-if [ ! -f ${cpath}/conf/conf ]; then
-    echo "conf is not exist !"
+mkdir -p  "${cpath}/ret"
+
+init_log $retLog
+
+if [ ! -f ${cpath}/conf/conf.${runlevel} ]; then
+    echo "conf/conf.${runlevel} is not exist !"
     exit 0
 fi
+. ${cpath}/conf/conf.${runlevel}
+
 #echo "you can change the running param in ${cpath}/sbin/conf before start this shell!"
 #read -p "to change the conf?(y/n)" sure
 #if [ "${sure}" == "y" ] ; then
@@ -22,11 +43,11 @@ fi
  #echo  "please input y or n !"
 #exit 0
 #fi
-. ${cpath}/conf/conf
-runtimes=$1
+
 cmds=()
 nodes=(${nodeList})
 nodeNum=${#nodes[@]}
+
 #insert
 cmds[0]="${cpath}/bin/insert.sh ${tableName} ${rowNum} ${nodeNum} ${threadNum} ${batch}"
 #echo "cmd0:${cmds[0]}"
@@ -45,33 +66,30 @@ cmds[4]="${cpath}/bin/count.sh ${tableName}"
 cmds[5]="${cpath}/bin/column.sh ${tableName} ${columnName} ${batch}"
 #insertWithCheck
 cmds[6]="${cpath}/bin/insertWithCheck.sh ${iwcTableName} ${iwcRowNum} ${nodeNum} ${iwcThreadNum} ${iwcRowFamilyNum}"
+
+
 #echo ${cmds[5]}
 function hbaseTest {
    for(( i=0;i<${#cmds[@]};i++)); do
    cmd=${cmds[i]}
-   echo $cmd >> $retLog
-   $cmd >> $retLog
+	log_and_show "INFO" "Run cmd: $cmd " 
+	log_and_show "INFO" "Cmd result: `$cmd`\n" 
   done
-  echo "${retNum} times is finished see the logs in ret/${retNum}.log"
+  log_and_show "INFO"  "${retNum} times is finished see the logs in ret/${retNum}.log"
   retNum=`expr ${retNum} + 1`
-  retLog=ret/${retNum}.log
+  retLog=${cpath}/ret/${retNum}.log
+ init_log $retLog
  }
 
-if [ "" == "${runtimes}" ] ; then
- echo "this hbase test will keep running"
-while true
-do
-hbaseTest
-done
-elif [ "${runtimes}" -le 0 ] ; then
-echo "this hbase test will run just one time"
-hbaseTest
+if [ 0 -lt ${runtimes} ];then
+	log_and_show "INFO" "this hbase test will run ${runtimes} times,please wait..."
+	t=1
+		while [ $t -le  $runtimes ]
+		do
+			hbaseTest
+			t=`expr ${t} + 1`
+		done
 else
-echo "this hbase test will run ${runtimes} times,please wait..."
-t=0
-while [[ $t < $runtimes ]]
-do
-hbaseTest
-t=`expr ${t} + 1`
-done
+	log_and_show "INFO" "this hbase test will run just one time"
+	hbaseTest
 fi

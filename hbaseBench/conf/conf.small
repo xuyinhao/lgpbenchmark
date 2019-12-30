@@ -1,0 +1,27 @@
+#!/bin/sh
+
+rowNum=10000
+moreRowNum=10
+queryRowNum=1000
+updateRowNum=5000
+
+nodeList="mds1 node29 node30"
+threadNum=20
+
+queryThreadNum=50
+insertThreadNum=10
+iwcRowNum=1000
+iwcThreadNum=10
+iwcRowFamilyNum=1
+
+#static
+tableName="test_small"
+iwcTableName="iwcTestTable_small"
+batch=1000
+
+dirPath="/tmp/"
+
+columnName="col1"
+
+hadoopPath="/loongoop/loongoop-1.0.4-v2.7.2/bin/hadoop"
+hbasePath="/loongoop/hbase-1.3.1/bin/hbase"

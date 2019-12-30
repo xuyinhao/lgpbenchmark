@@ -16,17 +16,17 @@ fi
 . ${cpath}/../lib/log_tool.sh
 
 
-rm -rf ${cpath}/o2
+rm -rf ${cpath}/.o2
 for word in `cat ${outPath}|awk '{print $1}'`
 do
- m=0;for i in `cat ${genresultPath}/gen* |grep "^$word "|awk  '{print $2}'`;do let m+=$i;done ; echo -e "${word}\t${m}"  >>${cpath}/o2
+ m=0;for i in `cat ${genresultPath}/gen* |grep "^$word "|awk  '{print $2}'`;do let m+=$i;done ; echo -e "${word}\t${m}"  >>${cpath}/.o2
 done
 
-ret=`diff ${cpath}/o2 ${outPath}`
+ret=`diff ${cpath}/.o2 ${outPath}`
 if [ $? -eq 0 ];then
-	log_and_show "INFO" "check pass"
+	log_and_show "INFO" "check pass" 
 else
-	log_and_show "ERROR" "Check Error ..."
+	log_and_show "ERROR" "Check Error ..." 
 fi
 
 

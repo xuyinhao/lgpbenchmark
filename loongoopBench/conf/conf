@@ -1,7 +1,7 @@
 #!/bin/sh
 
 ##common conf
-loongoopPath="/loongoop/loongoop-1.0.4-v2.7.2"
+loongoopPath="/loongoop/loongoop-1.0.5-v2.7.2"
 leofsSitePath="${loongoopPath}/etc/hadoop/leofs-site.xml"
 coreSitePath="${loongoopPath}/etc/hadoop/core-site.xml"
 exampleJarPath="${loongoopPath}/share/hadoop/mapreduce/hadoop-mapreduce-examples-2.7.2.jar"

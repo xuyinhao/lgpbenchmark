@@ -1,7 +1,0 @@
-#!/bin/sh
-nodeList="master slave1 slave2"
-loongoopPath="/opt2/loongoop-0.0.3"
-exampleJarPath="${loongoopPath}/share/hadoop/mapreduce/hadoop-mapreduce-examples-2.6.0.jar"
-testJarPath="${loongoopPath}/share/hadoop/mapreduce/hadoop-mapreduce-client-jobclient-2.6.0-tests.jar"
-wordcount_filePath="/wordscount"
-reduceNum=2

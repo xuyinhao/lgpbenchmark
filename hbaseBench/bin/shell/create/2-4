@@ -1,0 +1,17 @@
+#!/bin/bash
+#2-4 创建 大小写的表 
+
+tableName241="tb_2-4.name"
+tableName242="TB_2-4.NAME"
+cfName241="cf_$tableName241"
+cfName242="CF_$tableName242"
+
+hbaseShell  "disable '$tableName241'; drop '$tableName241';create '$tableName241','$cfName241'"
+hbaseShell  "disable '$tableName242'; drop '$tableName242';create '$tableName242','$cfName242'"
+
+ret=`checkExistTableColumn "$tableName241" "$cfName241"` 			#$1:tableName $2...: cloumnName
+if [ $ret -eq 0 ];then
+	checkExistTableColumn "$tableName242" "$cfName242"
+else
+	echo 1
+fi

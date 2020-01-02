@@ -3,4 +3,4 @@ str=`genString 100`
 `echo $str > "/${tmpDir}/cat5-2"`
 ret=`$cat "file:///${tmpDir}/cat5-2" 2>&1`
 checkOk $? "$str" "$ret"
-$rm "file:///${tmpDir}/cat5-2" 
+$rm "file:///${tmpDir}/cat5-2" >/dev/null 2>&1

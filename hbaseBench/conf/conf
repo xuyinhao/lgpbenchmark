@@ -1,20 +1,8 @@
 #!/bin/sh
-rowNum=1000000
-moreRowNum=100000
-queryRowNum=1000
-updateRowNum=20000
 nodeList="mds1 node29 node30"
-threadNum=50
-queryThreadNum=50
-insertThreadNum=10
-iwcRowNum=10000
-iwcThreadNum=10
-iwcRowFamilyNum=1
-#static
-tableName="testa"
-iwcTableName="iwcTestTable"
-batch=1000
+
 dirPath="/tmp/"
-columnName="col1"
-hadoopPath="/loongoop/loongoop-1.0.4-v2.7.2/bin/hadoop"
+hadoopPath="/loongoop/loongoop-1.0.5-v2.7.2/bin/hadoop"
 hbasePath="/loongoop/hbase-1.3.1/bin/hbase"
+
+hbasePathShell="${hbasePath} shell"

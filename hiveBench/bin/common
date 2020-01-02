@@ -1,0 +1,93 @@
+#!/bin/bash
+. ../conf/conf
+. ../lib/log_tool.sh
+
+LOG_HIVE_RUN=/tmp/lgp-run-hive.log
+hive_info(){
+	init_log $LOG_HIVE_RUN
+	log_info "$1" "$2" "$LOG_HIVE_RUN"
+}
+hive_error(){
+	init_log $LOG_HIVE_RUN
+    log_error "$1" "$2" "$LOG_HIVE_RUN"
+}
+
+## hive cmd 没有返回结果，返回信息直接进日志
+hivecmd(){
+	local h_cmds="$1"
+	retv="`$hivePath -e "$h_cmds" 2>&1`"
+	declare -i retf=$?
+	hive_info "`echo $retv`"  "$LINENO"
+	return $retf
+}
+
+## hive std cmd 返回结果 标准输出
+hivestdcmd(){
+	local hs_cmds="$1"
+    retv="`$hivePath -e "$hs_cmds" 2>&1`"
+	declare -i retf=$?
+	hive_info "`echo $retv`"
+	echo  "$retv" 
+	return $retf
+}
+
+beelinecmd(){
+	local b_cmds="$1"
+	retv="`$beelinePath -u $beelineConnect --silent=true -e "$b_cmds" 2>&1`"
+	declare -i retf=$?
+	hive_info "`echo $retv`" "$LINENO"
+	return $retf
+}
+beelinestdcmd(){
+    local bs_cmds="$1"
+	retv="`$beelinePath -u $beelineConnect --silent=true -e "$bs_cmds" 2>&1`"
+    declare -i retf=$?
+    hive_info "`echo $retv`" "$LINENO"
+	echo "$retv" > /dev/null
+    return $retf
+
+}
+getHiveWarehouse(){
+	hiveWarehouse=`grep -A3 "<name>hive.metastore.warehouse.dir</name>" /loongoop/hive-1.2.1/conf/hive-site.xml |grep -oP "(?<=<value>)(.*)(?=</value>)"`
+	echo $hiveWarehouse
+}
+
+chechExistDb(){
+	local checkDb="$1"
+	declare -i flag=1
+	
+	hret=`hivestdcmd "show databases"`
+	if [[ "$hret" =~ "$checkDb" ]];then
+		$hadoopPath fs -ls leofs://`getHiveWarehouse`/${checkDb}.db >> $LOG_HIVE_RUN 2>&1
+		if [ $? -eq 0 ];then
+			flag=0
+		fi
+	fi
+	echo $flag
+}
+
+chechExistTb(){
+    local checkTb="$1"
+    declare -i flag=1
+
+    hret=`hivestdcmd "show tables"`
+    if [[ "$hret" =~ "$checkTb" ]];then
+        $hadoopPath fs -ls leofs://`getHiveWarehouse`/${checkTb} >> $LOG_HIVE_RUN 2>&1
+        if [ $? -eq 0 ];then
+            flag=0
+        fi
+    fi
+    echo $flag
+}
+
+checkInfo(){
+    local e_info="$1"
+    local e_checkvalue="$2"
+    local declare flag=1
+
+    if [[ "$e_info" =~ "$e_checkvalue" ]];then
+        flag=0
+    fi
+
+    echo $flag
+}

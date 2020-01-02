@@ -1,0 +1,11 @@
+#!/bin/bash
+exec=hive
+
+hiveHome=/loongoop/hive-1.2.1/
+beelineConnect="jdbc:hive2://node29:21066"
+
+hadoopPath="/loongoop/loongoop-1.0.5-v2.7.2/bin/hadoop"
+
+hiveConfPath="${hiveHome}/conf/hive-site.xml"
+hivePath=${hiveHome}/bin/hive
+beelinePath=${hiveHome}/bin/beeline

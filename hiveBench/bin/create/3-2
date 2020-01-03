@@ -1,0 +1,17 @@
+#!/bin/bash
+#3-2 创建一个index
+#新建一个索引，查看是创建成功
+
+indexName="index"
+preTableName="hive_index_base_tb_3_2"
+
+# pre table
+preTable "${preTableName}"
+
+${exec}cmd "create index $indexName on table $preTableName(id) \
+	as 'org.apache.hadoop.hive.ql.index.compact.CompactIndexHandler' \
+	with deferred rebuild \
+	idxproperties('creator'='LgpHive','create_at'='2020-01-01');"
+
+checkExistTb "${preTableName}" "index" "$indexName"
+

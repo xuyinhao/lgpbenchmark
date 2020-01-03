@@ -1,0 +1,7 @@
+#!/bin/bash
+#3-1 创建一个存在的表
+
+${exec}cmd 'drop table hivetb3_1;create table hivetb3_1(id int,name String);' >/dev/null 2>&1
+ret=`${exec}stdcmd 'create table hivetb3_1(id int,name String);'`
+
+checkInfo  "$ret" "org.apache.hadoop.hive.ql.exec.DDLTask. AlreadyExistsException"

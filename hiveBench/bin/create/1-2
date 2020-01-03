@@ -1,0 +1,24 @@
+#!/bin/bash
+#1-2 创建一个外部表
+# 新建一个外部表，设置成功后
+
+
+tableName="hive_external_tb_1_2"
+location="/output/$tableName"
+${exec}cmd "drop table ${tableName} ; dfs -rm -r $location" >/dev/null 2>&1
+
+${exec}cmd "create external table ${tableName}(id int,name string,loc string) \
+	row format delimited fields	\
+	terminated by '\t'	\
+	location '${location}';"
+
+ret=`checkExistTb "$tableName" "external" "${location}" `
+
+if [ $ret -eq 0 ];then
+	preInsertExtTb 
+	hivecmd "load data local inpath '/tmp/hive.ef' into table $tableName"
+	checkExtValue "$tableName" "${location}" "1"
+else
+	echo $ret
+fi
+

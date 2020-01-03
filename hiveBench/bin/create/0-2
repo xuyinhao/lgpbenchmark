@@ -1,7 +1,5 @@
 #!/bin/bash
 #0-2 创建一个数据库
-. ../conf/conf
-. common
 ${exec}cmd 'drop table hivetb0_2' >/dev/null 2>&1
 ${exec}cmd 'create table hivetb0_2(id int,name String);'
 checkExistTb "hivetb0_2"

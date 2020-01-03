@@ -1,0 +1,16 @@
+#!/bin/bash
+#1-3 创建一个临时表
+## 创建临时表create temporary table temp(id int);show查看
+# 关闭当前session，重新打开会话，查看该表是否还存在
+
+tableName="hive_tmp_tb_1_3"
+${exec}cmd "drop table ${tableName}" >/dev/null 2>&1
+${exec}cmd "create temporary table ${tableName}(id int,name String); \
+	desc ${tableName};"
+
+if [ $? -eq 0 ];then
+	ret=`${exec}stdcmd "desc $tableName"`
+	checkInfo  "$ret" "Table not found" 
+else
+	echo 1
+fi

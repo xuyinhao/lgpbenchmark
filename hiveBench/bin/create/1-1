@@ -3,8 +3,6 @@
 # 新建一个表，给其设定分区，设置成功后，
 #查看是否创建成功（partition辨识分区）（分区表加载数据时，必须指定分区）
 
-. ../conf/conf
-. common
 
 tableName="hive_partition_tb_1_1"
 ${exec}cmd "drop table ${tableName}" >/dev/null 2>&1

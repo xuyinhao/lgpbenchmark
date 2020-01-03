@@ -1,0 +1,22 @@
+#!/bin/bash
+#2-2 创建一个表，创建表选择,并插入1条数据
+
+baseTableName="hive_base_tb2_2"
+likeTableName="hive_like_tb_2_2"
+
+## pre table
+${exec}cmd "drop table $baseTableName" >/dev/null 2>&1
+${exec}cmd "create table $baseTableName(id int,name String,loc String) \
+	row format delimited fields terminated by '\t';"
+
+## like table
+${exec}cmd "create table ${likeTableName} like $baseTableName;"
+ret=`checkExistTb "${likeTableName}"`
+if [ $ret -eq 0 ];then
+	loadDataToTb "/tmp/hive.db.f"
+	${exec}cmd "load data local inpath '/tmp/hive.db.f' overwrite into table ${likeTableName}"
+	ret2=`${exec}stdcmd "select * from $likeTableName;"`
+	checkInfo  "$ret2" "`cat /tmp/hive.db.f`"
+else
+	echo $ret
+fi 

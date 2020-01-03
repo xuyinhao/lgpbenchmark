@@ -1,8 +1,16 @@
 #!/bin/bash
-#0-1 创建一个数据库
-. ../conf/conf
-. common
-${exec}cmd 'drop table hivetb3_1;create table hivetb3_1(id int,name String);' >/dev/null 2>&1
-ret=`${exec}stdcmd 'create table hivetb3_1(id int,name String);'`
+#3-1 创建一个view
+# 新建一个表创建成功后，导入数据到该表中，新建视图调用该表，
+#查看该视图显示查询结果是否和刚刚创建的表查询显示一致
 
-checkInfo  "$ret" "org.apache.hadoop.hive.ql.exec.DDLTask. AlreadyExistsException"
+tableName="hive_view_tb_3_1"
+preTableName="hive_view_base_3_1"
+# pre table
+preTable "${preTableName}"
+
+${exec}cmd "create view ${tableName} as select * from $preTableName ;"
+ret=`checkExistTb "${tableName}" "view"`
+if [ $ret -eq 0 ];then
+	compareTableValue $preTableName $tableName
+fi
+

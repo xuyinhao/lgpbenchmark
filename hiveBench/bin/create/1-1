@@ -1,7 +1,23 @@
 #!/bin/bash
-#0-1 创建一个数据库
+#1-1 创建一个分区表
+# 新建一个表，给其设定分区，设置成功后，
+#查看是否创建成功（partition辨识分区）（分区表加载数据时，必须指定分区）
+
 . ../conf/conf
 . common
-${exec}cmd 'drop table hivetb1_1' >/dev/null 2>&1
-${exec}cmd 'create table hivetb1_1(id int,name String);'
-chechExistTb "hivetb1_1"
+
+tableName="hive_partition_tb_1_1"
+${exec}cmd "drop table ${tableName}" >/dev/null 2>&1
+${exec}cmd "create table ${tableName}(deptno int,dname string,loc string) \
+	partitioned by(month string) \
+	row format delimited fields terminated by '\t';"
+
+ret=`checkExistTb "${tableName}" "partition"`
+if [ $ret -eq 0 ];then
+	preInsertPartitionTb "$tableName" "month" "12"
+	hivecmd "load data inpath '/hive.pf' into table $tableName  partition(month='12');"
+	checkPartitionValue "$tableName" "month" "12"  "1"
+else
+	echo 1
+fi
+

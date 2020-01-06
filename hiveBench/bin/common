@@ -1,8 +1,18 @@
 #!/bin/bash
-. ../conf/conf
-. ../lib/log_tool.sh
+##########################
+## 说明：
+##      hive common function
+##		2020-01  Xuyh 
+#########################
 
-LOG_HIVE_RUN=/tmp/lgp-run-hive.log
+declare basecmd=hivecmd					#检查正确性时，使用的cmd入口
+declare basestdcmd=hivestdcmd
+declare LOG_HIVE_RUN=/tmp/lgp-run-hive.log
+
+##########################################################################
+#  DESCRIPTION  :log save to file 
+#  Para         : $1: MSG , $2: LINENO
+##########################################################################
 hive_info(){
 	init_log $LOG_HIVE_RUN
 	log_info "$1" "$2" "$LOG_HIVE_RUN"
@@ -11,8 +21,17 @@ hive_error(){
 	init_log $LOG_HIVE_RUN
     log_error "$1" "$2" "$LOG_HIVE_RUN"
 }
+hive_debug(){
+	init_log $LOG_HIVE_RUN
+    log_debug "$1" "$2" "$LOG_HIVE_RUN"
+}
 
 ## hive cmd 没有返回结果，返回信息直接进日志
+##########################################################################
+#  DESCRIPTION  : cmd 执行， stdcmd会返回打印信息
+#  Para         : $1: cmd 	
+#  return		: 0 / 1 
+##########################################################################
 hivecmd(){
 	local h_cmds="$1"
 	retv="`$hivePath -e "$h_cmds" 2>&1`"
@@ -45,18 +64,31 @@ beelinestdcmd(){
     hive_info "`echo $retv`" "$LINENO"
 	echo "$retv" > /dev/null
     return $retf
-
 }
+
+## 返回hive warehouse hdfs的路径
 getHiveWarehouse(){
-	hiveWarehouse=`grep -A3 "<name>hive.metastore.warehouse.dir</name>" /loongoop/hive-1.2.1/conf/hive-site.xml |grep -oP "(?<=<value>)(.*)(?=</value>)"`
+	hiveWarehouse=`grep -A3 "<name>hive.metastore.warehouse.dir</name>" $hiveConfPath |grep -oP "(?<=<value>)(.*)(?=</value>)"`
 	echo $hiveWarehouse
 }
+genString(){
+  j=0;
+  for i in {a..z};do array[$j]=$i;j=$(($j+1));done
+  for i in {A..Z};do array[$j]=$i;j=$(($j+1));done
+  for ((i =0;i < $1;i++));do strs="$strs${array[$(($RANDOM%$j))]}"; done;
+        echo $strs
+}
 
-chechExistDb(){
+##########################################################################
+#  DESCRIPTION  : 检查db是否存在， 并检查hadoop fs的路径文件
+#  Para         : $1: db name
+#  return echo	:  flag 0,1
+##########################################################################
+checkExistDb(){
 	local checkDb="$1"
 	declare -i flag=1
 	
-	hret=`hivestdcmd "show databases"`
+	hret=`$basestdcmd "show databases"`
 	if [[ "$hret" =~ "$checkDb" ]];then
 		$hadoopPath fs -ls leofs://`getHiveWarehouse`/${checkDb}.db >> $LOG_HIVE_RUN 2>&1
 		if [ $? -eq 0 ];then
@@ -66,28 +98,323 @@ chechExistDb(){
 	echo $flag
 }
 
-chechExistTb(){
-    local checkTb="$1"
-    declare -i flag=1
+echo_data(){
+local p_value_path="$1"
+echo -e """1\t测试\tkk1
+2\tdev\tkk2
+3\test\tkk3""" > $p_value_path
 
-    hret=`hivestdcmd "show tables"`
-    if [[ "$hret" =~ "$checkTb" ]];then
-        $hadoopPath fs -ls leofs://`getHiveWarehouse`/${checkTb} >> $LOG_HIVE_RUN 2>&1
-        if [ $? -eq 0 ];then
-            flag=0
+}
+checkTbHdfsPath(){
+	local d_tableName="$1"
+	$hadoopPath fs -ls leofs://`getHiveWarehouse`/${d_tableName} >> $LOG_HIVE_RUN 2>&1
+	return $?
+}
+preInsertPartitionTb(){
+	local p_value_f="/tmp/hive.pf"
+	local p_tb_name="$1"
+    local p_partName="$2"
+    local p_partValue="$3"
+
+	echo_data  $p_value_f
+	
+	if [[ "$p_partName" == "" ]];then
+		p_partName="month"
+    fi
+	if [[ $p_partValue == "" ]];then
+		p_partValue="11"
+	fi
+	
+	$basecmd "dfs -rm  /hive.pf " >> $LOG_HIVE_RUN 2>&1
+	$basecmd  "dfs -put file://$p_value_f /"  >> $LOG_HIVE_RUN 2>&1
+	
+}
+checkPartitionValue(){
+	local p_value_f="/tmp/hive.pf"
+	flag=1
+    local p_tb_name="$1"
+    local p_partName="$2"
+    local p_partValue="$3"
+	local p_items_num="$4"
+
+    if [[ "$p_partName" == "" ]];then
+        p_partName="month"
+    fi
+    if [[ $p_partValue == "" ]];then
+        p_partValue="11"
+    fi
+	ret=`$basestdcmd "dfs -ls  leofs://`getHiveWarehouse`/${p_tb_name}/${p_partName}=${p_partValue};"`
+	if [ $? -eq 0 ];then
+		flag=0
+		if [[ $p_items_num != "" ]];then
+			real_num=`echo $ret|grep -oP "(?<=Found )(\w*)(?= items)"`
+			if [ $p_items_num -ne $real_num ];then
+				flag=1
+			fi
+		fi
+	fi
+	echo $flag
+}
+checkPartitionTb(){
+	# 分区表必须,分区点是month
+	local p_tb_name="$1"
+	local p_partName="$2"
+	local p_partValue="$3"
+
+	if [[ "$p_partName" == "" ]];then
+		p_partName="month"
+	fi
+	
+	p_ret=`$basecmd "show partitions $1" >> $LOG_HIVE_RUN 2>&1`
+	
+	if [ $? -eq 0 ];then
+		return 0
+	fi
+	return 1
+}
+
+checkBucketTb(){
+	local b_tb_name="$1"
+    local b_bk_num="$2"
+	ret=`$basestdcmd "desc formatted $b_tb_name" 2>/dev/null`
+	#real_bk_num=`echo "$ret"|grep -oP "(?<=Num Buckets: )(\w*)?(?= Bucket)"`
+	real_bk_num=`echo "$ret"|grep "Num Buckets"|awk -F ":" '{print $2}'`
+	if [ $real_bk_num -eq $b_bk_num ];then
+		real_dfs_num=$($hadoopPath fs -ls leofs://`getHiveWarehouse`/$b_tb_name 2>/dev/null | grep "$b_tb_name" |wc -l )
+		if [ $real_dfs_num -eq $b_bk_num ];then
+			return 0
+		fi
+	fi
+	return 1
+}
+
+preInsertExtTb(){
+	local e_value_f="/tmp/hive.ef"
+	echo_data $e_value_f
+}
+loadDataToTb(){
+	local d_path="$1"
+	echo_data $d_path
+}
+
+checkExtValue(){
+    flag=1
+    local e_tb_name="$1"
+    local e_location="$2"
+    local e_items_num="$3"
+
+	ret=`$basestdcmd "dfs -ls  leofs://${e_location}"`
+    if [ $? -eq 0 ];then
+        flag=0
+        if [[ $e_items_num != "" ]];then
+            real_num=`echo $ret|grep -oP "(?<=Found )(\w*)(?= items)"`
+            if [ $e_items_num -ne $real_num ];then
+                flag=1
+            fi
         fi
     fi
     echo $flag
 }
 
+checkIndexTb(){
+	local i_tableName="$1"
+	local i_indexName="$2"
+	indexTable="default__${i_tableName}_${i_indexName}__"
+
+	$basecmd "alter index ${i_indexName} on ${i_tableName} rebuild;"
+	ret=`$basestdcmd "select * from $indexTable;"`
+	if [[ "$ret" =~ "/${i_tableName}/" ]];then
+		return 0	
+	fi
+	return 1
+}
+
+##########################################################################
+#  DESCRIPTION  : 检查db是否存在， 并检查hadoop fs的路径文件
+#  Para         : $1: table name ， $2:view ,external ,bucket 
+#					如果$2=external,bucket 则需要传输 $3 
+#				$3: exteranl--> ex_location	 外部表存放的位置
+#				$3: bucket -->  buckets_num 桶表的 桶个数
+#  return echo  :  flag
+##########################################################################
+checkExistTb(){
+    local checkTb="$1"
+	local otherCheck="$2"
+	local ex_location="$3"
+	local buckets_num="$3"
+	local index_name="$3"
+    declare -i flag=1
+
+    hret=`$basestdcmd "show tables"`
+	
+    if [[ "$hret" =~ "$checkTb" ]];then
+		if [[ "$otherCheck" == "external" ]];then
+			$hadoopPath fs -ls leofs://${ex_location} >> $LOG_HIVE_RUN 2>&1
+            if [ $? -eq 0 ];then
+                flag=0
+            fi	
+		elif [[ "$otherCheck" == "view" ]];then
+			checkTbHdfsPath ${checkTb}
+			if [ $? -ne 0 ];then				#view视图表，无数据落在hdfs
+            	flag=0
+            fi
+		elif [[ "$otherCheck" == "index" ]];then
+			checkTbHdfsPath default__${checkTb}_${index_name}__		
+			if [ $? -eq 0 ];then
+                flag=0
+            fi
+		else
+			checkTbHdfsPath ${checkTb}
+        	if [ $? -eq 0 ];then
+            	flag=0
+			fi
+		fi
+	fi
+
+	if [ $flag -eq 0 ];then
+		# check partition : show partitions
+		if [[ "$otherCheck" == "partition" ]];then
+			checkPartitionTb "$checkTb" 
+			if [ $? -ne 0 ];then
+            	flag=1
+        	fi
+		fi
+
+		## check Num Buckets:
+		if [[ "$otherCheck" == "bucket" ]];then
+			checkBucketTb "$checkTb" "$buckets_num"
+			if [ $? -ne 0 ];then
+                flag=1
+            fi
+		fi
+		
+		## check index table 
+		if [[ "$otherCheck" == "index" ]];then
+			checkIndexTb "$checkTb" "$index_name"
+			if [ $? -ne 0 ];then
+				flag=1
+            fi
+		fi
+	fi
+    echo $flag
+}
+
+##########################################################################
+#  DESCRIPTION  : check $1 info =~ 包含 $2
+#  echo 		: true:0 , false:1
+##########################################################################
 checkInfo(){
     local e_info="$1"
     local e_checkvalue="$2"
-    local declare flag=1
-
+    local flag=1
     if [[ "$e_info" =~ "$e_checkvalue" ]];then
         flag=0
     fi
-
     echo $flag
+}
+
+##########################################################################
+#  DESCRIPTION  : create table and load data 
+#  Parm			: $1: tableName
+#  Return       : true:0 ,false: Not 0
+##########################################################################
+preTable(){
+	local p_tableName="$1"
+	${basecmd} "drop table $p_tabletableName" >/dev/null 2>&1
+	${basecmd} "create table $p_tableName(id int,name String,loc String) \
+    	row format delimited fields terminated by '\t';"
+	loadDataToTb "/tmp/hive.db.f"
+    ${exec}cmd "load data local inpath '/tmp/hive.db.f' overwrite into table ${p_tableName}"
+	return $?
+}
+
+##########################################################################
+#  DESCRIPTION  : compare two  table value is equal or not 
+#  Parm         : $1: tableName1 , $2: tableName2
+#  Return       : true:0 ,false: 1
+##########################################################################
+compareTableValue(){
+	local c_tableName1="$1"
+	local c_tableName2="$2"
+	ret_t1=`${basestdcmd} "select * from $c_tableName1"`
+	ret_t2=`${basestdcmd} "select * from $c_tableName2"`
+	grep_t1=`echo $ret_t1|xargs|grep -oP "(?<=OK )(.*)(?=Time taken)"`
+	grep_t2=`echo $ret_t2|xargs|grep -oP "(?<=OK )(.*)(?=Time taken)"`
+	
+	if [[ "$grep_t1" == "${grep_t2}" ]];then
+		echo 0
+		return 0
+	fi	
+	echo 1;return 1
+}
+
+catTableHdfsValue(){
+	local catTableName="$1"
+	local tableType="$2"
+	local catpartValue="$3"
+	if [ "$tableType" = "partition" ];then
+		r_ret=$($hadoopPath fs -cat leofs://`getHiveWarehouse`/${catTableName}/month=${catpartValue}/* 2>/dev/null)
+	else
+		r_ret="$($hadoopPath fs -cat leofs://`getHiveWarehouse`/${catTableName}/* 2>/dev/null)"
+	fi
+	echo $r_ret
+}
+
+#仅支持普通表, 数据存放位置为默认位置
+# 查看表内容 以及hdfs文件内容检查
+checkTableValue(){
+	local ck_tableName="$1"
+    local c_info="$2"
+	local c_tableType="$3"
+	local c_p_value="$4"
+    ret_t1=`${basestdcmd} "select * from $ck_tableName"`
+    grep_t1=`echo $ret_t1|xargs|grep -oP "(?<=OK )(.*)(?=Time taken)"`
+
+    if [[ "$grep_t1" =~ "${c_info}" ]];then
+		if [ "$c_tableType" != "" ] && [ "$c_tableType" != "partition" ];then
+			echo 0;return 0
+		fi
+		if [[ "`catTableHdfsValue ${ck_tableName} ${c_tableType} "${c_p_value}"`" =~ "$c_info" ]];then
+			echo 0;return 0
+		fi	
+    fi
+    echo 1;return 1
+}
+
+
+##########################################################################
+#  DESCRIPTION 	: 创建基本表，[分区表，桶表]
+#  Para         : $1: 表名称
+#  return echo  : 0:true , Not 0:False
+##########################################################################
+createNormalTb(){
+	local n_tableName="$1"
+	${basecmd} "drop table ${n_tableName}" >/dev/null 2>&1
+	${basecmd} "create table ${n_tableName}(id int,name String,loc String);"
+	nret=$?
+	[ $nret -ne 0 ] && hive_error "create noremal table error" "$LINENO"
+	return $nret
+}
+createPartitionTb(){
+	local p_tableName="$1"
+	${basecmd} "drop table ${p_tableName}" >/dev/null 2>&1
+	${basecmd} "create table ${p_tableName}(deptno int,dname string,loc string) \
+	partitioned by(month string) \
+	row format delimited fields terminated by '\t';"
+	pret=$?
+	[ $pret -ne 0 ] && hive_error "create partition table error " "$LINENO"
+	return $pret
+}
+
+createBucketTb(){
+	local b_tableName="$1"
+	local b_bucketNum="$2"
+	
+	${basecmd} "drop table ${b_tableName}" >/dev/null 2>&1
+	${basecmd} "set hive.enforce.bucketing=true;create table ${b_tableName}(id int,name String,loc String) \
+	clustered by (id) into ${b_bucketNum} buckets \
+	row format delimited fields terminated by '\t';"
+	bret=$?
+	[ $bret -ne 0 ] && hive_error "create bucket table error" "$LINENO"
+	return $bret
 }

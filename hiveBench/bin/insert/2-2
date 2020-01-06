@@ -1,0 +1,14 @@
+#!/bin/bash
+#
+
+baseTableName="hive_insertbase_ov_2_2"
+hiveTable="hive_insertselect_ov_2_2"
+preTable ${baseTableName}
+
+${basecmd} "drop table $hiveTable;create table $hiveTable(id int,name String,loc String) \
+row format delimited fields terminated by '\t';"
+
+${exec}cmd "insert overwrite table  ${hiveTable} select * from $baseTableName ;"
+compareTableValue "$baseTableName" "$hiveTable"
+
+

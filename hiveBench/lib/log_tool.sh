@@ -34,7 +34,7 @@ log()
 		local logFile=$LOG_FILE_FULL_PATH
 	fi
     local logTime="$(date +'%Y-%m-%d_%T')"   
-    printf  "[${logTime}] ${logLevel}: ${message} (${FUNCNAME[2]};${lineNo})\n" >> "${logFile}" 2>&1
+    printf "[${logTime}] ${logLevel}: ${message} (${FUNCNAME[2]};${lineNo})\n" >> "${logFile}" 2>&1
     [ $? -ne 0 ] && return 1
 	return 0
 

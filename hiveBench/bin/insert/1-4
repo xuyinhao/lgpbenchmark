@@ -1,0 +1,30 @@
+#!/bin/bash
+
+tableName="hive_insertovinto_1_4"
+str_n1=`genString 20`
+str_d1=`genString 200`
+
+str_n2=`genString 15`
+str_d2=`genString 150`
+createNormalTb  $tableName
+${exec}cmd "insert overwrite table ${tableName} values(1,'${str_n1}','${str_d1}');"
+[ $? -ne 0 ] && echo 1 && return 1
+
+${exec}cmd "insert overwrite table ${tableName} values(2,'${str_n2}','${str_d2}');"
+[ $? -ne 0 ] && echo 1 && return 1
+
+
+if [ `checkTableValue "${tableName}" "${str_n1}"` -ne 0  ];then
+	if [ `checkTableValue "${tableName}" "${str_d1}"` -eq 0 ];then
+		echo 1;return 1
+	fi
+else
+	echo 1;return 1
+fi
+
+if [ `checkTableValue "${tableName}" "${str_n2}"` -eq 0 ];then
+	checkTableValue "${tableName}" "${str_d2}"	
+else
+	echo 1;return 1
+fi
+

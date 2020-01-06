@@ -1,0 +1,19 @@
+#!/bin/bash
+#
+
+baseTableName="hive_insertbase_2_3"
+hiveTable="hive_insertselect_2_3"
+preTable ${baseTableName}
+
+${basecmd} "drop table $hiveTable;create table $hiveTable(id int,name String,loc String) \
+row format delimited fields terminated by '\t';"
+
+${exec}cmd "insert into ${hiveTable} select * from $baseTableName ;"
+${exec}cmd "insert into ${hiveTable} select * from $baseTableName ;"
+
+if [ `compareTableValue "$baseTableName" "$hiveTable"` -ne 0 ];then
+	echo 0;return 0
+fi
+echo 1
+
+

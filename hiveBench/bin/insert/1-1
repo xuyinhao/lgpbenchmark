@@ -1,0 +1,14 @@
+#!/bin/bash
+
+tableName="hive_insertinto_1_1"
+str_n=`genString 20`
+str_d=`genString 200`
+createNormalTb  $tableName
+${exec}cmd "insert into table ${tableName} values(1,'${str_n}','${str_d}');"
+[ $? -ne 0 ] && echo 1 && return 1
+if [ `checkTableValue "${tableName}" "${str_n}"` -eq 0  ];then
+	checkTableValue "${tableName}" "${str_d}"
+else
+	echo 1
+fi
+

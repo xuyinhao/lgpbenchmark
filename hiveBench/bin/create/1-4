@@ -3,9 +3,10 @@
 
 tableName="hive_bucket_tb_1_4"
 ${exec}cmd "drop table ${tableName}" >/dev/null 2>&1
-${exec}cmd "create table ${tableName}(id int,name String,loc String) \
+${exec}cmd "set hive.enforce.bucketing=true;create table ${tableName}(id int,name String,loc String) \
 	clustered by (id) into 3 buckets \
-	row format delimited fields terminated by '\t';"
+	row format delimited fields terminated by '\t'; \
+	insert into ${tableName} values (1,'a1','a11'),(1,'b1','b11');"
 checkExistTb "$tableName" "bucket" "3"
 
 #if [ $? -eq 0 ];then

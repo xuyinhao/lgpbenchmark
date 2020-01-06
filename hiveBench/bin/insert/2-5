@@ -1,0 +1,25 @@
+#!/bin/bash
+# 2-5 insert 到多个表 （select）
+
+baseTableName="hive_insertbase_ov_2_5"
+hiveTableid="hive_insertselect_id_2_5"
+hiveTablename="hive_insertselect_name_2_5"
+hiveTableall="hive_insertselect_all_2_5"
+
+preTable ${baseTableName}
+
+${exec}cmd "drop table $hiveTableid;create table $hiveTableid(id int) \
+row format delimited fields terminated by '\t';"
+${exec}cmd "drop table $hiveTablename;create table $hiveTablename(name String) \
+row format delimited fields terminated by '\t';"
+${exec}cmd "drop table $hiveTableall;create table $hiveTableall(id int,name String,loc String) \
+row format delimited fields terminated by '\t';"
+
+${exec}cmd "from $baseTableName insert into $hiveTableid select id \
+	insert into $hiveTablename select name \
+	insert overwrite table $hiveTableall select * ;"
+
+if [ `compareTableValue "$baseTableName" "$hiveTableall"` -eq 0 ];then
+	checkTableValue "$hiveTableid" "1 2 3"
+fi
+

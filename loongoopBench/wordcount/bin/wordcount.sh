@@ -25,21 +25,23 @@ declare wordcount_filePath="${lgpMountPoint}/wordscount"
 WC_LOG=/tmp/lgp-wc.log
 
 init_log $WC_LOG
-show_log "INFO" "init pass"
+show_log "INFO" "----------------------------------"
+show_log "INFO" "Start wordcount test ... init  pass"
 ##获取yarn node节点
 getNode(){
-#	local noder
 	nodeList=`ssh $nodemaster "$loongoopPath/bin/yarn node  -list 2>/dev/null  |grep RUNNING"`
 	nodeList=`echo "$nodeList"|awk -F : '{print $1}'`
 	for i in $nodeList
 	do
 		noder=$noder" "$i
+		nodenum+=1
 	done
 	echo $noder
 }
 
 nodes=`getNode`
 show_log "INFO" "yarn nodes:${nodes[@]}"
+show_log "INFO" "每个节点写入总文件大小:${1}B,每个节点文件数:${2}"
 
 ## 初始化文件路径
 log_and_show "INFO"  "the path of words : $wordcount_filePath"
@@ -49,6 +51,7 @@ log_info "`java -jar ${spath}/lib/benchmark-loongoop-x2.jar createpath "/datapoo
 
 ## 各节点执行 java 写文件
 index=0
+log_and_show "INFO" "begin write file ......" "$LINENO" "$WC_LOG"
 for node in ${nodes[@]} ; do
  ssh $node "java -jar ${spath}/lib/benchmark-loongoop-x2.jar wordswrite $1 $2 $3 ${index} $wordcount_filePath > /tmp/lgp-wc.log  2>&1 " & 
  index=`expr ${index} + 1`
@@ -77,7 +80,7 @@ fi
 log_and_show "INFO" "get mr wordcount result and check ..."
 rm -f ${cpath}/.output 1>/dev/null 2>&1
 touch ${cpath}/.output 1>/dev/null 2>&1
-${loongoopPath}/bin/hadoop fs -cat "wordcountOutput/*"  > ${cpath}/.output 2>&1
+${loongoopPath}/bin/hadoop fs -cat "wordcountOutput/*"  > ${cpath}/.output 2>/dev/null
 log_and_show ""  "`java -jar ${spath}/lib/benchmark-loongoop-x2.jar wordscheck "${cpath}/.output"`" "" $WC_LOG
 
 # shell check

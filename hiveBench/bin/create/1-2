@@ -16,7 +16,7 @@ ret=`checkExistTb "$tableName" "external" "${location}" `
 
 if [ $ret -eq 0 ];then
 	preInsertExtTb 
-	hivecmd "load data local inpath '/tmp/hive.ef' into table $tableName"
+	hivecmd "load data local inpath '/tmp/hive_ef' into table $tableName"		#hive_ef 不要修改文件名
 	checkExtValue "$tableName" "${location}" "1"
 else
 	echo $ret

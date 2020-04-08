@@ -1,11 +1,13 @@
 #!/bin/bash
 #只能用overwrite，into错误！
 ## 3-1 insert 到本地文件系统
+
 localdir='/tmp/hive_load'
 baseTableName="hive_inserttodir_base_3_1"
 tableName="hive_inserttodir_3_1"
 preTable $baseTableName
-
-${exec}cmd "insert overwrite directory '/tmp/hive_load' \
+${exec}cmd "insert overwrite local directory '${localdir}' \
 	row format delimited fields terminated by '\t' \
-	select * from ;"
+	select * from $baseTableName;"
+localValue="`cat ${localdir}/*`"
+checkTableValue "$baseTableName" "`echo $localValue`" 

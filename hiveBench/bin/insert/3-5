@@ -1,0 +1,22 @@
+#!/bin/bash
+#只能用overwrite，into错误！
+## 3-5 insert 到 本地+hadoop 文件系统
+
+mixdir='/tmp/hive_load'
+baseTableName="hive_inserttoleo_base_3_5"
+preTable $baseTableName
+
+${exec}cmd "from $baseTableName \
+	insert overwrite directory '${mixdir}' \
+	row format delimited fields terminated by '\t' \
+	select *  \
+	insert overwrite local directory '${mixdir}' \
+	row format delimited fields terminated by '\t' \
+    select * ;"
+localValue="`cat ${mixdir}/*`"
+leofsValue="`$hadoopPath fs -cat ${mixdir}/* 2>/dev/null`"
+if [ `checkTableValue "$baseTableName" "$(echo $leofsValue)" ` -eq 0 ];then
+	checkTableValue "$baseTableName" "$(echo $localValue)" 
+else
+	echo 1
+fi

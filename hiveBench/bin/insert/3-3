@@ -1,0 +1,19 @@
+#!/bin/bash
+#只能用overwrite，into错误！
+## 3-3 insert 到本地文件系统 2次
+
+leofsdir='/tmp/hive_load'
+baseTableName="hive_inserttoleo_base_3_3"
+tableName="hive_inserttoleo_3_3"
+preTable $baseTableName
+
+${exec}cmd "insert overwrite directory '${leofsdir}' \
+	row format delimited fields terminated by '\t' \
+	select * from $baseTableName;"
+
+${exec}cmd "insert overwrite directory '${leofsdir}' \
+    row format delimited fields terminated by '\t' \
+    select * from $baseTableName;"
+
+leofsValue="`$hadoopPath fs -cat ${leofsdir}/* 2>/dev/null`"
+checkTableValue "$baseTableName" "`echo $leofsValue`" 

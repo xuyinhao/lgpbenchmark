@@ -2,21 +2,24 @@
 #2-1 创建一个表，创建表选择
 baseTableName="hive_base_tb2_1"
 selectTableName="hive_select_tb_2_1"
+localPath="/datapool/hive_db_f"
 
 ## pre table
 ${exec}cmd "drop table $baseTableName" >/dev/null 2>&1
 ${exec}cmd "create table $baseTableName(id int,name String,loc String) \
 	row format delimited fields terminated by '\t';"
-loadDataToTb "/tmp/hive.db.f"
-${exec}cmd "load data local inpath '/tmp/hive.db.f' overwrite into table ${baseTableName}"
+loadDataToTb "${localPath}"
+
+${exec}cmd "load data local inpath '${localPath}' overwrite into table ${baseTableName}"
 
 ## select table
+${exec}cmd "drop table $selectTableName" >/dev/null 2>&1
 ${exec}cmd "create table ${selectTableName} as select * from $baseTableName;"
 
 ret=`checkExistTb "${selectTableName}"`
 if [ $ret -eq 0 ];then
-	ret2=`${exec}stdcmd "select * from $selectTableName;"`
-	checkInfo  "$ret2" "`cat /tmp/hive.db.f`"
+	ret2=`${exec}stdcmd "select * from $selectTableName"`
+	checkInfo   "$ret2" "`cat ${localPath}`"
 else
 	echo $ret
 fi 

@@ -25,5 +25,5 @@
 3-1 insert到本地文件系统
 3-2 inser到leofs文件系统
 3-3 多次insert (2个文件系统 [分区表]
-3-3 多次insert (2个文件系统 [桶型表]
-
+3-4 多次insert (2个文件系统 [桶型表]
+3-5 insert到2个文件系统 local leofs

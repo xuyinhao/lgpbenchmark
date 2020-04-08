@@ -6,6 +6,6 @@ ndirPath1=${apiPath}/find4-2.d1
 $touchz $nfilePath1   2>/dev/null
 $mkdir -p  $ndirPath1   2>/dev/null
 
-rett=`$find ${apiPath} -name "find4-2*"  -print 2>&1`
+rett=`$find ${apiPath} -name "find4-2*"  -print 2>/dev/null`
 checkOk $? "$rett" ${apiPath} "find4-2*" 
 

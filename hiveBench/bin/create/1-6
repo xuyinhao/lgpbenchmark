@@ -1,0 +1,39 @@
+#!/bin/bash
+tableName="hive_tb_part_external_1_6"
+location="/tmp/$tableName"
+table_info="
+create external table ${tableName}
+(BeginTime bigint,
+CallDuration bigint,
+CardType string,
+CardNo string,
+HomeArea string,
+UserNum string,
+RelateHomeAc string,
+RelateNum string,
+CallType string,
+CallFlag string,
+Charge string,
+NeID string,
+RouterOut string,
+RouterIn string,
+OrigFileID string,
+RelateNumIp string,
+DatiipTrach string,
+SpCode string
+)
+partitioned by (cp bigint, id bigint)
+row format delimited fields terminated by ',' lines terminated by '\n'
+stored as textfile
+location '${location}';
+"
+
+${exec}cmd "drop table ${tableName}";
+${exec}cmd "$table_info"
+if [ `checkExistTb "${tableName}" "external"  "${location}"` -eq 0 ];then
+	${exec}cmd "insert into $tableName  partition (cp=20201010,id=3333333) \
+	values (123456,654321,'Ctype','CardNo','Asian','009900','addf','RekateNum','CallType','CallFalg','charge','NeID', \
+	'RouterOut','RouterIn', 'OgFID','13.13.13.13','Datiip','SpCode');"
+	if [ $? -ne 0 ];then echo 1 ; return 1;fi
+	checkPartitionTb  "$tableName"
+fi

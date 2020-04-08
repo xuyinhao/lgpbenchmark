@@ -5,7 +5,6 @@ moreRowNum=10
 queryRowNum=1000
 updateRowNum=5000
 
-nodeList="mds1 node29 node30"
 threadNum=20
 
 queryThreadNum=50

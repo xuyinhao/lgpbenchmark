@@ -1,7 +1,7 @@
 #!/bin/bash
 #1-3 创建一个表，有多个属性
-
-#hbaseShell  "disable 'ct_table1-3'; drop 'ct_table1-3';create 'ct_table1-3',{NAME=>'cf_ct_table1-3',VERSIONS=>1, BLOCKCACHE=>true,BLOOMFILTER=>'ROW',COMPRESSION=>'SNAPPY',TTL => 2592000 },{SPLITS => ['1','2','a','b']}" 
+#
+hbaseShell  "disable 'ct_table1-3'; drop 'ct_table1-3';create 'ct_table1-3',{NAME=>'cf_ct_table1-3',VERSIONS=>1, BLOCKCACHE=>true,BLOOMFILTER=>'ROW',COMPRESSION=>'SNAPPY',TTL => 2592000 },{SPLITS => ['1','2','a','b']}" 
 
 checkExistIndex "" "ct_table1-3" 'cf_ct_table1-3 ROW DAYS) SNAPPY'
 #checkExistIndex "{NAME => 'cf_ct_table1-3', DATA_BLOCK_ENCODING => 'NONE', BLOOMFILTER => 'ROW', REPLICATION_SCOPE => '0', VERSIONS => '1', COMPRESSION => 'SNAPPY', MIN_VERSIONS => '0', TTL => '2592000 SECONDS (30 DAYS)', KEEP_DELETED_CELLS => 'FALSE', BLOCKSIZE => '65536', IN_MEMORY => 'false', BLOCKCACHE => 'true'}" "ct_table1-3"  'cf_ct_table1-3 ROW DAYS) SNAPPY'

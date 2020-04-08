@@ -1,0 +1,14 @@
+#!/bin/bash
+#只能用overwrite，into错误！
+## 3-2 insert 到hadoop文件系统
+
+leofsdir='/tmp/hive_load'
+baseTableName="hive_inserttoleo_base_3_2"
+tableName="hive_inserttoleo_3_2"
+preTable $baseTableName
+
+${exec}cmd "insert overwrite directory '${leofsdir}' \
+	row format delimited fields terminated by '\t' \
+	select * from $baseTableName;"
+leofsValue="`$hadoopPath fs -cat ${leofsdir}/* 2>/dev/null`"
+checkTableValue "$baseTableName" "`echo $leofsValue`" 

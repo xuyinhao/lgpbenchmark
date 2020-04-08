@@ -1,11 +1,22 @@
 #!/bin/bash
-exec=hive
 
+###########################################
+# exec :hive , beeline
+# 设定 执行测试的hive方式
+############################################
+exec=hive
+#exec=beeline
+
+
+########################################################
+## base  hive conf
+########################################################
 hiveHome=/loongoop/hive-1.2.1/
 beelineConnect="jdbc:hive2://node29:21066"
 
-hadoopPath="/loongoop/loongoop-1.0.5-v2.7.2/bin/hadoop"
+hadoopPath="/loongoop/loongoop-1.0.6-v2.7.2/bin/hadoop"
 
 hiveConfPath="${hiveHome}/conf/hive-site.xml"
 hivePath=${hiveHome}/bin/hive
 beelinePath=${hiveHome}/bin/beeline
+######################################################

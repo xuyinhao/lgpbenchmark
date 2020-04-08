@@ -7,30 +7,34 @@ path=`cd $path;cd "..";pwd`
 . "${path}/lib/log_tool.sh"
 LOG_HIVE="/tmp/lgp-hive.log"
 caseConfDir="$path/conf/caseConf"
-
+init_log $LOG_HIVE
 
 runCase(){
  exist=$(echo "$1"| grep "#")
  if [ "$exist" != "" ]; then
-    echo "pass $1"
+    log_and_show "INFO" "Skip $1"
   else
    if [ ! -d $path/bin/"$1" ]; then
-    echo "$apiConf are prefered!"
+    log_and_show "INFO" "$apiConf are prefered!"
    else
      #echo "2:$2"
      for caseName in $cases
      do
       passed=$(echo $caseName | grep "#")
       if [ "$passed" != "" ]; then
-       echo "pass $apiName.$caseName"
+       log_and_show "INFO" "Skip $apiName.$caseName"
       else
        testcase="$path/bin/$apiName/$caseName"
        #echo "testCase:$testcase"
        if [ -f $testcase ]; then
         ret=`. $testcase`
-        echo "$apiName.$caseName $ret"
+		if [ $ret -eq 0 ];then
+	        log_and_show "INFO" "$apiName.$caseName pass"
+		else
+	        log_and_show "ERROR" "$apiName.$caseName fail"
        fi
       fi
+	 fi
     done
    fi
  fi
@@ -47,8 +51,8 @@ if [ 0 -eq $# ]; then
 elif [ 1 -eq $# -o 2 -eq $# ]; then
 	apiName=$1              # apiName 
 	if [ ! -d $path/bin/"$apiName" ]; then
-    	echo "apiName are prefered!"
-    	echo "check $path/bin/"$apiName" exist "
+    	log_and_show "WARN"  "apiName are prefered!"
+    	log_and_show "WARN"  "check $path/bin/"$apiName" exist "
 		echo_help
     	exit 1
 	fi
@@ -62,6 +66,5 @@ else
 	echo_help
 fi
 logTime="$(date +'%Y-%m-%d_%T')"
-init_log $LOG_HIVE
-echo $logTime  $apiName $cases |tee -a $LOG_HIVE
-runCase $apiName "${cases}" |tee -a $LOG_HIVE
+log_and_show "INFO" "$logTime  $apiName $cases"
+runCase $apiName "${cases}" 

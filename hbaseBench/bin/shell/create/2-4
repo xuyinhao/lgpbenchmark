@@ -1,8 +1,8 @@
 #!/bin/bash
 #2-4 创建 大小写的表 
 
-tableName241="tb_2-4.name"
-tableName242="TB_2-4.NAME"
+tableName241="ct_table_tb_2-4.name"
+tableName242="ct_table_TB_2-4.NAME"
 cfName241="cf_$tableName241"
 cfName242="CF_$tableName242"
 

@@ -6,7 +6,7 @@ $rm -r -f $nfilePath1 $ndirPath1 >/dev/null 2>&1
 $touchz $nfilePath1   2>/dev/null
 $mkdir -p  $ndirPath1   2>/dev/null
 
-rett=`$find  -name "find3-3*" 2>&1`
+rett=`$find  -name "find3-3*" 2>/dev/null`
 checkOk $? "$rett" "" "find3-3*"
 
 $rm -r -f $nfilePath1 $ndirPath1 >/dev/null 2>&1

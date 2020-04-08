@@ -6,6 +6,6 @@ ndirPath1=${apiPath}/find3-2.d1
 $touchz $nfilePath1   2>/dev/null
 $mkdir -p  $ndirPath1   2>/dev/null
 
-rett=`$find leofs://${apiPath} -name "find3-2*" 2>&1`
+rett=`$find leofs://${apiPath} -name "find3-2*" 2>/dev/null`
 checkOkByFs $? "$rett" ${apiPath} "find3-2*" "leofs"
 

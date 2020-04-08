@@ -1,7 +1,7 @@
 #!/bin/bash
 #2-3 创建一个 特殊字符\中文的表:只可以是 a-zA-z0-9_-.
 
-tableName23="tb_2-3.NAME"
+tableName23="ct_table2-3.NAME"
 cfName23="cf_$tableName23"
 hbaseShell  "disable '$tableName23'; drop '$tableName23';create '$tableName23','$cfName23'"
 

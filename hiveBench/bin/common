@@ -5,9 +5,10 @@
 ##		2020-01  Xuyh 
 #########################
 
-declare basecmd=hivecmd					#检查正确性时，使用的cmd入口
-declare basestdcmd=hivestdcmd
-declare LOG_HIVE_RUN=/tmp/lgp-run-hive.log
+
+declare basecmd=hivecmd	#beelinecmd #hivecmd						#检查正确性时，使用的cmd入口 hivecmd, beelinecmd
+declare basestdcmd=hivestdcmd	#beelinestdcmd #hivestdcmd				# hivestdcmd, beelinestdcmd
+declare LOG_HIVE_RUN=/tmp/lgp-run-hive.log		# 运行时，日志记录位置
 
 ##########################################################################
 #  DESCRIPTION  :log save to file 
@@ -62,7 +63,7 @@ beelinestdcmd(){
 	retv="`$beelinePath -u $beelineConnect --silent=true -e "$bs_cmds" 2>&1`"
     declare -i retf=$?
     hive_info "`echo $retv`" "$LINENO"
-	echo "$retv" > /dev/null
+	echo "$retv"|grep -v ".id"|grep -v ".name"| grep -v "-"|sed 's/|//g'
     return $retf
 }
 
@@ -78,7 +79,6 @@ genString(){
   for ((i =0;i < $1;i++));do strs="$strs${array[$(($RANDOM%$j))]}"; done;
         echo $strs
 }
-
 ##########################################################################
 #  DESCRIPTION  : 检查db是否存在， 并检查hadoop fs的路径文件
 #  Para         : $1: db name
@@ -111,7 +111,7 @@ checkTbHdfsPath(){
 	return $?
 }
 preInsertPartitionTb(){
-	local p_value_f="/tmp/hive.pf"
+	local p_value_f="/tmp/hive_pf"
 	local p_tb_name="$1"
     local p_partName="$2"
     local p_partValue="$3"
@@ -125,12 +125,12 @@ preInsertPartitionTb(){
 		p_partValue="11"
 	fi
 	
-	$basecmd "dfs -rm  /hive.pf " >> $LOG_HIVE_RUN 2>&1
+	$basecmd "dfs -rm  /hive_pf " >> $LOG_HIVE_RUN 2>&1
 	$basecmd  "dfs -put file://$p_value_f /"  >> $LOG_HIVE_RUN 2>&1
 	
 }
 checkPartitionValue(){
-	local p_value_f="/tmp/hive.pf"
+	local p_value_f="/tmp/hive_pf"
 	flag=1
     local p_tb_name="$1"
     local p_partName="$2"
@@ -143,7 +143,7 @@ checkPartitionValue(){
     if [[ $p_partValue == "" ]];then
         p_partValue="11"
     fi
-	ret=`$basestdcmd "dfs -ls  leofs://`getHiveWarehouse`/${p_tb_name}/${p_partName}=${p_partValue};"`
+	ret=$($basestdcmd "dfs -ls  leofs://`getHiveWarehouse`/${p_tb_name}/${p_partName}=${p_partValue};")
 	if [ $? -eq 0 ];then
 		flag=0
 		if [[ $p_items_num != "" ]];then
@@ -158,8 +158,8 @@ checkPartitionValue(){
 checkPartitionTb(){
 	# 分区表必须,分区点是month
 	local p_tb_name="$1"
-	local p_partName="$2"
-	local p_partValue="$3"
+	#local p_partName="$2"
+	#local p_partValue="$3"
 
 	if [[ "$p_partName" == "" ]];then
 		p_partName="month"
@@ -168,9 +168,9 @@ checkPartitionTb(){
 	p_ret=`$basecmd "show partitions $1" >> $LOG_HIVE_RUN 2>&1`
 	
 	if [ $? -eq 0 ];then
-		return 0
+		echo 0;return 0
 	fi
-	return 1
+	echo 1;return 1
 }
 
 checkBucketTb(){
@@ -189,7 +189,7 @@ checkBucketTb(){
 }
 
 preInsertExtTb(){
-	local e_value_f="/tmp/hive.ef"
+	local e_value_f="/tmp/hive_ef"
 	echo_data $e_value_f
 }
 loadDataToTb(){
@@ -205,11 +205,11 @@ checkExtValue(){
 
 	ret=`$basestdcmd "dfs -ls  leofs://${e_location}"`
     if [ $? -eq 0 ];then
-        flag=0
+        flag=1
         if [[ $e_items_num != "" ]];then
             real_num=`echo $ret|grep -oP "(?<=Found )(\w*)(?= items)"`
-            if [ $e_items_num -ne $real_num ];then
-                flag=1
+            if [ $e_items_num -eq $real_num ];then
+                flag=0
             fi
         fi
     fi
@@ -274,7 +274,7 @@ checkExistTb(){
 	if [ $flag -eq 0 ];then
 		# check partition : show partitions
 		if [[ "$otherCheck" == "partition" ]];then
-			checkPartitionTb "$checkTb" 
+			ret="`checkPartitionTb "$checkTb" `"
 			if [ $? -ne 0 ];then
             	flag=1
         	fi
@@ -307,7 +307,10 @@ checkInfo(){
     local e_info="$1"
     local e_checkvalue="$2"
     local flag=1
-    if [[ "$e_info" =~ "$e_checkvalue" ]];then
+	e_info1=`echo "$e_info"|xargs`
+	e_checkvalue1=`echo "$e_checkvalue"|xargs`
+
+    if [[ "$e_info1" =~ "$e_checkvalue1" ]];then
         flag=0
     fi
     echo $flag
@@ -323,8 +326,8 @@ preTable(){
 	${basecmd} "drop table $p_tabletableName" >/dev/null 2>&1
 	${basecmd} "create table $p_tableName(id int,name String,loc String) \
     	row format delimited fields terminated by '\t';"
-	loadDataToTb "/tmp/hive.db.f"
-    ${exec}cmd "load data local inpath '/tmp/hive.db.f' overwrite into table ${p_tableName}"
+	loadDataToTb "/tmp/hive_db_f"
+    ${exec}cmd "load data local inpath '/tmp/hive_db_f' overwrite into table ${p_tableName}"
 	return $?
 }
 
@@ -367,8 +370,10 @@ checkTableValue(){
     local c_info="$2"
 	local c_tableType="$3"
 	local c_p_value="$4"
-    ret_t1=`${basestdcmd} "select * from $ck_tableName"`
-    grep_t1=`echo $ret_t1|xargs|grep -oP "(?<=OK )(.*)(?=Time taken)"`
+    #ret_t1=`${basestdcmd} "select * from $ck_tableName"`
+    #grep_t1=`echo $ret_t1|xargs|grep -oP "(?<=OK )(.*)(?=Time taken)"`
+
+	grep_t1=`${basestdcmd} "select * from $ck_tableName" 2>/dev/null |grep -v "${ck_tableName}" |grep -v "-"|sed 's/|//g'`
 
     if [[ "$grep_t1" =~ "${c_info}" ]];then
 		if [ "$c_tableType" != "" ] && [ "$c_tableType" != "partition" ];then

@@ -13,7 +13,7 @@ ${exec}cmd "create table ${tableName}(deptno int,dname string,loc string) \
 ret=`checkExistTb "${tableName}" "partition"`
 if [ $ret -eq 0 ];then
 	preInsertPartitionTb "$tableName" "month" "12"
-	hivecmd "load data inpath '/hive.pf' into table $tableName  partition(month='12');"
+	hivecmd "load data inpath '/hive_pf' into table $tableName  partition(month='12');"
 	checkPartitionValue "$tableName" "month" "12"  "1"
 else
 	echo 1

@@ -1,6 +1,6 @@
 #!/bin/bash
 #hbasePathShell="/loongoop/hbase-1.3.1/bin/hbase  shell"
-#hadoopPath="/loongoop/loongoop-1.0.5-v2.7.2/bin/hadoop"
+#hadoopPath="/loongoop/loongoop-1.0.6-v2.7.2/bin/hadoop"
 LOG_HBASE_RUN="/tmp/lgp-run-hbase.log"
 hbase_info(){
 	init_log $LOG_HBASE_RUN

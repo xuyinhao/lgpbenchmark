@@ -10,6 +10,6 @@ ndirPath3=${apiPath}/findxx1-1.d2
 $touchz $nfilePath1 $nfilePath2 $nfilePath3  2>/dev/null
 $mkdir -p  $ndirPath1 $ndirPath2 $ndirPath3  2>/dev/null
 
-rett=`$find ${apiPath} -name "find1-1*" 2>&1`
+rett=`$find ${apiPath} -name "find1-1*" 2>/dev/null`
 checkOk $? "$rett" $apiPath "find1-1*"
 

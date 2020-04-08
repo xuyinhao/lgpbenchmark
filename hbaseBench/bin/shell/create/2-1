@@ -1,10 +1,11 @@
 #!/bin/bash
 #2-1 创建一个表，255B
 
-strName=`genString 255`
+tableName=`genString 255`
 
-hbaseShell  "disable '$strName'; drop '$strName';create '$strName','cf_ct_2-1'" 
+hbaseShell  "disable '$tableName'; drop '$tableName';create '$tableName','cf_ct_2-1'" 
 
-checkExistTableColumn "$strName" "cf_ct_2-1" 			#$1:tableName $2...: cloumnName
+checkExistTableColumn "$tableName" "cf_ct_2-1" 			#$1:tableName $2...: cloumnName
 
-hbaseShell "disable '$strName'; drop '$strName'"
+#清掉
+#hbaseShell "disable '$tableName'; drop '$tableName'"

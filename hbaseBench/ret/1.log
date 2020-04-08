@@ -1,30 +1,3 @@
-[2019-12-26_11:06:20] INFO: Create log file /opt/lgpbenchmark/hbaseBench/ret/1.log successfully. (main;[log_tool.sh:223])
-[2019-12-26_11:06:20] INFO: this hbase test will run just one time (main;)
-[2019-12-26_11:06:20] INFO: Run cmd: /opt/lgpbenchmark/hbaseBench/bin/insert.sh test_small 10000 3 20 1000  (hbaseTest;)
-[2019-12-26_11:06:35] INFO: Cmd result: delete test_small success!
-create test_small success!
-node29:use time 224ms, avg is 14879 r/s
-mds1:use time 305ms, avg is 10927 r/s
-node30:use time 460ms, avg is 7245 r/s
-@@total:10000r,time:460ms,avg:21739r/s,space:2285B,speed:4967B/s
- (hbaseTest;)
-[2019-12-26_11:06:35] INFO: Run cmd: /opt/lgpbenchmark/hbaseBench/bin/query.sh test_small 1000 3 20 /tmp/  (hbaseTest;)
-[2019-12-26_11:06:38] INFO: Cmd result: @@total:1000r,time:1538ms,avg:650r/s,maxDelay:375ms,avgDelay:19ms
- (hbaseTest;)
-[2019-12-26_11:06:38] INFO: Run cmd: /opt/lgpbenchmark/hbaseBench/bin/update.sh test_small 5000 3 50 10 /tmp/  (hbaseTest;)
-[2019-12-26_11:06:40] INFO: Cmd result: @@total:5000r,time:1868ms,updateSum:4848r,updateAvg:2595r/s,querySum:150r,queryAvg:80r/s,maxDelay:395ms,avgDelay:320ms
- (hbaseTest;)
-[2019-12-26_11:06:40] INFO: Run cmd: /opt/lgpbenchmark/hbaseBench/bin/insertmore.sh test_small 10 3 20 1000  (hbaseTest;)
-[2019-12-26_11:06:43] INFO: Cmd result: node29:use time 22ms, avg is 136 r/s
-mds1:use time 38ms, avg is 78 r/s
-node30:use time 62ms, avg is 48 r/s
-@@total:10r,time:62ms,avg:161r/s
- (hbaseTest;)
-[2019-12-26_11:06:43] INFO: Run cmd: /opt/lgpbenchmark/hbaseBench/bin/count.sh test_small  (hbaseTest;)
-[2019-12-26_11:07:27] INFO: Cmd result: @@time:44445ms,count:14808r
- (hbaseTest;)
-[2019-12-26_11:07:27] INFO: Run cmd: /opt/lgpbenchmark/hbaseBench/bin/column.sh test_small col1 1000  (hbaseTest;)
-[2019-12-26_11:07:38] INFO: Cmd result: modify table finish
-@@total:14808r,time:374ms,avg:39593r/s
- (hbaseTest;)
-[2019-12-26_11:07:38] INFO: Run cmd: /opt/lgpbenchmark/hbaseBench/bin/insertWithCheck.sh iwcTestTable_small 1000 3 10 1  (hbaseTest;)
+[2020-04-09_01:40:01] INFO: Create log file /opt/lgpbenchmark/hbaseBench/ret/1.log successfully. (main;[log_tool.sh:223])
+[2020-04-09_01:40:01] INFO: this hbase test will run just one time (main;)
+[2020-04-09_01:40:01] INFO: Run cmd: /opt/lgpbenchmark/hbaseBench/bin/insert.sh test_small 10000 3 20 1000  (hbaseTest;)

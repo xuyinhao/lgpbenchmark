@@ -2,6 +2,7 @@
 if [ $# -le 0 ];then
 	echo """Usage:
 	$0 runlevel [runtimes]
+	runtimes : default=1
 	Example:
 	    $0 small 
 	    $0 middle 2
@@ -17,6 +18,8 @@ declare -i retNum=1
 cpath=`dirname $0`
 cpath=`cd "${cpath}";cd "..";pwd`
 . ${cpath}/lib/log_tool.sh
+. ${cpath}/conf/conf
+
 declare retLog=${cpath}/ret/$retNum.log 
 
 if [ -d "${cpath}/ret" ]; then
@@ -47,7 +50,9 @@ fi
 cmds=()
 nodes=(${nodeList})
 nodeNum=${#nodes[@]}
-
+echo "----------------"
+echo $nodes
+echo $nodeNum
 #insert
 cmds[0]="${cpath}/bin/insert.sh ${tableName} ${rowNum} ${nodeNum} ${threadNum} ${batch}"
 #echo "cmd0:${cmds[0]}"

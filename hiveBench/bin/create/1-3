@@ -9,7 +9,7 @@ ${exec}cmd "create temporary table ${tableName}(id int,name String); \
 	desc ${tableName};"
 
 if [ $? -eq 0 ];then
-	ret=`${exec}stdcmd "desc $tableName"`
+	ret=`${exec}stdcmd "desc $tableName" 2>&1`
 	checkInfo  "$ret" "Table not found" 
 else
 	echo 1

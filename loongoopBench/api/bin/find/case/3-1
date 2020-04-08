@@ -6,6 +6,6 @@ ndirPath1=${tmpDir}/find3-1.d1
 touch $nfilePath1   2>/dev/null
 mkdir -p  $ndirPath1   2>/dev/null
 
-rett=`$find file://${tmpDir} -name "find3-1*" 2>&1`
+rett=`$find file://${tmpDir} -name "find3-1*" 2>/dev/null`
 checkOkByFs $? "$rett" ${tmpDir} "find3-1*" "local"
 

@@ -102,7 +102,9 @@ show_log()
         echo "$logTime [ERROR]:${2}" 1>&2
     elif [ "$1" = "INFO" -o "$1" = "info" ];then
         echo "$logTime  [INFO]:${2}"
-    else
+    elif [ "$1" = "WARN" -o "$1" = "warn" ];then
+		echo "$logTime  [WARN]:${2}"
+	else
         echo "`date +%D_%T` : $@"
     fi
 

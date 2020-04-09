@@ -15,6 +15,7 @@ testJarPath="${loongoopPath}/share/hadoop/mapreduce/hadoop-mapreduce-client-jobc
 #################################
 ## api conf						#
 ## 测试api时需要的路径			#
+## 一般不用修改					#
 #################################
 rootPath="/testxyh"		#hdfs目录下的，测试根路径。测试 数据将会生成在此目录下
 tmpDir="/opt/tmpDir"	#本地的 测试数据临时目录路径
@@ -26,7 +27,6 @@ loongoopfs="${loongoopPath}/bin/hadoop fs"
 # 	mr-wordcount配置			#
 ################################# 
 nodemaster="mds1"						#resouremanager hostname
-#nodeList="master slave1 slave2"			#节点
 wordcount_filePath="/wordscount" 		#hdfs path , wordcount原始数据的路径
-reduceNum=2								#wordcount MR reduce num
+reduceNum=4								#wordcount MR reduce num 。 map数 可由文件数、split.minsize调整
 

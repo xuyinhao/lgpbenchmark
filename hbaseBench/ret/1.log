@@ -1,3 +1,0 @@
-[2020-04-09_01:40:01] INFO: Create log file /opt/lgpbenchmark/hbaseBench/ret/1.log successfully. (main;[log_tool.sh:223])
-[2020-04-09_01:40:01] INFO: this hbase test will run just one time (main;)
-[2020-04-09_01:40:01] INFO: Run cmd: /opt/lgpbenchmark/hbaseBench/bin/insert.sh test_small 10000 3 20 1000  (hbaseTest;)

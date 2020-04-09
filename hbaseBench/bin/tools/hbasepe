@@ -1,0 +1,2 @@
+#hbase pe test
+${hbasePath} org.apache.hadoop.hbase.PerformanceEvaluation --rows=10 --table='ct_hbasepetest' --compress="GZ" --columns=3 --nomapred sequentialWrite 3

@@ -3,22 +3,25 @@ path=`dirname $0`
 path=`cd $path;cd "..";pwd`
 
 . "${path}/conf/conf"
-. "${path}/bin/shell/common"
+. "${path}/bin/tools/common"
 . "${path}/lib/log_tool.sh"
 
 LOG_HBASE="/tmp/lgp-hbase.log"
 caseConfDir="$path/conf/caseConf"
+totalcasenum=0
+passnum=0
 
 runCase(){
-     #echo "2:$2"
-       testcase="$path/bin/tools/$cases"
-       #echo "testCase:$testcase"
-       if [ -f $testcase ]; then
+	let totalcasenum+=1
+	testcase="$path/bin/tools/$cases"
+       
+	if [ -f $testcase ]; then
         ret=`. $testcase`		#1:fail, 0 :pass
 	 	if [ $ret -eq 0 ];then
-	        log_and_show "INFO" "$apiName.$caseName pass"
+	        log_and_show "INFO" "Tools.$apiName pass"
+			let passnum+=1
 		else
-	        log_and_show "ERROR" "$apiName.$caseName fail"
+	        log_and_show "ERROR" "Tools.$apiName fail"
         fi
 	   fi
 }
@@ -34,7 +37,7 @@ if [ 0 -eq $# ]; then
 elif [ 1 -eq $# ]; then
 	apiName=$1              # apiName 
 	if [ ! -f $path/bin/tools/"$apiName" ]; then
-    	log_and_show "WARN" "apiName are prefered!"
+    	log_and_show "WARN" "toolName are prefered!"
     	log_and_show "WARN" "check $path/bin/tools/"$apiName" exist "
 		echo_help
 	fi
@@ -49,6 +52,7 @@ fi
 logTime="$(date +'%Y-%m-%d_%T')"
 init_log "$LOG_HBASE"
 
-echo "$logTime run hbaseShellTest: $apiName "$cases"" |tee -a "$LOG_HBASE"
+log_and_show "INFO" "run hbaseTools: Tools $apiName"
 runCase  "${cases}" 
-log_and_show  "INFO" "Hbase shell $apiName test finished! Log path : $LOG_HBASE"
+echo totalnum:$totalcasenum , passnum:$passnum
+#log_and_show  "INFO" "Hbase shell $apiName test finished! Log path : $LOG_HBASE"

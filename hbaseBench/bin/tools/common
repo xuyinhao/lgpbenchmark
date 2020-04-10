@@ -95,9 +95,21 @@ checkOk(){
 	local e_flag=$1
  flag=1
  if [ 0 -eq $e_flag ]; then
-  flag=0
-  echo $flag
+  	flag=0
+	echo $flag
  else
- echo $flag
+ 	echo $flag
 fi
+}
+
+checkExistSnap(){
+	local check_table=$1
+	local check_snap=$2
+	flag=1
+	ret=`hbaseStdShell "list_snapshots" |grep " $check_table "`
+	if [[ $ret =~ "$check_snap" ]];then
+		flag=0
+	fi
+	echo $flag
+	
 }

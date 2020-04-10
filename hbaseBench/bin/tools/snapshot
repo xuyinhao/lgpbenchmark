@@ -1,0 +1,17 @@
+#!/bin/bash
+#快照测试
+plog="/tmp/lgp-hbase.tool.detail.log"
+
+hbaseShell  "disable 'ct_table_snp'; drop 'ct_table_snp';create 'ct_table_snp','cf1','cf2'; put 'ct_table_snp','row1','cf1:no','1';put 'ct_table_snp','row1','cf1:no','2'; put 'ct_table_snp','row1','cf1:no','3'; put 'ct_table_snp','row1','cf1:no','4';delete_snapshot 'ct_table_snp_s1'"  > $plog 2>&1
+
+flag=1
+if [ `checkExistTableColumn "ct_table_snp" "cf2" ` -eq 0 ];then            #$1:tableName $2...: cloumnName
+	$hbasePath snapshot create -n ct_table_snp_s1 -t ct_table_snp >/dev/null 2>&1
+	if [ $? -eq 0 ] ;then
+		ret=`checkExistSnap "ct_table_snp" "ct_table_snp_s1"`
+		if [ $ret -eq 0 ];then
+			flag=0
+		fi
+	fi
+fi
+echo $flag

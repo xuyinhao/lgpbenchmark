@@ -9,35 +9,39 @@ path=`cd $path;cd "..";pwd`
 LOG_HBASE="/tmp/lgp-hbase.log"
 caseConfDir="$path/conf/caseConf"
 
+totalcasenum=0
+passnum=0
+
+
 runCase(){
- exist=$(echo "$1"| grep "#")
- if [ "$exist" != "" ]; then
-    log_and_show "INFO" "Skip:  $1"
-  else
-   if [ ! -d $path/bin/shell/"$1" ]; then
-    log_and_show "INFO" "$apiConf are prefered!"
-   else
-     #echo "2:$2"
-     for caseName in $cases
-     do
-      passed=$(echo $caseName | grep "#")
-      if [ "$passed" != "" ]; then
-       log_and_show "INFO" "pass $apiName.$caseName"
-      else
-       testcase="$path/bin/shell/$apiName/$caseName"
-       #echo "testCase:$testcase"
-       if [ -f $testcase ]; then
-        ret=`. $testcase`		#1:fail, 0 :pass
-	 	if [ $ret -eq 1 ];then
-	        log_and_show "ERROR" "$apiName.$caseName fail"
-		else
-	        log_and_show "INFO" "$apiName.$caseName pass"
-        fi
-	   fi
-	  fi
-     done
-   fi
- fi
+ 	exist=$(echo "$1"| grep "#")
+ 	if [ "$exist" != "" ]; then
+    	log_and_show "INFO" "Skip:  $1"
+	else
+		let totalcasenum+=1
+		if [ ! -d $path/bin/shell/"$1" ]; then
+    		log_and_show "INFO" "$apiConf are prefered!"
+   		else
+     		for caseName in $cases
+     		do
+      			passed=$(echo $caseName | grep "#")
+      			if [ "$passed" != "" ]; then
+       				log_and_show "INFO" "pass $apiName.$caseName"
+      			else
+       				testcase="$path/bin/shell/$apiName/$caseName"
+       				#echo "testCase:$testcase"
+       				if [ -f $testcase ]; then
+        				ret=`. $testcase`		#1:fail, 0 :pass
+	 					if [ $ret -eq 1 ];then
+	        				log_and_show "ERROR" "$apiName.$caseName fail"
+						else
+	        				log_and_show "INFO" "$apiName.$caseName pass"
+        			fi
+	   			fi
+	  		fi
+     		done
+   		fi
+ 	fi
 }
 
 echo_help(){

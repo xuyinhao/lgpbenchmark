@@ -7,7 +7,7 @@ for apiName in $apiConf
 do
   exist=`echo "$apiName"| grep "#"`
   if [ "$exist" != "" ]; then
-    echo "pass api ${apiName#\#}"
+    echo "Skip hbaseshell test:${apiName#\#}"
   else
 #    echo "run api $apiName"
     cases=`cat $caseConfDir/$apiName`

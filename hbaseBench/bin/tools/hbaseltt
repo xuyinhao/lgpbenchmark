@@ -1,1 +1,15 @@
+#!/bin/bash
 #hbase ltt test
+
+plog="/tmp/lgp-hbase.tool.detail.log"
+ret1=`$hbasePath ltt -write 10:1024:20  -num_keys 100 -num_tables 3 -compression GZ > $plog 2>&1`
+flag1=$?
+ret2=`$hbasePath ltt -read 10:1024  -num_keys 100 -num_tables 3 -compression GZ > $plog 2>&1`
+flag2=$?
+
+if [  `checkOk "$flag1"` -eq 0 -a  `checkOk "$flag2"` -eq 0  ];then
+	checkExistIndex "" "cluster_test_3" "GZ" "test_cf"
+    return 0
+fi
+echo 1
+

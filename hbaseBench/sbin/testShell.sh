@@ -9,8 +9,8 @@ path=`cd $path;cd "..";pwd`
 LOG_HBASE="/tmp/lgp-hbase.log"
 caseConfDir="$path/conf/caseConf"
 
-totalcasenum=0
-passnum=0
+#totalcasenum=0
+#passnum=0
 
 
 runCase(){
@@ -18,7 +18,7 @@ runCase(){
  	if [ "$exist" != "" ]; then
     	log_and_show "INFO" "Skip:  $1"
 	else
-		let totalcasenum+=1
+		#let totalcasenum+=1
 		if [ ! -d $path/bin/shell/"$1" ]; then
     		log_and_show "INFO" "$apiConf are prefered!"
    		else

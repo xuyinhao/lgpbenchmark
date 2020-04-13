@@ -79,6 +79,8 @@ checkExistTableColumn(){
 	echo $flag
 }
 
+#value1 是否包含value2
+# return 0:包含
 checkInfo(){
 	local e_info="$1"
 	local e_checkvalue="$2"
@@ -113,3 +115,21 @@ checkExistSnap(){
 	echo $flag
 	
 }
+
+checkHbasePath(){
+:
+}
+
+catHdfsFile(){
+	path=$1
+	echo `$hadoopPath fs -cat $path 2>/dev/null` 
+}
+rmHdfsPath(){
+	path=$1
+	ret=`$hadoopPath fs -rmr $path 2>/dev/null`
+	if [ $? -eq 0 ];then
+		return 0
+	else
+		return 1
+	fi
+}	

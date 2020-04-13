@@ -8,18 +8,18 @@ path=`cd $path;cd "..";pwd`
 
 LOG_HBASE="/tmp/lgp-hbase.log"
 caseConfDir="$path/conf/caseConf"
-totalcasenum=0
-passnum=0
+#totalcasenum=0
+#passnum=0
 
 runCase(){
-	let totalcasenum+=1
+	#let totalcasenum+=1
 	testcase="$path/bin/tools/$cases"
        
 	if [ -f $testcase ]; then
         ret=`. $testcase`		#1:fail, 0 :pass
 	 	if [ $ret -eq 0 ];then
 	        log_and_show "INFO" "Tools.$apiName pass"
-			let passnum+=1
+#			let passnum+=1
 		else
 	        log_and_show "ERROR" "Tools.$apiName fail"
         fi
@@ -54,5 +54,4 @@ init_log "$LOG_HBASE"
 
 log_and_show "INFO" "run hbaseTools: Tools $apiName"
 runCase  "${cases}" 
-echo totalnum:$totalcasenum , passnum:$passnum
 #log_and_show  "INFO" "Hbase shell $apiName test finished! Log path : $LOG_HBASE"

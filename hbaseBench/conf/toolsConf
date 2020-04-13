@@ -1,4 +1,9 @@
-#bulkload
+#2bulkload
 hbasepe
 hbaseltt
-snapshot
+#hbaseexport
+#hbaseimport
+snapshotcreate
+snapshotrestore
+snapshotclone
+snapshotexport  

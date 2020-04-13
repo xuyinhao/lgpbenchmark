@@ -1,0 +1,43 @@
+#!/bin/bash
+#快照测试
+plog="/tmp/lgp-hbase.tool.detail.log"
+
+snp_ct(){
+hbaseShell  "disable 'ct_table_r'; drop 'ct_table_r';create 'ct_table_r','cf1','cf2'; put 'ct_table_r','row1','cf1:no','1';put 'ct_table_r','row1','cf1:no','2'; put 'ct_table_r','row2','cf1:no','3'; put 'ct_table_r','row3','cf1:no','4';delete_snapshot 'ct_table_r_s1'"  > $plog 2>&1
+
+flag=1
+if [ `checkExistTableColumn "ct_table_r" "cf2" ` -eq 0 ];then            #$1:tableName $2...: cloumnName
+	$hbasePath snapshot create -n ct_table_r_s1 -t ct_table_r >/dev/null 2>&1
+	if [ $? -eq 0 ] ;then
+		ret=`checkExistSnap "ct_table_r" "ct_table_r_s1"`
+		if [ $ret -eq 0 ];then
+			flag=0
+		fi
+	fi
+fi
+echo $flag
+}
+
+
+snp_restore(){
+ret=`hbaseStdShell "delete 'ct_table_r','row3','cf1:no';scan 'ct_table_r'" `
+check_table_info=`checkInfo "$ret" "row3 column"`
+if [ $check_table_info -eq 1 ];then      #不包含，才是正确的
+	hbaseShell "disable 'ct_table_r';restore_snapshot 'ct_table_r_s1';enable 'ct_table_r'"
+	table_r_v=`hbaseStdShell "scan 'ct_table_r'"`
+	check_table_r3=`checkInfo "$table_r_v" "row3 column"`
+	if [ $check_table_r3 -eq 0 ];then 	#快照恢复后，应该包含row3
+		echo 0
+	else
+		echo 1
+	fi
+else
+	echo 1
+fi
+}
+
+if [ `snp_ct` -eq 0 ];then
+	echo `snp_restore`
+else
+	echo 1
+fi

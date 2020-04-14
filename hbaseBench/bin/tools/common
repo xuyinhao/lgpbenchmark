@@ -54,6 +54,18 @@ checkExistIndex(){
 	done
 	echo $flag
 }
+checkExistInfoByScan(){
+local s_tableName=$1
+local s_info=$2
+
+	s_hbasescan=`hbaseStdShell "scan '$s_tableName'" 2>&1`
+	
+	if [[ "$s_hbasescan" =~ "$s_info" ]];then
+		echo 0	
+	else
+		echo 1
+	fi
+}
 
 checkExistTableColumn(){
 	local declare flag=1		#false flag
@@ -115,7 +127,14 @@ checkExistSnap(){
 	echo $flag
 	
 }
-
+checkLeoFSPath(){
+	local l_path="$1"
+	if [ -e `getMountPath`/"$l_path" ];then
+		echo 0
+	else
+		echo 1
+	fi
+}
 checkHbasePath(){
 :
 }
@@ -132,4 +151,17 @@ rmHdfsPath(){
 	else
 		return 1
 	fi
-}	
+}
+function getMountPath(){
+ val=`grep -n 'leofs.mountpoint.dir' ${leofsSitePath}`
+ val=`expr ${val:0:1} + 1`
+ str=`sed -n "${val}p" ${leofsSitePath}`
+ str=${str#*<value>}
+ str=${str%</value>*}
+ if [[ "$str" == "" ]];then
+    echo "/datapool/loongoop"
+ else
+    echo $str
+ fi
+}
+	

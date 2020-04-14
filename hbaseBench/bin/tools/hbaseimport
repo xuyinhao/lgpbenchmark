@@ -1,1 +1,20 @@
-#hbase import
+#!/bin/bash
+#hbase export and import 
+
+plog="/tmp/lgp-hbase.tool.detail.log"
+i_tablename=ct_import_tb
+flag=1
+
+#1. hbase export
+sbinpath=$(cd `dirname $0`;pwd)
+hbasetoolpath=$sbinpath/../bin/tools/hbaseexport
+ret_hbaseexport=`. $hbasetoolpath`
+
+# 2. hbase import
+hbaseShell "disable '$i_tablename';drop '$i_tablename';create '$i_tablename','name'"
+if [ $ret_hbaseexport -eq 0 ];then
+	$hbasePath org.apache.hadoop.hbase.mapreduce.Import $i_tablename /hbaseExportDir >> $plog 2>&1
+	ret_check=`checkExistInfoByScan  "$i_tablename" ", value=row3_value"`	#判断导入的表，是否包含该数据
+	flag=$ret_check
+fi
+echo $flag

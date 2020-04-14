@@ -1,0 +1,44 @@
+#!/bin/bash
+## 1. importtsv ,2.bulkload 
+
+
+plog="/tmp/lgp-hbase.tool.detail.log"
+tablename=ct_bkload_tb
+
+#1. 创建一个表
+hbaseShell "disable '$tablename';drop '$tablename';create '$tablename','name'"
+
+#2. 创建文件并上传
+echo '''a,name1
+b,name2
+c,name3
+d,name4''' > `getMountPath`/bk_file
+rm -rf `getMountPath`/h_file1
+
+#3. import 
+$hbasePath org.apache.hadoop.hbase.mapreduce.ImportTsv \
+-Dimporttsv.separator="","" -Dimporttsv.bulk.output=/h_file1 \
+-Dimporttsv.columns=HBASE_ROW_KEY,name:name $tablename /bk_file >> $plog 2>&1
+flag="$?"
+
+check_table(){
+	if [ `checkExistTableColumn "$tablename" "name"` -eq 0 ];then
+		echo `checkExistInfoByScan "$tablename"  ", value=name4"`
+	else
+		echo 1
+	fi
+}
+
+if [[ $flag == "0" ]];then
+	#4. completebulkload
+	$hbasePath org.apache.hadoop.hbase.mapreduce.LoadIncrementalHFiles /h_file1 $tablename >> $plog 2>&1
+	if [ $? -eq 0 -a `check_table` -eq 0 ];then
+		flag=0 
+	else
+		flag=1
+	fi
+else
+	flag=1
+fi
+echo $flag
+

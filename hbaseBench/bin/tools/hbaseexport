@@ -1,1 +1,20 @@
-#hbase export
+#!/bin/bash
+#hbase export and import 
+#
+ 
+plog="/tmp/lgp-hbase.tool.detail.log"
+e_tablename=ct_export_tb
+e_dir="`getMountPath`/hbaseExportDir"
+
+#1. 创建表 export ,import  ，并插入数据到export
+hbaseShell "disable '$e_tablename';drop '$e_tablename';create '$e_tablename','name';put '$e_tablename','row1','name:1','row1_value';put '$e_tablename','row1','name:2','row1_value2';put '$e_tablename','row3','name:3','row3_value';" >> $plog 2>&1 
+
+#2. export 到leofs:///
+rm -rf $e_dir  >> $plog 2>&1
+$hbasePath org.apache.hadoop.hbase.mapreduce.Export $e_tablename /hbaseExportDir  >> $plog 2>&1
+flag=$?
+if [ $flag -eq 0 -a `checkLeoFSPath /hbaseExportDir/_SUCCESS` -eq 0 ];then
+	echo 0
+else
+	echo 1
+fi

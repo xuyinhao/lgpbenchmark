@@ -1,4 +1,4 @@
-## shell : create  test case 
+## shell : create  test case, create_namespace 
 # 测试说明
 
 1-1	创建1个表，1个列族

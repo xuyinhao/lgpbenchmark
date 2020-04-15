@@ -3,7 +3,7 @@ path=`dirname $0`
 path=`cd $path;cd "..";pwd`
 
 . "${path}/conf/conf"
-. "${path}/bin/tools/common"
+. "${path}/bin/common"
 . "${path}/lib/log_tool.sh"
 
 LOG_HBASE="/tmp/lgp-hbase.log"
@@ -52,6 +52,6 @@ fi
 logTime="$(date +'%Y-%m-%d_%T')"
 init_log "$LOG_HBASE"
 
-log_and_show "INFO" "run hbaseTools: Tools $apiName"
+#log_and_show "INFO" "run hbaseTools: Tools $apiName"
 runCase  "${cases}" 
 #log_and_show  "INFO" "Hbase shell $apiName test finished! Log path : $LOG_HBASE"

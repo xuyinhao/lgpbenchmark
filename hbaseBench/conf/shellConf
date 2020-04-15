@@ -1,2 +1,8 @@
 create
 list
+alter
+append
+count
+delete
+disable
+drop

@@ -1,0 +1,27 @@
+#!/bin/bash
+# 统计命名空间里的表 行数
+
+plog="/tmp/lgp-hbase.tool.detail.log"
+nsName="ct_ns_count"
+tbName="ct_count_tb"
+
+#1. 创建ns表
+createNs "$nsName" >> $plog 2>&1 
+createTableAndPut "${nsName}:${tbName}" >> $plog 2>&1
+if [ $? -ne 0 ];then
+	echo 1 ;return 1
+fi
+
+#2. count
+ret=`hbaseStdShell "count '${nsName}:${tbName}'"`
+
+#3. count row check
+if [ `checkInfo  "$ret" "3 row(s)"` -eq 0 ];then
+    echo 0; return 0
+fi
+
+echo 1
+
+
+
+

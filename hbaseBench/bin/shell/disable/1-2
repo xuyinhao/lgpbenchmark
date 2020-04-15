@@ -1,0 +1,27 @@
+#!/bin/bash
+# disable table
+
+plog="/tmp/lgp-hbase.shell.detail.log"
+a_tablename="ct_disable_tb"
+
+#1. 创建表
+createTableAndPut "$a_tablename" >> $plog 2>&1
+if [ $? -ne 0 ];then
+	echo 1 ;return 1
+fi
+
+#2. disable表并检查
+hbaseShell "disable '$a_tablename'"
+if [ `checkExistIndex  "" "$a_tablename" "DISABLED"` -ne 0 ];then
+    echo 1; return 1
+fi
+
+dis_ret=`hbaseStdShell "is_disabled '$a_tablename'"`
+if [ `checkExistIndex  "$dis_ret" "$a_tablename" "true"` -eq 0 ];then
+	echo 0;return 0
+fi
+echo 1
+
+
+
+

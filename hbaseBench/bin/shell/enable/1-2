@@ -1,0 +1,23 @@
+#!/bin/bash
+# 1-2 enable一个ns的表 ，is-enabled检查
+
+nsName="ct_ns_enable"
+tableName="${nsName}:ct_enable_tb"
+
+#1. 创建表并disable
+ret=`createNs "$nsName"`
+createTableAndPut "$tableName"
+hbaseShell "disable '$tableName'"
+
+if [ `checkExistIndex "" "$tableName" "DISABLED"` ];then
+	hbaseShell "enable '$tableName'"
+	ret=`checkExistIndex "" "$tableName" "ENABLED"`
+fi
+
+if [ $ret -eq 0 ];then
+	is_e_ret=`hbaseStdShell "is_enabled '$tableName'"`
+	if [ `checkInfo "$is_e_ret" "true"` -eq 0  ];then
+		echo 0;return 0
+	fi
+fi
+echo 1

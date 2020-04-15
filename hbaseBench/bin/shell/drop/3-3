@@ -1,0 +1,22 @@
+#!/bin/bash
+# 3-3  drop删除空namespace
+
+plog="/tmp/lgp-hbase.tool.detail.log"
+nsName="ct_ns_drop"
+tablename="${nsName}:ct_drop_table"
+
+#1. 创建ns-表
+ret=`createNs $nsName` 
+createTableAndPut "$tablename"
+if [ $? -ne 0 ];then
+	echo 1 ;return 1
+fi
+
+#2 drop 不为空的 namespace
+d_ret=`hbaseStdShell "drop_namespace '$nsName'"`
+
+#3. 检查 info
+if [ `checkError "$?"  "$d_ret" "The namespace must be empty"` -eq 0 ] ;then
+	echo 0;return 0
+fi
+echo 1

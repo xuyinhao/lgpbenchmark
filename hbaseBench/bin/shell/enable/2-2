@@ -1,0 +1,49 @@
+#!/bin/bash
+# enable all table
+
+plog="/tmp/lgp-hbase.shell.detail.log"
+nsName='ct_ns_enableall'
+a_tablename1="${nsName}:ct_enable_tb_1"
+a_tablename2="${nsName}:ct_enable_tb_2"
+enablename="${nsName}.*"
+
+#1. 创建namespace+ 表
+nsret=`createNs "$nsName"`
+createTableAndPut "$a_tablename1" >> $plog 2>&1
+if [ $? -ne 0 ];then
+	echo 1 ;return 1
+fi
+createTableAndPut "$a_tablename2" >> $plog 2>&1
+if [ $? -ne 0 ];then
+    echo 1 ;return 1
+fi
+
+#2. enable_all 表并检查
+	#hbaseShell "disable_all '$enablename'"
+disableAll "$enablename"
+if [ `checkExistIndex  "" "$a_tablename1" "DISABLED"` -ne 0 -o `checkExistIndex  "" "$a_tablename2" "DISABLED"` -ne 0 ];then
+    echo 1; return 1
+fi
+
+dis_ret=`hbaseStdShell "is_disabled '$a_tablename1';is_disabled '$a_tablename2'"`
+if [ `checkExistIndex  "$dis_ret" "$a_tablename1" "false"` -eq 0 ];then
+	echo 1;return 1
+fi
+
+#3. enable_all 表并检查
+enableAll "$enablename"
+if [ `checkExistIndex  "" "$a_tablename1" "ENABLED"` -ne 0 -o `checkExistIndex  "" "$a_tablename2" "ENABLED"` -ne 0 ];then
+    echo 1; return 1
+fi
+
+dis_ret=`hbaseStdShell "is_enabled '$a_tablename1';is_enabled '$a_tablename2'"`
+if [ `checkExistIndex  "$dis_ret" "$a_tablename1" "false"` -ne 0 ];then  #不包含false .都是true --enable
+    echo 0;return 0
+fi
+
+
+echo 1
+
+
+
+

@@ -1,0 +1,19 @@
+#!/bin/bash
+# 1-2 不disable , 直接删除表
+
+plog="/tmp/lgp-hbase.tool.detail.log"
+a_tablename="ct_drop_tb"
+#1. 创建表
+createTableAndPut "$a_tablename"
+if [ $? -ne 0 ];then
+    echo 1 ;return 1
+fi
+
+#2 droptable
+hret=`hbaseStdShell "drop '$a_tablename'"`
+
+#3. 检查info
+if [ `checkInfo "$hret" "is enabled. Disable it first."` -eq 0 ] ;then
+	echo 0;return 0
+fi
+echo 1

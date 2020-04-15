@@ -3,7 +3,7 @@ path=`dirname $0`
 path=`cd $path;cd "..";pwd`
 
 . "${path}/conf/conf"
-. "${path}/bin/shell/common"
+. "${path}/bin/common"
 . "${path}/lib/log_tool.sh"
 
 LOG_HBASE="/tmp/lgp-hbase.log"
@@ -32,10 +32,10 @@ runCase(){
        				#echo "testCase:$testcase"
        				if [ -f $testcase ]; then
         				ret=`. $testcase`		#1:fail, 0 :pass
-	 					if [ $ret -eq 1 ];then
-	        				log_and_show "ERROR" "$apiName.$caseName fail"
-						else
+	 					if [ $ret -eq 0 ];then
 	        				log_and_show "INFO" "$apiName.$caseName pass"
+						else
+	        				log_and_show "ERROR" "$apiName.$caseName fail"
         			fi
 	   			fi
 	  		fi
@@ -72,4 +72,4 @@ init_log "$LOG_HBASE"
 
 echo "$logTime run hbaseShellTest: $apiName "$cases"" |tee -a "$LOG_HBASE"
 runCase $apiName "${cases}" 
-log_and_show  "INFO" "Hbase shell $apiName test finished! Log path : $LOG_HBASE"
+#log_and_show  "INFO" "Hbase shell $apiName test finished! Log path : $LOG_HBASE"

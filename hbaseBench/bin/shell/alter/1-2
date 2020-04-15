@@ -1,0 +1,21 @@
+#!/bin/bash
+# 更改 REPLICATION_SCOPE => 3
+
+a_tablename="ct_alter_tb2"
+#1. 创建表
+createTableAndPut "$a_tablename"
+if [ $? -ne 0 ];then
+	echo 1 ;return 1
+fi
+
+#2. 修改 REPLICATION_SCOPE => 3
+hbaseShell "alter '$a_tablename','name',{NAME => 'name',REPLICATION_SCOPE => '3'}"
+if [ `checkExistIndex "" "$a_tablename" "REPLICATION_SCOPE => '3',"` -eq 0 ];then
+	echo 0; return 0
+fi
+
+echo 1
+
+
+
+

@@ -1,0 +1,23 @@
+#!/bin/bash
+# 3-2 删除namespace的表,并检查leofs数据
+
+plog="/tmp/lgp-hbase.tool.detail.log"
+nsName='ct_ns_drop'
+a_tablename="${nsName}:ct_drop_tb"
+
+#1. 创建ns-表
+ret=`createNs $nsName`
+createTableAndPut "$a_tablename"
+if [ $? -ne 0 ];then
+    echo 1 ;return 1
+fi
+
+#2 droptable
+hret=`hbaseShell "disable '$a_tablename';drop '$a_tablename'"`
+
+#3. 检查 i:表不在，ii: 后端数据不在了
+if [ `checkNotExistTable $a_tablename` -eq 0 ] ;then
+    echo 0;return 0
+fi
+echo 1
+

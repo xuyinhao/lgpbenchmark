@@ -1,0 +1,24 @@
+#!/bin/bash
+# 修改namespace
+
+plog="/tmp/lgp-hbase.tool.detail.log"
+ns_name="ct_ns_empty"
+#1. 创建namespace
+if [ `createNs $ns_name` -ne 0 ];then
+	echo 1 ;return 1
+fi
+
+#2. 修改namespace
+hbaseShell "alter_namespace '$ns_name', {METHOD => 'set', 'PROPERTY_NAME' => 'PROPERTY_VALUE'}"
+ret=`hbaseStdShell "describe_namespace '$ns_name'"`
+
+#3. 检查 ns信息已经修改
+if [ `checkInfo  "$ret" "'PROPERTY_VALUE'"` -eq 0 ];then
+    echo 0; return 0
+fi
+
+echo 1
+
+
+
+

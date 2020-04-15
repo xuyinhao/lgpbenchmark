@@ -1,0 +1,13 @@
+#!/bin/bash
+# 修改不存在的表
+
+plog="/tmp/lgp-hbase.tool.detail.log"
+nsName="notexistns"
+
+ret=`hbaseStdShell "alter_namespace '$ns_name', {METHOD => 'set', 'PROPERTY_NAME' => 'PROPERTY_VALUE'}"`
+echo `checkError $? "$ret" "ERROR: Unknown namespace"`
+
+
+
+
+

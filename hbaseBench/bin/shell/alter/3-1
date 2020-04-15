@@ -1,0 +1,13 @@
+#!/bin/bash
+# 修改不存在的表
+
+plog="/tmp/lgp-hbase.tool.detail.log"
+a_tablename="not_exist_ct_alter_tb"
+
+ret=`hbaseStdShell "alter '$a_tablename',{ METHOD => 'delete',NAME => 'name' }"`
+echo `checkError $? "$ret" "ERROR: Can't find a table"`
+
+
+
+
+

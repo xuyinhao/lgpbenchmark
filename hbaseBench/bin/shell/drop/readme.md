@@ -7,6 +7,6 @@
 2-2 drop_all 所有表
 
 3-1 drop删除空namespace
-3-2 drop 删除不为空的namespace
-3-2 drop_all namespace的表
+3-2 删除namespace的表
+3-3 drop 删除不为空的namespace
 

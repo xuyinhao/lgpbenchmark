@@ -1,0 +1,35 @@
+#!/bin/bash
+# disable all table
+
+plog="/tmp/lgp-hbase.shell.detail.log"
+nsName='ct_ns_disableall'
+a_tablename1="${nsName}:ct_disable_tb_1"
+a_tablename2="${nsName}:ct_disable_tb_2"
+disablename="ct_ns_disableall.*"
+#1. 创建namespace+ 表
+nsret=`createNs "$nsName"`
+createTableAndPut "$a_tablename1" >> $plog 2>&1
+if [ $? -ne 0 ];then
+	echo 1 ;return 1
+fi
+createTableAndPut "$a_tablename2" >> $plog 2>&1
+if [ $? -ne 0 ];then
+    echo 1 ;return 1
+fi
+
+#2. disable_all 表并检查
+	#hbaseShell "disable_all '$disablename'"
+disableAll "$disablename"
+if [ `checkExistIndex  "" "$a_tablename1" "DISABLED"` -ne 0 -o `checkExistIndex  "" "$a_tablename2" "DISABLED"` -ne 0 ];then
+    echo 1; return 1
+fi
+
+dis_ret=`hbaseStdShell "is_disabled '$a_tablename1';is_disabled '$a_tablename2'"`
+if [ `checkExistIndex  "$dis_ret" "$a_tablename1" "false"` -ne 0 ];then
+	echo 0;return 0
+fi
+echo 1
+
+
+
+

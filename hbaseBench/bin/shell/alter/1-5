@@ -1,0 +1,24 @@
+#!/bin/bash
+#删除列族 { METHOD => 'delete',NAME => 'f1' }
+
+plog="/tmp/lgp-hbase.tool.detail.log"
+a_tablename="ct_alter_tb"
+#1. 创建表
+createTableAndPut "$a_tablename"
+if [ $? -ne 0 ];then
+	echo 1 ;return 1
+fi
+
+#2. 增加列族cf1,删除列族name
+hbaseShell "alter '$a_tablename', 'cf1';alter '$a_tablename',{ METHOD => 'delete',NAME => 'name' }"
+
+#3. 检查列族不存在了
+if [ `checkExistIndex  "" "$a_tablename" "'name'"` -eq 1 ];then
+    echo 0; return 0
+fi
+
+echo 1
+
+
+
+

@@ -1,7 +1,13 @@
 #!/bin/bash
+# Common func
+# 
+
 #hbasePathShell="/loongoop/hbase-1.3.1/bin/hbase  shell"
 #hadoopPath="/loongoop/loongoop-1.0.6-v2.7.2/bin/hadoop"
+
+# add common func
 LOG_HBASE_RUN="/tmp/lgp-run-hbase.log"
+
 hbase_info(){
 	init_log $LOG_HBASE_RUN
 	log_info "$1" "$2" "$LOG_HBASE_RUN"
@@ -24,12 +30,12 @@ hbaseStdShell(){
     echo "${s_cmd};exit"|$hbasePathShell 2>&1
 
 }
-
 genString(){
+	declare -i stringlenth=$1
   j=0;
-  for i in {a..z};do array[$j]=$i;j=$(($j+1));done
+  for i in {a..z};do array[$j]=$i;j=$(($j+1));done 
   for i in {A..Z};do array[$j]=$i;j=$(($j+1));done
-  for ((i =0;i < $1;i++));do strs="$strs${array[$(($RANDOM%$j))]}"; done;
+  for ((i =0;i < ${stringlenth};i++));do strs="$strs${array[$(($RANDOM%$j))]}"; done;
         echo $strs
 }
 
@@ -45,7 +51,8 @@ checkExistIndex(){
 
 	for i in $c_index
 	do
-		if [[ "$c_hbaseDes" =~ "$i'," ]];then
+		#if [[ "$c_hbaseDes" =~ "$i'," ]];then
+		if [[ "$c_hbaseDes" =~ "$i" ]];then
 			flag=0
 		else 
 			flag=1
@@ -90,19 +97,21 @@ checkExistTableColumn(){
 
 	echo $flag
 }
-
-#value1 是否包含value2
-# return 0:包含
+#############################################
+# Func: 检查A是否包含B .value1 是否包含value2
+# Param: info checkvalue 
+# Output  0:包含 1:不包含
+#############################################
 checkInfo(){
 	local e_info="$1"
-	local e_checkvalue="$2"
+	local e_checkvalue=$2
 	local declare flag=1
 	
 	if [[ "$e_info" =~ "$e_checkvalue" ]];then
-		flag=0	
+    	flag=0
 	fi	
-
 	echo $flag
+
 }
 
 checkOk(){
@@ -115,6 +124,24 @@ checkOk(){
  	echo $flag
 fi
 }
+
+checkError(){
+	local e_flag="$1"
+	local e_retinfo="$2"
+	local e_checkvalue="$3"
+	flag=1
+	if [ $e_flag -eq 0 ];then
+		echo 0;return 0
+	fi
+	
+	if [[ "$e_retinfo" =~ "$e_checkvalue" ]];then
+		flag=0
+	fi
+	echo $flag ; return $flag
+	
+
+}
+
 
 checkExistSnap(){
 	local check_table=$1
@@ -135,6 +162,8 @@ checkLeoFSPath(){
 		echo 1
 	fi
 }
+
+
 checkHbasePath(){
 :
 }
@@ -143,6 +172,7 @@ catHdfsFile(){
 	path=$1
 	echo `$hadoopPath fs -cat $path 2>/dev/null` 
 }
+
 rmHdfsPath(){
 	path=$1
 	ret=`$hadoopPath fs -rmr $path 2>/dev/null`
@@ -152,16 +182,110 @@ rmHdfsPath(){
 		return 1
 	fi
 }
+
+#######################################
+# 获取loongoop在leofs的存放路径
+# Param: None
+# Output: pathdir   
+######################################
 function getMountPath(){
- val=`grep -n 'leofs.mountpoint.dir' ${leofsSitePath}`
- val=`expr ${val:0:1} + 1`
- str=`sed -n "${val}p" ${leofsSitePath}`
- str=${str#*<value>}
- str=${str%</value>*}
- if [[ "$str" == "" ]];then
-    echo "/datapool/loongoop"
- else
-    echo $str
- fi
+	val=`grep -n 'leofs.mountpoint.dir' ${leofsSitePath}`
+	val=`expr ${val:0:1} + 1`
+	str=`sed -n "${val}p" ${leofsSitePath}`
+	str=${str#*<value>}
+	str=${str%</value>*}
+	if [[ "$str" == "" ]];then
+    	echo "/datapool/loongoop"
+ 	else
+    	echo $str
+ 	fi
 }
+###############################################################
+# 在hbase创建一个表，并put数据 row3','name:3','row3_value
+# Param: tablename
+# Output: None
+# Return: 0|1 (0:true,1:false)
+##############################################################
+createTableAndPut(){
+	local e_tablename=$1
+	hbaseShell "disable '$e_tablename';drop '$e_tablename';create '$e_tablename','name';put '$e_tablename','row1','name:1','row1_value';put '$e_tablename','row2','name:2','row2_value';put '$e_tablename','row3','name:3','row3_value';" >> $LOG_HBASE_RUN 2>&1
+	ret=`checkExistInfoByScan "$e_tablename" "row3_value"`
+	if [ $ret -eq 0 ];then
+		return 0
+	else
+		return 1
+	fi
+}
+###############################
+# 检查表是 不存在
+# Param: 表名字
+# Output: 0|1 （0：不存在）
+###############################
+checkNotExistTable(){
+	local tablename="$1"
+	if [[ "$tablename" =~ ":" ]];then
+		namespace=`echo "$tablename"|awk -F ":" '{print $1}'`
+		n_tablename=`echo "$tablename"|awk -F ":" '{print $2}'`
+	else
+		namespace="default"
+		n_tablename=$tablename
+	fi
 	
+	##1 check table exist
+	ret1=`hbaseStdShell "list"`
+	if [[ ! "$ret1" =~ "$tablename" ]];then				#不包含表
+		##2 check leo path exist
+		if [ ! `checkLeoFSPath /hbase/data/$namespace/$n_tablename` -eq 0 ];then		#路径不存在
+			echo 0;return 0
+		fi
+	fi	
+	echo 1
+
+}
+
+####################################
+# Func: 创建命名空间 namespace
+# Param: nsName 
+# Output: 0|1 (0:true,1:false)
+###################################
+createNs(){
+	local nsName=$1
+	
+	hbaseShell "drop_namespace '$nsName';create_namespace '$nsName'"
+	if [ $? -eq 0 ];then
+		echo 0;return 0
+	else
+		echo 1;return 1
+	fi
+}
+#####################################
+#Func: 检查是否存在namespace
+# Param: nsName (命名空间的名字)
+# Output: 0|1 . (0:pass,1:fail)
+# Return: 0|1
+#####################################
+checkExistNs(){
+	local nsName=$1
+	flag=1
+	ret=`hbaseStdShell "list_namespace"`
+	if [[ $ret =~ $nsName ]];then
+		flag=0
+	fi
+	echo $flag;return $flag
+}
+
+disableAll(){
+	tableName="$1"
+	echo -e "disable_all '$tableName'\ny"|$hbasePathShell -n  >> $LOG_HBASE_RUN 2>&1
+}
+
+dropAll(){
+	tableName="$1"
+    echo -e "drop_all '$tableName'\ny"|$hbasePathShell -n >> $LOG_HBASE_RUN 2>&1
+}
+
+enableAll(){
+    tableName="$1"
+    echo -e "enable_all '$tableName'\ny"|$hbasePathShell -n >> $LOG_HBASE_RUN 2>&1
+}
+

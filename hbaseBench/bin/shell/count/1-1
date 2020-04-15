@@ -1,0 +1,25 @@
+#!/bin/bash
+# 统计表含有多少行数据
+
+plog="/tmp/lgp-hbase.tool.detail.log"
+a_tablename="ct_count_tb"
+
+#1. 创建表
+createTableAndPut "$a_tablename"
+if [ $? -ne 0 ];then
+	echo 1 ;return 1
+fi
+
+#2. count
+ret=`hbaseStdShell "count '${a_tablename}'"`
+
+#3. count row check
+if [ `checkInfo  "$ret" "3 row(s)"` -eq 0 ];then
+    echo 0; return 0
+fi
+
+echo 1
+
+
+
+

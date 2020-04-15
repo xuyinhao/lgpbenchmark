@@ -1,0 +1,22 @@
+#!/bin/bash
+# 更改 REPLICATION_SCOPE => 1
+
+plog="/tmp/lgp-hbase.tool.detail.log"
+a_tablename="ct_alter_tb3"
+#1. 创建表
+createTableAndPut "$a_tablename"
+if [ $? -ne 0 ];then
+	echo 1 ;return 1
+fi
+
+#2. 修改 REPLICATION_SCOPE => 1
+hbaseShell "alter '$a_tablename',NAME => 'name',TTL => 2"  >> $plog 2>&1
+if [ `checkExistIndex "" "$a_tablename" "TTL => '2 SECONDS',"` -eq 0 ];then
+	echo 0; return 0
+fi
+
+echo 1
+
+
+
+

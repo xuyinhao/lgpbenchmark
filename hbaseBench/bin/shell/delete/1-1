@@ -1,0 +1,18 @@
+#!/bin/bash
+# 删除表的某一行-列
+
+plog="/tmp/lgp-hbase.tool.detail.log"
+tablename="ct_delete_tb"
+
+#1. 创建表
+createTableAndPut "$tablename"
+if [ $? -ne 0 ];then
+    echo 1 ;return 1
+fi
+
+#2. 删除一行 row3 name:3,  value:row3_value
+hbaseShell "delete '$tablename','row3','name:3'"
+if  [ `checkExistInfoByScan $tablename row3_value` -eq 1 ];then 	#检查不存在，返回真
+	echo 0;return 0
+fi
+	echo 1

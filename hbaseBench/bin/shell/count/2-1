@@ -1,0 +1,20 @@
+#!/bin/bash
+# 统计命名空间里的表 行数
+
+plog="/tmp/lgp-hbase.tool.detail.log"
+tbName="notexistct_count_tb"
+
+
+#1. count 不存在的表
+ret=`hbaseStdShell "count '${tbName}'"`
+
+#. check
+if [ `checkInfo  "$ret" "ERROR: Unknown table"` -eq 0 ];then
+    echo 0; return 0
+fi
+
+echo 1
+
+
+
+

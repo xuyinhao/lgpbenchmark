@@ -1,0 +1,14 @@
+#!/bin/bash
+# 创建一个命名空间
+
+ns_name="ct_create_empty"
+
+#1. 创建namespace
+if [ `createNs $ns_name` -eq 0 ];then
+    if [ `checkExistNs $ns_name` -eq 0 ];then
+		echo 0;return 0
+	fi
+fi
+echo 1 ;return 1
+
+

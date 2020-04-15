@@ -1,0 +1,10 @@
+#!/bin/bash
+#3-1 不存在的表
+tableName="notexist_ns:notb"
+
+ret=`hbaseStdShell "enable '$tableName'"`
+
+if [ `checkInfo "$ret" "does not exist"` -eq 0 ];then
+	echo 0;return 0
+fi
+echo 1

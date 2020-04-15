@@ -1,0 +1,18 @@
+#!/bin/bash
+# 3-1  drop删除空namespace
+
+plog="/tmp/lgp-hbase.tool.detail.log"
+nsName="ct_ns_empty"
+#1. 创建ns
+if [ `createNs $nsName` -ne 0 ];then
+    echo 1 ;return 1
+fi
+
+#2 drop 空 namespace
+hbaseShell "drop_namespace '$nsName'"
+
+#3. 检查 namespace不在了
+if [ `checkExistNs $nsName` -eq 1 ] ;then
+	echo 0;return 0
+fi
+echo 1

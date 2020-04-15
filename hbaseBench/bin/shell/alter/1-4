@@ -1,0 +1,28 @@
+#!/bin/bash
+# 删除 表范围运算符,MAX_FILESIZE
+
+plog="/tmp/lgp-hbase.tool.detail.log"
+a_tablename="ct_alter_tb"
+#1. 创建表
+createTableAndPut "$a_tablename"
+if [ $? -ne 0 ];then
+	echo 1 ;return 1
+fi
+
+#2. 修改 MAX_FILESIZE
+hbaseShell "alter '$a_tablename',MAX_FILESIZE => 134217728"  >> $plog 2>&1
+if [ `checkExistIndex "" "$a_tablename" "'134217728'"` -ne 0 ];then
+	echo 1; return 1
+fi
+
+#3. 删除 MAX_FILESIZE 属性
+ret=`hbaseStdShell "alter '$a_tablename', METHOD => 'table_att_unset', NAME => 'MAX_FILESIZE';desc '$a_tablename'"`
+if [ `checkExistIndex "$ret" "$a_tablename" "'134217728'"` -eq 1 ];then
+    echo 0; return 0
+fi
+
+echo 1
+
+
+
+

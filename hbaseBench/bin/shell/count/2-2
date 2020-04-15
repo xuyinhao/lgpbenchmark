@@ -1,0 +1,21 @@
+#!/bin/bash
+# 统计命名空间里的表 行数
+
+plog="/tmp/lgp-hbase.tool.detail.log"
+tbName1="notexistct_count_tb1"
+tbName2="notexistct_count_tb2"
+
+
+#1. count 不存在的表
+ret=`hbaseStdShell "count '${tbName1}','${tbName2}'"`
+
+#. check
+if [ `checkInfo  "$ret" "ERROR: can't convert String into Hash"` -eq 0 ];then
+    echo 0; return 0
+fi
+
+echo 1
+
+
+
+

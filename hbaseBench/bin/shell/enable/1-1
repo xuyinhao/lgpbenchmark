@@ -1,0 +1,21 @@
+#!/bin/bash
+# 1-1 enable一个表 ，is-enabled检查
+
+tableName="ct_enable_tb"
+
+#1. 创建表并disable
+createTableAndPut "$tableName"
+hbaseShell "disable '$tableName'"
+
+if [ `checkExistIndex "" "$tableName" "DISABLED"` ];then
+	hbaseShell "enable '$tableName'"
+	ret=`checkExistIndex "" "$tableName" "ENABLED"`
+fi
+
+if [ $ret -eq 0 ];then
+	is_e_ret=`hbaseStdShell "is_enabled '$tableName'"`
+	if [ `checkInfo "$is_e_ret" "true"` -eq 0  ];then
+		echo 0;return 0
+	fi
+fi
+echo 1

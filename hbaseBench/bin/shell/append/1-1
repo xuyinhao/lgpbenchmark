@@ -1,0 +1,22 @@
+#!/bin/bash
+# 给某一行的某个列value, 增加值 并scan查看
+
+plog="/tmp/lgp-hbase.tool.detail.log"
+a_tablename="ct_append_tb"
+av1=`genString 100`
+#1. 创建表
+createTableAndPut "$a_tablename"
+if [ $? -ne 0 ];then
+    echo 1 ;return 1
+fi
+
+#2. append 
+hbaseShell "put '$a_tablename','appendrow','name:append','beginvalue'; append '$a_tablename','appendrow','name:append','$av1',ATTRIBUTES=>{'mykey'=>'myvalue'}" >> $plog 2>&1
+
+#3.check
+if [ `checkExistInfoByScan "$a_tablename" "value=beginvalue$av1"` -eq 0 ];then
+	echo 0	; return 0
+fi
+echo 1
+
+

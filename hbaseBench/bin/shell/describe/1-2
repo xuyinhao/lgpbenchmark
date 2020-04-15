@@ -1,0 +1,24 @@
+#!/bin/bash
+# 查看表 |des
+
+plog="/tmp/lgp-hbase.shell.detail.log"
+a_tablename="ct_desc_tb"
+
+#1. 创建表
+createTableAndPut "$a_tablename" >> $plog 2>&1
+if [ $? -ne 0 ];then
+	echo 1 ;return 1
+fi
+
+#2. describe表并检查
+desc_ret=`hbaseStdShell "desc '$a_tablename'"`
+
+if [ `checkExistIndex  "$desc_ret" "$a_tablename" "ENABLED DESCRIPTION COMPRESSION FOREVER"` -eq 0 ];then
+    echo 0; return 0
+fi
+
+echo 1
+
+
+
+

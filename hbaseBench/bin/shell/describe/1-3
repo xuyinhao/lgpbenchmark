@@ -1,0 +1,23 @@
+#!/bin/bash
+# 查看namespace |describe_namespace
+
+plog="/tmp/lgp-hbase.shell.detail.log"
+nsName="ct_ns_empty"
+
+#1. 创建空的命名空间
+if [ `createNs "$nsName"` -ne 0 ];then
+	echo 1 ;return 1
+fi
+
+#2. describe_namespace 检查
+desc_ret=`hbaseStdShell "describe_namespace '$nsName'"`
+
+if [ `checkExistIndex  "$desc_ret" "$nsName" "DESCRIPTION {NAME '$nsName'"` -eq 0 ];then
+    echo 0; return 0
+fi
+
+echo 1
+
+
+
+

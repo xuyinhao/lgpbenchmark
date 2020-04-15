@@ -1,0 +1,30 @@
+#!/bin/bash
+# 2-2  drop_all 所有表,并检查leofs数据
+
+plog="/tmp/lgp-hbase.tool.detail.log"
+nsName="ct_ns_drop"
+a_tablename1="${nsName}:ct_drop_tb1"
+a_tablename2="${nsName}:ct_drop_tb2"
+
+#1. 创建ns - 表
+ret=`createNs "$nsName"`
+createTableAndPut "$a_tablename1"
+if [ $? -ne 0 ];then
+    echo 1 ;return 1
+fi
+createTableAndPut "$a_tablename2"
+if [ $? -ne 0 ];then
+    echo 1 ;return 1
+fi
+
+
+#2 droptable
+disableAll "${nsName}.*" 
+dropAll "${nsName}.*"
+
+#3. 检查 i:表不在，ii: 后端数据不在了
+if [ `checkNotExistTable $a_tablename1` -eq 0 -a `checkNotExistTable $a_tablename2` ] ;then
+    echo 0;return 0
+fi
+echo 1
+

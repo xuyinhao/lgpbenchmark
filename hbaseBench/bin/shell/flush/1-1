@@ -1,0 +1,32 @@
+#!/bin/bash
+# 1-1 flush 并测试
+
+tableName="ct_flush_tb"
+#1. 创建表，并第一次flush
+createTableAndPut "$tableName"
+
+#2. flush
+hbaseShell "flush '$tableName'"
+c_ret1=`checkFlushPath "$tableName" "name"`
+if [ $c_ret1 -ne 1 ];then
+	echo 1 ;return 1
+fi
+
+#2.1  flush2
+hbaseShell "put '$tableName','flushrow1','name:flush','flush11111';flush '$tableName'"
+c_ret2=`checkFlushPath "$tableName" "name"`
+if [ $c_ret2 -ne 2 ];then
+    echo 1 ;return 1
+fi
+
+#3.1 flush3
+hbaseShell "put '$tableName','flushrow2','name:flush2','flush22222';flush '$tableName'"
+c_ret3=`checkFlushPath "$tableName" "name"`
+if [ $c_ret3 -eq 3 ];then
+    echo 0 ;return 0
+fi
+echo 1
+
+
+
+

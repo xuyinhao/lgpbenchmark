@@ -1,0 +1,17 @@
+#!/bin/bash
+#1-2 get_table 
+
+tableName="ct_get_tb"
+#1. 创建表,put数据
+createTableAndPut "$tableName"
+if [ $? -ne 0 ];then
+	echo 1 ;return 1
+fi
+hbaseShell "put '$tableName','getrow1','name:get1','value_get_1';put '$tableName','getrow1','name:get2','value_get_2';"
+
+#2. get, + check
+g_ret=`hbaseStdShell "t1=get_table '$tableName';t1.scan"`
+if [ `checkExistIndex "$g_ret" "" "value=row3_value value=value_get_1  value=value_get_1 name:get1 name:get2 "` -eq 0 ];then
+	echo 0;return 0
+fi
+echo 1

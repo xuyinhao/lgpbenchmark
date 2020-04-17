@@ -1,11 +1,11 @@
 #!/bin/bash
 #2-2 创建一个表，一个列族 127B,再put 和scan 
 
+tableName=ct_create_tb
 cfName=`genString 126`
 
-hbaseShell  "disable 'ct_table2-2'; drop 'ct_table2-2';create 'ct_table2-2','$cfName'" 
-rett=`hbaseStdShell "put 'ct_table2-2','row1','$cfName','value-${cfName}-value';scan 'ct_table2-2'"`
+hbaseShell  "disable '$tableName'; drop '$tableName';create '$tableName','$cfName'" 
+rett=`hbaseStdShell "put '$tableName','row1','$cfName','value-${cfName}-value';scan '$tableName'"`
 
 checkInfo "$rett" "value-${cfName}-value"
-#checkExistTableColumn "ct_table2-2" "$cfName" 			#$1:tableName $2...: cloumnName
 

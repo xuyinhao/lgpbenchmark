@@ -1,9 +1,10 @@
 #!/bin/bash
 #更改列族单元格的最大数目,并put
 
-a_tablename="ct_alter_tb1"
+a_tablename="ct_alter_tb"
 av1=`genString 1024` ; av2=`genString 1023` ; av3=`genString 1022`
 av4=`genString 1024` ; av5=`genString 1023` ; av6=`genString 1022`
+#av1="av1";av2="av2";av3="av3";av4="av4";av5="av5";av6="av6"
 #1. 创建表
 createTableAndPut "$a_tablename"
 if [ $? -ne 0 ];then
@@ -11,8 +12,8 @@ if [ $? -ne 0 ];then
 fi
 
 #2. 修改version=>5
-hbaseShell "alter '$a_tablename','name',{NAME => 'name',VERSIONS =>5}"
-if [ `checkExistIndex "" "$a_tablename" "VERSIONS => '5',"` -ne 0 ];then
+hbaseShell "alter '$a_tablename','name',{NAME => 'name',VERSIONS => 5}"
+if [ `checkExistIndex "" "$a_tablename" "VERSIONS => '5'"` -ne 0 ];then
 	echo 1; return 1
 fi
 
@@ -21,9 +22,9 @@ hbaseShell "put '$a_tablename','alterrow','name','$av1';put '$a_tablename','alte
 put '$a_tablename','alterrow','name','$av3';put '$a_tablename','alterrow','name','$av4';
 put '$a_tablename','alterrow','name','$av5';put '$a_tablename','alterrow','name','$av6';"
 
-ret=`hbaseStdShell "get 'ct_alter_tb1','alterrow',{COLUMN=>'name',VERSIONS => 5}"`
+ret=`hbaseStdShell "get '$a_tablename','alterrow',{COLUMN=>'name',VERSIONS => 5}"`
 if [ `checkExistIndex "$ret" "$a_tablename" "value=${av2} value=${av6}"` -eq 0 -a \
-	`checkExistIndex "$ret" "$a_tablename" "value=$av1"` -eq 1 ];then
+	`checkExistIndex "$ret" "$a_tablename" "value=${av1}"` -eq 1 ];then
     echo 0; return 0
 fi
 echo 1

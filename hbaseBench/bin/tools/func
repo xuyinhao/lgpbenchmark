@@ -1,0 +1,11 @@
+#!/bin/bash
+hbase_create_snapshot="$hbasePath org.apache.hadoop.hbase.snapshot.CreateSnapshot"
+hbase_export_snapshot="$hbasePath org.apache.hadoop.hbase.snapshot.ExportSnapshot"
+hbase_export="$hbasePath org.apache.hadoop.hbase.mapreduce.Export"
+hbase_import="$hbasePath org.apache.hadoop.hbase.mapreduce.Import"
+hbase_importtsv="$hbasePath org.apache.hadoop.hbase.mapreduce.ImportTsv"
+hbase_bulkload_hfile="$hbasePath org.apache.hadoop.hbase.mapreduce.LoadIncrementalHFiles"
+
+###
+hbase_pe="${hbasePath} org.apache.hadoop.hbase.PerformanceEvaluation"
+hbase_ltt="${hbasePath} org.apache.hadoop.hbase.util.LoadTestTool"

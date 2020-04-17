@@ -1,6 +1,14 @@
 #!/bin/bash
-#1-1 list查看
+#1-1 list查看 所有
 
-ret=`hbaseStdShell "list"`		#有标准输出
+nsName="ct_ns_list"
+tablename1="${nsName}:ct_list_tb1"
+tablename2="${nsName}:ct_list_tb2"
 
-checkInfo "$ret" "row(s) in" 			#$1:return的数据， $2..:判断是否含有该字符 
+#1 创建
+ret=`createNs "$nsName"`
+hbaseShell "disable '$tablename1';disable '$tablename2'; drop '$tablename1';drop '$tablename2';create '$tablename1','name';create '$tablename2','name'"
+ret=`hbaseStdShell "list '${nsName}.*'"`		#有标准输出
+
+flag=`checkExistIndex "$ret" ""  "$tablename1 $tablename2"` 			#$1:return的数据， $2..:判断是否含有该字符 
+echo $flag

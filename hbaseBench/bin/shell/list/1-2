@@ -1,0 +1,11 @@
+#!/bin/bash
+#1-2 list查看  单个表
+
+tableName="ct_list_tb"
+
+#1 创建
+createTableAndPut "$tableName"
+ret=`hbaseStdShell "list '${tableName}'"`		#有标准输出
+
+flag=`checkExistIndex "$ret" ""  "$tableName"` 			#$1:return的数据， $2..:判断是否含有该字符 
+echo $flag

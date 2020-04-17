@@ -1,0 +1,34 @@
+#!/bin/bash
+# 1-1 flush- major_compact  并检查
+
+tableName="ct_mj_tb"
+#1. 创建表，并第一次flush
+createTableAndPut "$tableName"
+
+#2. flush
+hbaseShell "flush '$tableName'"
+c_ret1=`checkFlushPath "$tableName" "name"`
+if [ $c_ret1 -ne 1 ];then
+	echo 1 ;return 1
+fi
+
+#2.1  flush2
+hbaseShell "put '$tableName','flushrow1','name:flush','flush11111';flush '$tableName'"
+c_ret2=`checkFlushPath "$tableName" "name"`
+if [ $c_ret2 -ne 2 ];then
+    echo 1 ;return 1
+fi
+
+#3 - major_compact
+
+hbaseShell "major_compact '$tableName';flush '$tableName'"
+for i in 5 5 10 10 10 15 15 20 
+do
+	sleep $i
+	c_ret3=`checkFlushPath "$tableName" "name"`
+	if [ $c_ret3 -eq 1 ];then
+    	echo 0 ;return 0
+	fi
+done
+echo 1
+

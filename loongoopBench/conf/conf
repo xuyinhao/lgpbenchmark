@@ -1,32 +1,33 @@
 #!/bin/sh
 # loongoop test script 
-
+## 先会check global.conf 
+## 再check 此处 conf
 #################################
 ##common conf					# 
 ## 基本的配置信息				#
 #################################
-loongoopPath="/loongoop/loongoop-1.0.6-v2.7.2"
-leofsSitePath="${loongoopPath}/etc/hadoop/leofs-site.xml"
-coreSitePath="${loongoopPath}/etc/hadoop/core-site.xml"
-exampleJarPath="${loongoopPath}/share/hadoop/mapreduce/hadoop-mapreduce-examples-2.7.2.jar"
-testJarPath="${loongoopPath}/share/hadoop/mapreduce/hadoop-mapreduce-client-jobclient-2.7.2-tests.jar"
+#loongoopPath=/loongoop/loongoop-1.0.6-v2.7.2
+#leofsSitePath="${loongoopPath}/etc/hadoop/leofs-site.xml"
+#coreSitePath="${loongoopPath}/etc/hadoop/core-site.xml"
+#exampleJarPath="${loongoopPath}/share/hadoop/mapreduce/hadoop-mapreduce-examples-2.7.2.jar"
+#testJarPath="${loongoopPath}/share/hadoop/mapreduce/hadoop-mapreduce-client-jobclient-2.7.2-tests.jar"
 
 
 #################################
 ## api conf						#
 ## 测试api时需要的路径			#
 #################################
-rootPath="/testxyh"		#hdfs目录下的，测试根路径。测试 数据将会生成在此目录下
-tmpDir="/opt/tmpDir"	#本地的 测试数据临时目录路径
-loongoopfs="${loongoopPath}/bin/hadoop fs"
+#rootPath="/testxyh"		#hdfs目录下的，测试根路径。测试 数据将会生成在此目录下
+#tmpDir="/opt/tmpDir"	#本地的 测试数据临时目录路径
+#loongoopfs="${loongoopPath}/bin/hadoop fs"
 
 
 #################################
 #	wordcount conf				#
 # 	mr-wordcount配置			#
 ################################# 
-nodemaster="mds1"						#resouremanager hostname
+#nodemaster="mds1"						#resouremanager hostname
 #nodeList="master slave1 slave2"			#节点
-wordcount_filePath="/wordscount" 		#hdfs path , wordcount原始数据的路径
-reduceNum=2								#wordcount MR reduce num
+#wordcount_filePath="/wordscount" 		#hdfs path , wordcount原始数据的路径
+#reduceNum=2								#wordcount MR reduce num
 

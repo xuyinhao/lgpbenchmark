@@ -1,12 +1,21 @@
 #!/bin/sh
 path=`dirname $0`
 path=`cd $path;cd "..";pwd`
+
+if [ -f  "${path}/../../global.conf" ];then
+. "${path}/../../global.conf" 
+fi
 . "${path}/../conf/conf"
 . "${path}/bin/commands"
 . "${path}/bin/common"
 . "${path}/../lib/log_tool.sh"
+
 caseConfDir="$path/conf/caseConf"
+
 API_LOG="/tmp/lgp-api.log"
+if [ "x$LOG_API" != "x" ];then
+	API_LOG=$LOG_API
+fi
 init_log $API_LOG
 
 mountPath=$(getMountPath)

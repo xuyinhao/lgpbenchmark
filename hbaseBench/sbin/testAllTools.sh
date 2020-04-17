@@ -5,6 +5,7 @@ caseConfDir="${path}/conf/caseConf"
 apiConf=`cat ${path}/conf/toolsConf`
 . ${path}/lib/log_tool.sh
 
+log_and_show  "INFO" "hbaseToolsTest start $apiConf"
 for apiName in $apiConf
 do
   exist=`echo "$apiName"| grep "#"`

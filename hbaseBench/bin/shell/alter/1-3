@@ -2,7 +2,7 @@
 # 更改 REPLICATION_SCOPE => 1
 
 plog="/tmp/lgp-hbase.tool.detail.log"
-a_tablename="ct_alter_tb3"
+a_tablename="ct_alter_tb"
 #1. 创建表
 createTableAndPut "$a_tablename"
 if [ $? -ne 0 ];then

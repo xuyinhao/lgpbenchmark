@@ -1,0 +1,16 @@
+#!/bin/bash
+#2-1 key值不存在 
+
+tableName="ct_locate_tb"
+#1. 创建表
+createTableAndPut "$tableName"
+if [ $? -ne 0 ];then
+	echo 1;return 1
+fi
+
+#2. locate
+ret=`hbaseStdShell "locate_region '$tableName'"`
+if [ `checkInfo "$ret" "wrong number"` -eq 0 ];then
+	echo 0 ;return 0
+fi
+echo 1

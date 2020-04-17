@@ -7,7 +7,7 @@ hbaseShell  "disable 'ct_table_r'; drop 'ct_table_r';create 'ct_table_r','cf1','
 
 flag=1
 if [ `checkExistTableColumn "ct_table_r" "cf2" ` -eq 0 ];then            #$1:tableName $2...: cloumnName
-	$hbasePath snapshot create -n ct_table_r_s1 -t ct_table_r >/dev/null 2>&1
+	$hbase_create_snapshot -n ct_table_r_s1 -t ct_table_r >/dev/null 2>&1
 	if [ $? -eq 0 ] ;then
 		ret=`checkExistSnap "ct_table_r" "ct_table_r_s1"`
 		if [ $ret -eq 0 ];then

@@ -11,7 +11,7 @@ hbaseShell "disable '$e_tablename';drop '$e_tablename';create '$e_tablename','na
 
 #2. export 到leofs:///
 rm -rf $e_dir  >> $plog 2>&1
-$hbasePath org.apache.hadoop.hbase.mapreduce.Export $e_tablename /hbaseExportDir  >> $plog 2>&1
+$hbase_export $e_tablename /hbaseExportDir  >> $plog 2>&1
 flag=$?
 if [ $flag -eq 0 -a `checkLeoFSPath /hbaseExportDir/_SUCCESS` -eq 0 ];then
 	echo 0

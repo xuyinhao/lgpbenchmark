@@ -2,7 +2,7 @@
 #1-1 创建一个表，一个列族
 #. ../common
 
-#hbaseShell "disable 'ct_table1-1'; drop 'ct_table1-1'" 
-hbaseShell  "disable 'ct_table1-1'; drop 'ct_table1-1';create 'ct_table1-1','cf_ct_1-1'" 
+tableName="ct_table_tb"
+hbaseShell  "disable '$tableName'; drop '$tableName';create '$tableName','cf_ct_1-1'" 
 
-checkExistTableColumn "ct_table1-1" "cf_ct_1-1" 			#$1:tableName $2...: cloumnName
+checkExistTableColumn "$tableName" "cf_ct_1-1" 			#$1:tableName $2...: cloumnName

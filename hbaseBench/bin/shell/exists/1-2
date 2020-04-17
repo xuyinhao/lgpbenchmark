@@ -1,0 +1,13 @@
+#!/bin/bash
+#1-2 表 不存在
+
+tableName="notexist_ct_exists_tb"
+
+hbaseShell "disable '$tableName';drop '$tableName'"
+
+#检查存在 exists
+e_ret=`hbaseStdShell " exists '$tableName'"`
+if [ `checkInfo "$e_ret" "does not exist"` -eq 0 ];then
+	echo 0;return 0
+fi
+echo 1

@@ -1,12 +1,12 @@
 #!/bin/bash
 #hbase pe test
-ret1=`${hbasePath} org.apache.hadoop.hbase.PerformanceEvaluation --rows=10 --table='ct_hbasepetest' --compress="GZ" --columns=3 --nomapred sequentialWrite 3  >> /tmp/lgp-hbase.tool.detail.log 2>&1`
+ret1=`${hbase_pe} --rows=10 --table='ct_hbasepetest' --compress="GZ" --columns=3 --nomapred sequentialWrite 3  >> /tmp/lgp-hbase.tool.detail.log 2>&1`
 flag1=$?
 
-ret2=`${hbasePath} org.apache.hadoop.hbase.PerformanceEvaluation --rows=10 --table='ct_hbasepetest' --compress="GZ" --columns=3 --nomapred sequentialRead 3  >> /tmp/lgp-hbase.tool.detail.log 2>&1`
+ret2=`${hbase_pe}  --rows=10 --table='ct_hbasepetest' --compress="GZ" --columns=3 --nomapred sequentialRead 3  >> /tmp/lgp-hbase.tool.detail.log 2>&1`
 flag2=$?
 if [  `checkOk "$flag1"` -eq 0 -a  `checkOk "$flag2"` -eq 0  ];then
-	 checkExistIndex "" "ct_hbasepetest" "GZ" "info"
-	return 0
+	 flag=`checkExistIndex "" "ct_hbasepetest" "GZ" "info"`
+	echo $flag ;return $flag
 fi
 echo 1

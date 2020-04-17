@@ -16,6 +16,9 @@ if [ ! -f ${spath}/conf/conf ]; then
     echo "conf is not exist !" |tee -a $WC_LOG
     exit 0
 fi
+if [ -f "${spath}/../global.conf" ];then
+	. ${spath}/../global.conf  
+fi
 . ${spath}/lib/common
 . ${spath}/conf/conf
 . ${spath}/lib/log_tool.sh
@@ -23,6 +26,9 @@ lgpMountPoint=`getPathNoMountpoint`		#loongoop 路径
 
 declare wordcount_filePath="${lgpMountPoint}/wordscount"
 WC_LOG=/tmp/lgp-wc.log
+if [ "x$LOG_WORDCOUNT" != "x" ];then
+	WC_LOG=$LOG_WORDCOUNT
+fi
 
 init_log $WC_LOG
 show_log "INFO" "----------------------------------"

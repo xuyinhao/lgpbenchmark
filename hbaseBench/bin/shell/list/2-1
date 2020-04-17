@@ -1,0 +1,10 @@
+#!/bin/bash
+#2-1  list不存在的表
+
+tableName="notexist_ct_list_tb"
+
+# list 
+ret=`hbaseStdShell "list '${tableName}'"`		#有标准输出
+
+flag=`checkInfo "$ret"  "0 row(s)"` 			#$1:return的数据， $2..:判断是否含有该字符 
+echo $flag

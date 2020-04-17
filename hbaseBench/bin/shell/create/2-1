@@ -1,7 +1,7 @@
 #!/bin/bash
 #2-1 创建一个表，255B
 
-tableName=`genString 255`
+tableName=ct_create_`genString 245`
 
 hbaseShell  "disable '$tableName'; drop '$tableName';create '$tableName','cf_ct_2-1'" 
 

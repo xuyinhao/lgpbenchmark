@@ -5,17 +5,22 @@
 #hbasePathShell="/loongoop/hbase-1.3.1/bin/hbase  shell"
 #hadoopPath="/loongoop/loongoop-1.0.6-v2.7.2/bin/hadoop"
 
-# add common func
-LOG_HBASE_RUN="/tmp/lgp-run-hbase.log"
+# add common funca
+if [ "$LOG_HBASE_RUN" == "" ];then
+	LOG_HBASE_RUN="/tmp/lgp-run-hbase.detail.log"
+fi
 
 hbase_info(){
+	#$1: msg $2:lineno
 	init_log $LOG_HBASE_RUN
 	log_info "$1" "$2" "$LOG_HBASE_RUN"
 }
+
 hbase_error(){
+	#$1: msg $2:lineno
 	init_log "$LOG_HBASE_RUN"
 	log_error "$1" "$2" "$LOG_HBASE_RUN"
-	syslog 	"hbaseTest" "$0" "0" "$1,$2"
+	syslog 	"lgptest_hbase" "$0" "1" "$1,$2"
 }
 
 hbaseShell(){
@@ -51,11 +56,12 @@ checkExistIndex(){
 
 	for i in $c_index
 	do
-		#if [[ "$c_hbaseDes" =~ "$i'," ]];then
 		if [[ "$c_hbaseDes" =~ "$i" ]];then
 			flag=0
+			hbase_info "${FUNCNAME} $c_hbaseDes -- 包含 -- $i" "$LINENO"
 		else 
 			flag=1
+			hbase_error "${FUNCNAME} $c_hbaseDes -- 不包含 -- $i" "$LINENO"
 			break
 		fi
 	done
@@ -69,8 +75,10 @@ local s_info=$2
 	
 	if [[ "$s_hbasescan" =~ "$s_info" ]];then
 		echo 0	
+		hbase_info "${FUNCNAME} $hbasescan -- 包含 -- $s_info" "$LINENO"
 	else
 		echo 1
+		hbase_error "${FUNCNAME} $hbasescan -- 不包含 -- $s_info" "$LINENO"
 	fi
 }
 
@@ -78,7 +86,7 @@ checkExistTableColumn(){
 	local declare flag=1		#false flag
 	local tableName="$1"
 	local column=$(echo "$@"|sed "s/ /,/"|awk -F "," '{print $2}' 2>&1)
-	hbase_info "Table:$tableName , column: $column ." "$LINENO"
+	hbase_info "${FUNCNAME} Table:$tableName , column: $column ." "$LINENO"
 	
 	hbaseDes=`echo "describe '$tableName'" |$hbasePathShell 2>&1`
 	if [[ "$hbaseDes" =~ "Table $tableName is" ]];then
@@ -92,7 +100,7 @@ checkExistTableColumn(){
 	fi
 
 	if [ $flag -ne 0 ];then
-		hbase_error "$0,checkExistTableColumn error,hbaseDes:$hbaseDes , hbaseFs:$hbaseFs" "$LINENO"
+		hbase_error "${FUNCNAME} ,hbaseDes:$hbaseDes , hbaseFs:$hbaseFs" "$LINENO"
 	fi
 
 	echo $flag
@@ -108,8 +116,11 @@ checkInfo(){
 	local declare flag=1
 	
 	if [[ "$e_info" =~ "$e_checkvalue" ]];then
-    	flag=0
-	fi	
+		hbase_info "${FUNCNAME} $e_info -- 包含 -- $e_checkvalue" "$LINENO"
+		echo 0 ;return 0
+		
+	fi
+	hbase_error "${FUNCNAME} $e_info -- 不包含 -- $e_checkvalue" "$LINENO"	
 	echo $flag
 
 }
@@ -119,7 +130,7 @@ checkOk(){
  flag=1
  if [ 0 -eq $e_flag ]; then
   	flag=0
-	echo $flag
+	echo $flag ;return $flag 
  else
  	echo $flag
 fi
@@ -136,7 +147,10 @@ checkError(){
 	
 	if [[ "$e_retinfo" =~ "$e_checkvalue" ]];then
 		flag=0
+		hbase_info "${FUNCNAME} $e_retinfo -- 包含 -- $e_checkvalue" "$LINENO"
+		echo $flag ; return $flag
 	fi
+	hbase_error "${FUNCNAME} $e_retinfo -- 不包含 -- $e_checkvalue" "$LINENO"
 	echo $flag ; return $flag
 	
 
@@ -150,7 +164,10 @@ checkExistSnap(){
 	ret=`hbaseStdShell "list_snapshots" |grep " $check_table "`
 	if [[ $ret =~ "$check_snap" ]];then
 		flag=0
+		hbase_info "${FUNCNAME} $ret -- 包含 -- $check_snap" "$LINENO"
+		echo $flag ; return $flag
 	fi
+	hbase_error "${FUNCNAME} $ret -- 不包含 -- $check_snap" "$LINENO"
 	echo $flag
 	
 }
@@ -158,8 +175,10 @@ checkLeoFSPath(){
 	local l_path="$1"
 	if [ -e `getMountPath`/"$l_path" ];then
 		echo 0
+		hbase_info "${FUNCNAME} `getMountPath`/$l_path 路径存在 " "$LINENO"
 	else
 		echo 1
+		hbase_info "${FUNCNAME} `getMountPath`/$l_path 路径不存在 " "$LINENO"
 	fi
 }
 
@@ -195,10 +214,13 @@ function getMountPath(){
 	str=${str#*<value>}
 	str=${str%</value>*}
 	if [[ "$str" == "" ]];then
-    	echo "/datapool/loongoop"
+    	mpath="/datapool/loongoop"
  	else
-    	echo $str
+    	mpath=$str
  	fi
+	echo $mpath
+	hbase_info "${FUNCNAME} leofsmountpath:$mpath" "$LINENO"
+
 }
 ###############################################################
 # 在hbase创建一个表，并put数据 row3','name:3','row3_value
@@ -211,11 +233,39 @@ createTableAndPut(){
 	hbaseShell "disable '$e_tablename';drop '$e_tablename';create '$e_tablename','name';put '$e_tablename','row1','name:1','row1_value';put '$e_tablename','row2','name:2','row2_value';put '$e_tablename','row3','name:3','row3_value';" >> $LOG_HBASE_RUN 2>&1
 	ret=`checkExistInfoByScan "$e_tablename" "row3_value"`
 	if [ $ret -eq 0 ];then
+		hbase_info "${FUNCNAME} tablename:$e_tablename " "$LINENO"
 		return 0
 	else
+		hbase_error "${FUNCNAME} tablename:$e_tablename " "$LINENO"
 		return 1
 	fi
 }
+getNsByTablename(){
+    local tablename="$1"
+    if [[ "$tablename" =~ ":" ]];then
+        namespace=`echo "$tablename"|awk -F ":" '{print $1}'`
+        n_tablename=`echo "$tablename"|awk -F ":" '{print $2}'`
+    else
+        namespace="default"
+        n_tablename=$tablename
+    fi
+    echo  $namespace
+	hbase_info "${FUNCNAME} namespace:$namespace " "$LINENO"
+}
+
+getTbnameByTablename(){
+    local tablename="$1"
+    if [[ "$tablename" =~ ":" ]];then
+        namespace=`echo "$tablename"|awk -F ":" '{print $1}'`
+        n_tablename=`echo "$tablename"|awk -F ":" '{print $2}'`
+    else
+        namespace="default"
+        n_tablename=$tablename
+    fi
+    echo  $n_tablename
+	hbase_info "${FUNCNAME} tablename:$n_tablename " "$LINENO"
+}
+
 ###############################
 # 检查表是 不存在
 # Param: 表名字
@@ -223,13 +273,8 @@ createTableAndPut(){
 ###############################
 checkNotExistTable(){
 	local tablename="$1"
-	if [[ "$tablename" =~ ":" ]];then
-		namespace=`echo "$tablename"|awk -F ":" '{print $1}'`
-		n_tablename=`echo "$tablename"|awk -F ":" '{print $2}'`
-	else
-		namespace="default"
-		n_tablename=$tablename
-	fi
+	namespace=`getNsByTablename $tablename`
+	n_tablename=`getTbnameByTablename $tablename`
 	
 	##1 check table exist
 	ret1=`hbaseStdShell "list"`
@@ -255,6 +300,7 @@ createNs(){
 	if [ $? -eq 0 ];then
 		echo 0;return 0
 	else
+		hbase_error "${FUNCNAME} nsName:$nsName " "$LINENO"
 		echo 1;return 1
 	fi
 }
@@ -269,23 +315,38 @@ checkExistNs(){
 	flag=1
 	ret=`hbaseStdShell "list_namespace"`
 	if [[ $ret =~ $nsName ]];then
-		flag=0
+		echo 0;return 0
 	fi
-	echo $flag;return $flag
+	hbase_error "$FUNCNAME list_namespace-ret:$ret , nsName:$nsName" "$LINENO"
+	echo 1;return 1
 }
 
 disableAll(){
 	tableName="$1"
+	hbase_info "${FUNCNAME} disable_all:$tableName " "$LINENO"
 	echo -e "disable_all '$tableName'\ny"|$hbasePathShell -n  >> $LOG_HBASE_RUN 2>&1
 }
 
 dropAll(){
 	tableName="$1"
+	hbase_info "${FUNCNAME} drop_all:$tableName " "$LINENO"
     echo -e "drop_all '$tableName'\ny"|$hbasePathShell -n >> $LOG_HBASE_RUN 2>&1
 }
 
 enableAll(){
     tableName="$1"
+	hbase_info "${FUNCNAME} enable_all:$tableName " "$LINENO"
     echo -e "enable_all '$tableName'\ny"|$hbasePathShell -n >> $LOG_HBASE_RUN 2>&1
 }
 
+checkFlushPath(){
+	local flushtable="$1"
+	local tableCol="$2"
+	leofsPath=`getMountPath`
+	namespace=`getNsByTablename $flushtable`
+    n_tablename=`getTbnameByTablename $flushtable`
+	
+	getflushnum=`ls $leofsPath/hbase/data/$namespace/$n_tablename/*/$tableCol/ 2>/dev/null |wc -l`
+	[ $? -eq 0 ] && echo $getflushnum
+
+}

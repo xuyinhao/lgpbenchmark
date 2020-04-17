@@ -6,10 +6,10 @@ hbaseShell  "disable 'ct_table_e'; drop 'ct_table_e';create 'ct_table_e','cf1','
 
 flag=1
 if [ `checkExistTableColumn "ct_table_e" "cf2" ` -eq 0 ];then            #$1:tableName $2...: cloumnName
-	$hbasePath snapshot create -n ct_table_e_s1 -t ct_table_e >/dev/null 2>&1
+	$hbase_create_snapshot -n ct_table_e_s1 -t ct_table_e >/dev/null 2>&1
 	if [ $? -eq 0 ] ;then
 		rmHdfsPath /hbaseExportSnapshot_e		#清目录
-		$hbasePath snapshot export  -snapshot ct_table_e_s1 -copy-to leofs:///hbaseExportSnapshot_e	> $plog 2>&1 #做快照
+		$hbase_export_snapshot  -snapshot ct_table_e_s1 -copy-to leofs:///hbaseExportSnapshot_e	> $plog 2>&1 #做快照
 		snp_r=`catHdfsFile /hbaseExportSnapshot_e/.hbase-snapshot/ct_table_e_s1/.snapshotinfo` #查看文件
 		check_ret=`checkInfo "$snp_r" "ct_table_e_s1"`			#检查包含信息
 		if [ $check_ret -eq 0 ];then

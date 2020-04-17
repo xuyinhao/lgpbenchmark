@@ -6,3 +6,9 @@ count
 delete
 disable
 drop
+enable
+exists
+flush
+get
+list
+locate_region

@@ -1,0 +1,11 @@
+#!/bin/bash
+#2-2 表 不存在 
+
+tableName="notexist_ct_locate_tb"
+
+#2. locate
+ret=`hbaseStdShell "locate_region '$tableName','row1'"`
+if [ `checkInfo "$ret" "ERROR: Unknown table"` -eq 0 ];then
+	echo 0 ;return 0
+fi
+echo 1

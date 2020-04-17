@@ -1,15 +1,22 @@
 #!/bin/sh
-path=`dirname $0`
-path=`cd $path;cd "..";pwd`
+# hbase tools(MR) 测试主脚本
+#
 
+filename="testTools.sh"
+path=$(cd `dirname $0`;cd "..";pwd)
+
+if [ "${path}/../global.conf" ];then
+    . "${path}/../global.conf"
+fi
+. "${path}/lib/log_tool.sh"
 . "${path}/conf/conf"
 . "${path}/bin/common"
-. "${path}/lib/log_tool.sh"
+. "${path}/bin/tools/func"
 
-LOG_HBASE="/tmp/lgp-hbase.log"
+if [ "x$LOG_HBASE" == "x" ];then
+	LOG_HBASE="/tmp/lgp-hbase.log"
+fi
 caseConfDir="$path/conf/caseConf"
-#totalcasenum=0
-#passnum=0
 
 runCase(){
 	#let totalcasenum+=1
@@ -19,9 +26,9 @@ runCase(){
         ret=`. $testcase`		#1:fail, 0 :pass
 	 	if [ $ret -eq 0 ];then
 	        log_and_show "INFO" "Tools.$apiName pass"
-#			let passnum+=1
 		else
 	        log_and_show "ERROR" "Tools.$apiName fail"
+			syslog "lgptest_hbase" "$filename" "1" "Tools.$apiName fail"
         fi
 	   fi
 }
@@ -42,9 +49,6 @@ elif [ 1 -eq $# ]; then
 		echo_help
 	fi
 	cases=$1                # 测试的cases
-#	if [ "$cases" == "" ];then
- #   	cases=`cat $caseConfDir/$apiName`       #调用testApi时用到
-#	fi
 else
 	echo_help
 fi
@@ -52,6 +56,4 @@ fi
 logTime="$(date +'%Y-%m-%d_%T')"
 init_log "$LOG_HBASE"
 
-#log_and_show "INFO" "run hbaseTools: Tools $apiName"
 runCase  "${cases}" 
-#log_and_show  "INFO" "Hbase shell $apiName test finished! Log path : $LOG_HBASE"

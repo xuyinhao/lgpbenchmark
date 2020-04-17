@@ -1,9 +1,9 @@
 #!/bin/bash
 #1-2 创建一个表，多个列族
-#. ../common
 
-#hbaseShell "disable 'ct_table1-2'; drop 'ct_table1-2'" 
-hbaseShell  "disable 'ct_table1-2'; drop 'ct_table1-2';create 'ct_table1-2','cf_ct_1-2','cf_ct_1-2.2','cf_ct_1-2.3'" 
+tableName=ct_create_tb
 
-checkExistTableColumn "ct_table1-2" "cf_ct_1-2" "cf_ct_1-2.2" "cf_ct_1-2.3" 
+hbaseShell  "disable '$tableName'; drop '$tableName';create '$tableName','cf_ct_1-2','cf_ct_1-2.2','cf_ct_1-2.3'" 
+
+checkExistTableColumn "$tableName" "cf_ct_1-2" "cf_ct_1-2.2" "cf_ct_1-2.3" 
 				#$1:tableName $2...: cloumnName

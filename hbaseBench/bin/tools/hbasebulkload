@@ -16,7 +16,8 @@ d,name4''' > `getMountPath`/bk_file
 rm -rf `getMountPath`/h_file1
 
 #3. import 
-$hbasePath org.apache.hadoop.hbase.mapreduce.ImportTsv \
+	#$hbasePath org.apache.hadoop.hbase.mapreduce.ImportTsv \
+$hbase_importtsv \
 -Dimporttsv.separator="","" -Dimporttsv.bulk.output=/h_file1 \
 -Dimporttsv.columns=HBASE_ROW_KEY,name:name $tablename /bk_file >> $plog 2>&1
 flag="$?"
@@ -31,7 +32,8 @@ check_table(){
 
 if [[ $flag == "0" ]];then
 	#4. completebulkload
-	$hbasePath org.apache.hadoop.hbase.mapreduce.LoadIncrementalHFiles /h_file1 $tablename >> $plog 2>&1
+		#$hbasePath org.apache.hadoop.hbase.mapreduce.LoadIncrementalHFiles /h_file1 $tablename >> $plog 2>&1
+	$hbase_bulkload_hfile /h_file1 $tablename >> $plog 2>&1
 	if [ $? -eq 0 -a `check_table` -eq 0 ];then
 		flag=0 
 	else

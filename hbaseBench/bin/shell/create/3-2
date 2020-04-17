@@ -1,6 +1,5 @@
 #!/bin/bash
 #3-2 不支持的命令
 
-
 err=`hbaseStdShell  "created 'ct_table3-1','cf_ct_3-1'" `
 checkInfo "$err" "NoMethodError: undefined method"  #$1 :info  $2:checkinfo

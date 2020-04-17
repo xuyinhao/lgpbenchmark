@@ -1,24 +1,27 @@
 #!/bin/sh
-path=`dirname $0`
-path=`cd $path;cd "..";pwd`
+# 执行 hbase shell 测试的脚本
+# 
 
+filename="testShell.sh" 	#脚本名称
+path=$(cd `dirname $0`;cd "..";pwd)
+if [ "${path}/../global.conf" ];then
+	. "${path}/../global.conf"
+fi
+. "${path}/lib/log_tool.sh"
 . "${path}/conf/conf"
 . "${path}/bin/common"
-. "${path}/lib/log_tool.sh"
 
-LOG_HBASE="/tmp/lgp-hbase.log"
 caseConfDir="$path/conf/caseConf"
 
-#totalcasenum=0
-#passnum=0
-
+if [ "x$LOG_HBASE" == "x" ];then
+    LOG_HBASE="/tmp/lgp-hbase.log"
+fi
 
 runCase(){
  	exist=$(echo "$1"| grep "#")
  	if [ "$exist" != "" ]; then
     	log_and_show "INFO" "Skip:  $1"
 	else
-		#let totalcasenum+=1
 		if [ ! -d $path/bin/shell/"$1" ]; then
     		log_and_show "INFO" "$apiConf are prefered!"
    		else
@@ -29,16 +32,16 @@ runCase(){
        				log_and_show "INFO" "pass $apiName.$caseName"
       			else
        				testcase="$path/bin/shell/$apiName/$caseName"
-       				#echo "testCase:$testcase"
        				if [ -f $testcase ]; then
         				ret=`. $testcase`		#1:fail, 0 :pass
 	 					if [ $ret -eq 0 ];then
 	        				log_and_show "INFO" "$apiName.$caseName pass"
 						else
 	        				log_and_show "ERROR" "$apiName.$caseName fail"
-        			fi
-	   			fi
-	  		fi
+							syslog "lgptest_hbase" "$filename" "1" "$apiName.$caseName fail"
+        				fi
+	   				fi
+	  			fi
      		done
    		fi
  	fi
@@ -72,4 +75,3 @@ init_log "$LOG_HBASE"
 
 echo "$logTime run hbaseShellTest: $apiName "$cases"" |tee -a "$LOG_HBASE"
 runCase $apiName "${cases}" 
-#log_and_show  "INFO" "Hbase shell $apiName test finished! Log path : $LOG_HBASE"

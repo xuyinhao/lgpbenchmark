@@ -4,6 +4,7 @@ function touchFile(){
  str=`genString 100`
  echo $str > $filePath
  echo $apiPath/"$1"
+	api_info "[${FUNCNAME}], f:$apiPath/$1" "$LINENO"
 }
 
 function checkOk(){
@@ -22,6 +23,7 @@ function checkOk(){
    echo "check failed"
   fi
  fi
+	api_info "[${FUNCNAME}], flag:$flag , --- $srcMd5 - ${distMd5}---" "$LINENO"
 echo $flag
 }
 
@@ -39,6 +41,7 @@ function checkOkForLocal(){
    flag=0
   fi
  fi
+	api_info "[${FUNCNAME}], flag:$flag , --- $srcMd5 - ${distMd5}---" "$LINENO"
 echo $flag
 }
 
@@ -91,5 +94,6 @@ function checkFileNature(){
    fi
   done
  fi
+	api_info "[${FUNCNAME}], flag:$flag , srcNature:$srcNature , distNature:$distNature" "$LINENO"
 echo $flag
 }

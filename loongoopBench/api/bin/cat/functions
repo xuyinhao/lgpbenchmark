@@ -9,6 +9,7 @@ function checkOk(){
    flag=0
   fi
  fi
+	api_info "[${FUNCNAME}], flag:$flag" "$LINENO"
  echo $flag
 }
 
@@ -22,6 +23,7 @@ function checkError(){
    flag=0
   fi
  fi
+	api_info "[${FUNCNAME}], flag:$flag" "$LINENO"
  echo $flag
 }
 

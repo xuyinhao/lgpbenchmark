@@ -5,6 +5,7 @@ function touchFile(){
  str=`genString 100`
  echo $str > $filePath
  echo $apiPath/"$1"
+	api_info "[${FUNCNAME}], f:$apiPath/$1" "$LINENO"
 }
 
 function checkOk(){
@@ -24,6 +25,7 @@ function checkOk(){
    flag=0
   fi
  fi
+	api_info "[${FUNCNAME}], flag:$flag , --- $srcMd5 - $distMd5---" "$LINENO"
 echo $flag
 }
 
@@ -37,6 +39,7 @@ function checkOkForPath(){
    flag=0
   fi
  fi
+	api_info "[${FUNCNAME}], flag:$flag " "$LINENO"
  echo $flag
 }
 
@@ -50,6 +53,7 @@ function checkError(){
    flag=0
   fi
  fi
+	api_info "[${FUNCNAME}], flag:$flag " "$LINENO"
  echo $flag 
 }
 
@@ -75,6 +79,7 @@ function checkFileNature(){
    fi
   done
  fi
+	api_info "[${FUNCNAME}], flag:$flag , srcNature:$srcNature distNature:$distNature " "$LINENO"
 echo $flag
 }
 
@@ -93,6 +98,7 @@ function checkDirNatureNeedWinacl(){
   distNatures=($distNature)
  
   if [[ "`getWinacl`" == "false" ]];then
+	api_info "[${FUNCNAME}], is not getwinacl" "$LINENO"
    for index in $indexs
    do
      if [ "${srcNatures[$index]}" != "${distNatures[$index]}" ]; then
@@ -104,6 +110,7 @@ function checkDirNatureNeedWinacl(){
 
 
    if [[ "`getWinacl`" == "true" ]];then
+	api_info "[${FUNCNAME}], is getwinacl" "$LINENO"
   for i in 0
    do
         if [ "drwxrwxrwx" != "${distNatures[0]}" ]; then
@@ -126,6 +133,7 @@ function checkDirNatureNeedWinacl(){
  fi
 echo $flag
 fi
+	api_info "[${FUNCNAME}], flag:$flag , srcNature:$srcNature distNature:$distNature " "$LINENO"
 }
 
 function checkFileNatureNeedWinacl(){
@@ -167,6 +175,7 @@ function checkFileNatureNeedWinacl(){
  for index in {1..6}
  do
   if [ "${srcNatures[$index]}" != "${distNatures[$index]}" ]; then
+	api_error "[${FUNCNAME}], flag:$flag , index:$index ,--- ${srcNatures[$index]} != ${distNatures[$index]} ---" "$LINENO"
     flag=0
 	echo $flag
     exit
@@ -177,6 +186,7 @@ function checkFileNatureNeedWinacl(){
  echo $flag
  fi
 fi
+	api_info "[${FUNCNAME}], flag:$flag , srcNature:$srcNature distNature:$distNature " "$LINENO"
 }
 
 

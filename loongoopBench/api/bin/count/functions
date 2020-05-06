@@ -13,10 +13,13 @@ function countOkCheck() {
   if [ $? -eq 0 ]; then
     #echo "2:$2"
     if [ "$ret" == "$2" ]; then
+		api_info "[${FUNCNAMR}] ,  $ret == $2" "$LINENO"
       return 1
     fi
+	api_error "[${FUNCNAMR}] ,  $ret != $2" "$LINENO"
     return 0
   fi
+	api_error "[${FUNCNAMR}] , exit code != 0  " "$LINENO"
   return 0
 }
 function countSomeOkCheck() {
@@ -29,10 +32,13 @@ function countSomeOkCheck() {
     #echo "2:$2"
     str=`echo $ret | grep "$2"`
     if [ "$str" == "" ]; then
+		api_error "[${FUNCNAMR}] , $str== NULL  " "$LINENO"
       return 0
     fi
+	api_info "[${FUNCNAMR}] , str:$str" "$LINENO"
     return 1
   fi
+	api_error "[${FUNCNAMR}] " "$LINENO"
   return 0
 }
 function countErrCheck() {

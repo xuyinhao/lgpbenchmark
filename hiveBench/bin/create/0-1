@@ -1,5 +1,8 @@
 #!/bin/bash
 #0-1 创建一个数据库
-${exec}cmd 'drop database hivedb0_1' >/dev/null 2>&1
-${exec}cmd 'create database hivedb0_1'
-checkExistDb "hivedb0_1"
+databaseName="ct_database_empty"
+
+${exec}cmd "drop database ${databaseName}" >/dev/null 2>&1
+${exec}cmd "create database ${databaseName}"
+
+checkExistDb "${databaseName}"

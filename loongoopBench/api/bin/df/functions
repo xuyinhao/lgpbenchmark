@@ -5,12 +5,16 @@ giga=`expr $mega \* 1024`
 tera=`expr $giga \* 1024`
 peta=`expr $tera \* 1024`
 exa=`expr $peta \* 1024`
+
 function datapoolDf() {
   defaultfs=`getDefaultFs`
   ret=(`df --block-size=1 | grep "datapool"`)
   prefix=`echo ${ret[2]} ${ret[1]} | awk '{ printf "%0.f\n" ,$1*100/$2}'`
   echo "$defaultfs ${ret[@]:1:3} ${prefix}%"
+    info=`echo "$defaultfs ${ret[@]:1:3} ${prefix}%%"`
+    api_info "[${FUNCNAME}] : `echo $info`"  "$LINENO"
 }
+
 function formatSize() {
   size=$1
   if [ "$size" -ge "$exa" ]; then
@@ -37,6 +41,7 @@ function datapoolDfh() {
   usedSpaceH=`formatSize ${ret[2]}`
   freeSpaceH=`formatSize ${ret[3]}`
   echo "$defaultfs $totalSpaceH $usedSpaceH $freeSpaceH ${prefix}%"
+	api_info "[${FUNCNAME}] : $defaultfs $totalSpaceH $usedSpaceH $freeSpaceH ${prefix}%%" "$LINENO"
 }
 function dfOkCheck() {
   ret=(`$df $1 2>/dev/null`)
@@ -51,8 +56,10 @@ function dfOkCheck() {
     #echo "space:$space"
     #echo "2:$2"
     if [ "$space" != "$2" ]; then
+	api_error "[${FUNCNAME}], hadoopDF:`echo ${space}%` != checkinfo:`echo ${2}%`" "$LINENO"
       return 0
     fi
+	api_info "[${FUNCNAME}], hadoopDF:`echo ${space}%` ==  checkinfo:`echo ${2}%`" "$LINENO"
     return 1
   fi
   return 0
@@ -68,6 +75,7 @@ function dfErrCheck() {
     if [ "$str" == "" ]; then
       return 0
     fi
+	api_info "[${FUNCNAME}], str:$str"
     return 1
   fi
   return 0

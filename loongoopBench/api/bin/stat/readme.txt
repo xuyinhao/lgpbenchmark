@@ -15,12 +15,25 @@
 5-2		错误指令的打印
 
 Usage: hadoop fs [generic options] -stat [format] <path> ...
-%b：打印文件大小（目录为0）
+%b：打印文件大小 
 %n：打印文件名
-%o：打印block size （我们要的值）
+%o：打印block size （我们要的值） 先查看leofs-site,没有值的话再查core-site
 %r：打印备份数
 %y：打印UTC日期 yyyy-MM-dd HH:mm:ss
 %Y：打印自1970年1月1日以来的UTC微秒数
 %F：目录打印directory, 文件打印regular file
+%g: 所属组
+%u: 所属用户
+
+## hadoop3.x perm, atime . stat "type:%F perm:%a %u:%g size:%b mtime:%y atime:%x name:%n blocksize:%o rep:%r"
 
  hadoop fs -stat "%b %n %o %r %y %Y %F" /api
+
+stat -c %s
+linux stat
+%s: 打印文件大小 （目录 4096）
+%n : 打印文件名 echo $(basename `stat -c %n /datapool/loongoop/hbase`)
+blocksize: 语义不一致
+备份数：语义不一致
+%U : 所属用户
+%G: 所属组 

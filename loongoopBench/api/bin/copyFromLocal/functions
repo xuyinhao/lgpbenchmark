@@ -3,6 +3,7 @@ function touchFile(){
  str=`genString 100`
  echo $str > $tmpDir/$1
  echo "$tmpDir/$1"
+	 api_info "[${FUNCNAME}] f:$tmpDir/$1" "$LINENO"
 }
 
 function checkOk(){
@@ -21,6 +22,7 @@ function checkOk(){
    flag=0
   fi
  fi
+	api_info "[${FUNCNAME}] flag:$flag , ----$srcMd5 - $distMd5---"  "$LINENO"
 echo $flag
 }
 
@@ -38,6 +40,7 @@ function checkOkForLocal(){
    flag=0
   fi
  fi
+	api_info "[${FUNCNAME}] flag:$flag , ----$srcMd5 - $distMd5---"  "$LINENO"
 echo $flag
 }
 
@@ -54,6 +57,7 @@ function checkOkForAllLocal(){
    flag=0
   fi
  fi
+	api_info "[${FUNCNAME}] flag:$flag , ----$srcMd5 - $distMd5---"  "$LINENO"
 echo $flag
 }
 
@@ -68,6 +72,7 @@ function checkOkForPath(){
    flag=0
   fi
  fi
+	api_info "[${FUNCNAME}] flag:$flag "  "$LINENO"
  echo $flag
 }
 
@@ -81,10 +86,11 @@ function checkError(){
    flag=0
   fi
  fi
+	api_info "[${FUNCNAME}] flag:$flag , ----$srcMd5 - $distMd5---"  "$LINENO"
  echo $flag 
 }
 
-function checkDirNatureNeedWinacl(){
+function checkDirNatureNeedWinacl_1(){
  flag=1
  if [ 0 -ne $1 ]; then
   flag=0
@@ -134,7 +140,7 @@ echo $flag
 fi
 }
 
-function checkFileNatureNeedWinacl(){
+function checkFileNatureNeedWinacl_1(){
  flag=1
  if [ 0 -ne $1 ]; then
   flag=0
@@ -179,7 +185,7 @@ function checkFileNatureNeedWinacl(){
   fi
  flag=1
  done
-
+  api_info "[${FUNCNAME}] flag:$flag , ----${srcNatures[$index]}-${distNatures[$index]}---"  "$LINENO"
  echo $flag
  fi
 fi

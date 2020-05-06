@@ -4,12 +4,14 @@ function getFileNature(){
  nature=`ls -l $realPath 2>/dev/null`
  natures=($nature)
  echo ${natures[$2]}
+	api_log "[${FUNCNAME}], real natures:${natures[$2]}" "$LINENO"
 }
 
 function getLocalFileNature(){
  nature=`ls -l $1`
  natures=($nature)
  echo ${natures[$2]}
+	api_log "[${FUNCNAME}], local natures:${natures[$2]}" "$LINENO"
 }
 
 
@@ -18,6 +20,7 @@ function getPathNature(){
  nature=`ls -ld $realPath`
  natures=($nature)
  echo ${natures[$2]}
+	api_log "[${FUNCNAME}], path natures:${natures[$2]}" "$LINENO"
 }
 
 function checkOk(){
@@ -25,11 +28,13 @@ function checkOk(){
  if [ 0 -eq $1 ]; then
   grp=`getFileNature $3 3`
   if [ "$2" != "$grp" ]; then
+	api_error "[${FUNCNAME}], $2 != $grp" "$LINENO"
    flag=0
   fi
  else
   flag=0
  fi
+	api_info "[${FUNCNAME}], flag:$flag" "$LINENO"
  echo $flag
 }
 getFileHdfs(){
@@ -37,7 +42,7 @@ getFileHdfs(){
 	hdfsInfo=`$ls $hdfsPath 2>/dev/null |grep "${1}$" `
 	hdfsInfos=($hdfsInfo)
 	echo ${hdfsInfos[$2]}
-	
+	api_info "[${FUNCNAME}], hdfs file info:${hdfsInfos[$2]}" "$LINENO"
 
 }
 getDirHdfs(){
@@ -46,7 +51,7 @@ getDirHdfs(){
 	hdfsInfo=`$ls $hdfsPathP 2>/dev/null |grep "${1}$"`
     hdfsInfos=($hdfsInfo)
     echo ${hdfsInfos[$2]}
-
+	api_info "[${FUNCNAME}], hdfs dir info:${hdfsInfos[$2]}" "$LINENO"
 }
 ############################
 # $1:$? $2:grpname should check 
@@ -56,6 +61,7 @@ function checkOkNeedWinacl(){
 flag=1
 dirPath=$4
  if `getWinacl`;then
+	api_info "[${FUNCNAME}], is getWinacl" "$LINENO"
  	if [ 0 -eq $1 ];then
 		if [ $dirPath ];then
 			grp=`getDirHdfs $3 3`
@@ -70,6 +76,7 @@ dirPath=$4
 	fi	
  
  else
+	api_info "[${FUNCNAME}], is not getWinacl" "$LINENO"
  	if [ 0 -eq $1 ]; then
   		grp=`getFileNature $3 3`
   		if [ "$2" != "$grp" ]; then
@@ -80,11 +87,13 @@ dirPath=$4
  	fi
 
  fi
+	api_info "[${FUNCNAME}], flag:$flag, --- $2 - $grp ---" "$LINENO"
   echo $flag
 }
 
 function checkOkForLocalFile(){
  flag=1
+
  if [ 0 -eq $1 ]; then
   grp=`getLocalFileNature $3 3`
   if [ "$2" != "$grp" ]; then
@@ -93,6 +102,7 @@ function checkOkForLocalFile(){
  else
   flag=0
  fi
+	api_info "[${FUNCNAME}], flag:$flag, --- $2 - $grp ---" "$LINENO"
  echo $flag
 }
 
@@ -107,6 +117,7 @@ function checkOkForPath(){
  else
   flag=0
  fi
+	api_info "[${FUNCNAME}], flag:$flag, --- $2 - $grp ---" "$LINENO"
  echo $flag
 }
 
@@ -135,6 +146,7 @@ function checkOkForDeepPath(){
  else
   flag=0
  fi
+	api_info "[${FUNCNAME}], flag:$flag, check: $1  $2 $pa " "$LINENO"
  echo $flag
 }
 

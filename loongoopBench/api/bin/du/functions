@@ -7,16 +7,20 @@ function duOkCheck() {
   if [ $? -eq 0 ]; then
     #echo "2:$2"
     if [ "$ret" == "$2" ]; then
+		api_info "[${FUNCNAME}] ,ok  " "$LINENO"
       return 1
     fi
     return 0
+		api_error "[${FUNCNAME}] ,fail  " "$LINENO"
   fi
+		api_error "[${FUNCNAME}] ,exit code fail  " "$LINENO"
   return 0
 }
 
 function duErrorCheck(){
  ret=`$du $1 2>&1`
  #echo "$ret"
+	api_info "[${FUNCNAME}] , ret:$ret " "$LINENO"
  if [ 0 -eq $? ]; then
   return 0
  fi

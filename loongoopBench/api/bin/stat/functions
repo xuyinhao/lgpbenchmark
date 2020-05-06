@@ -1,0 +1,217 @@
+#!/bin/bash
+## 在datapool下面创建一个文件
+function touch512LeoFile(){
+    filePath=`getLeofsRealPath "$1"`
+    local fileName=`basename "$1"`
+    str=`genString 512 2>/dev/null`
+    echo $str > $filePath
+    rm -rf ${tmpDir}/$fileName; \cp  $filePath ${tmpDir}/$fileName > /dev/null 2>&1
+    #echo "$1"
+    api_info "[${FUNCNAME}], f:${tmpDir}/$fileName" "$LINENO"
+}
+
+#filesize -- hdfs:%b , linux:%s
+get_filesize_value(){
+	local f_filePath="$1"
+	filesize="`stat -c %s $f_filePath 2>/dev/null`"
+	echo "$filesize"
+}
+
+getFileUserAndGroupOnHdfs(){
+    local hdfsPath="$1"
+    hdfsInfo=`$ls $hdfsPath 2>/dev/null  `
+    hdfsInfos=($hdfsInfo)
+    ## user:group
+    echo "${hdfsInfos[2]}:${hdfsInfos[3]}"
+}
+
+getDirUserAndGroupOnHdfs(){
+    local hdfsPath="$1"
+    hdfsPathP="${hdfsPath%/*}"      #获取path的父级目录
+    hdfsInfo=`$ls $hdfsPathP 2>/dev/null |grep "${1}$"`
+    hdfsInfos=($hdfsInfo)
+    echo "${hdfsInfos[2]}:${hdfsInfos[3]}"
+}
+
+
+#username -- hdfs:%u , linux:%U
+get_owner_user_value(){
+	local f_hdfsPath="$1"
+	leoPath="`getLeofsRealPath $f_hdfsPath`"
+
+	if [ -f $leoPath ];then
+		user=`getFileUserAndGroupOnHdfs	$f_hdfsPath |awk -F ":" '{print $1}'`
+		echo $user ; return 0
+	fi
+
+	if [ -d $leoPath ];then
+		user=`getDirUserAndGroupOnHdfs $f_hdfsPath |awk -F ":" '{print $1}'`
+        echo $user ; return 0
+    fi
+
+	#	owneruser="`stat -c %U $f_filePath 2>/dev/null`"
+	#	echo "$owneruser"
+}
+
+#groupname -- hdfs:%g , linux:%G
+get_owner_group_value(){
+	local f_hdfsPath="$1"
+	leoPath="`getLeofsRealPath $f_hdfsPath`"
+	 if [ -f $leoPath ];then
+        group=`getFileUserAndGroupOnHdfs $f_hdfsPath |awk -F ":" '{print $2}'`
+        echo $group ; return 0
+    fi  
+
+    if [ -d $leoPath ];then
+        group=`getDirUserAndGroupOnHdfs $f_hdfsPath |awk -F ":" '{print $2}'`
+        echo $group ; return 0
+    fi
+
+    ownergroup="`stat -c %G $f_filePath 2>/dev/null`"
+    echo "$ownergroup"
+}
+
+getBlkSizeByXml(){
+	xmlPath="$1"
+	api_debug "xmlPath:$xmlPath"
+	if [ "x$xmlPath" == "x" ] ;then
+        echo "no xmlSitePath set"
+        exit 1
+    fi
+    if  [ ! -f "$xmlPath" ];then
+        echo "no file xmlSitePath "
+         exit 1
+    fi
+
+    leofsBlockSize=$(grep -A3 "<name>leofs.block.size</name>" $xmlPath |grep -oP "(?<=<value>)(.*)(?=</value>)")
+    if [ "$leofsBlockSize" == "" ];then
+        echo "";return
+    fi
+	
+		#判断是否被注释掉了，只会尝试两次 
+		ret_1=`grep -B1 "<name>leofs.block.size</name>" $xmlPath |grep property`
+		if [[ "$ret_1" =~  "--" ]];then
+		#	ret_11=`echo "$ret_1"|grep -- "--"|wc -l `
+		#	if [ ${ret_11} -eq 1 ];then
+				api_info "[${FUNCNAME}] , get -- no leofs.block.size return "
+				echo "" ; return 1
+		#	fi
+		fi
+		
+		if [  "x$ret_1" == "x" ];then
+			ret_2=`grep -B2 "<name>leofs.block.size</name>"  $xmlPath |grep property`
+			if [[ "$ret_2" =~ "--" ]];then
+		#		ret_22=`echo "$ret_2"|grep -- "--"|wc -l `
+		#		if [ ${ret_22} -eq 1 ];then
+					api_info "[${FUNCNAME}] , get -- no leofs.block.size return "
+                	echo "" ; return 1
+         #   	fi
+			fi
+		fi
+
+		echo $leofsBlockSize
+    api_info "[${FUNCNAME}] xmlpath:$xmlPath , blocksize:$leofsBlockSize" "$LINENO"
+}
+
+
+getLeoBlocksize(){
+	#leofsSitePath=
+	#coreSitePath=
+	api_debug "leofs site: $leofsSitePath"
+	api_debug "core site: $coreSitePath"
+	leoblksize="`getBlkSizeByXml $leofsSitePath`"
+	if [ "x$leoblksize" == "x" ];then
+		leoblksize="`getBlkSizeByXml $coreSitePath`"
+	fi
+
+	if [ "x$leoblksize" == "x" ];then
+		leoblksize="67108864"
+	fi
+	api_info "[${FUNCNAME}],final leoblksize: $leoblksize" "$LINENO"
+	echo "$leoblksize"
+}
+
+#blocksize -- hdfs:%o , linux: leofs-site , core-site.xml
+get_blocksize_value(){
+	local b_filePath="$1"
+	blocksize="`getLeoBlocksize`"
+	echo "$blocksize"
+}
+
+#filename -- hdfs:%n , linux : `basename`
+get_filename_value(){
+	local f_filePath="$1"
+    filename="`basename $f_filePath`"
+    echo "$filename"
+}
+
+# type -- hdfs:%F ,linux : %F
+get_filetype_value(){
+    local t_filePath="$1"
+    filetype="`stat -c %F $t_filePath`"
+    echo "$filetype"
+}
+
+
+
+checkAllStat(){
+	### %u_%g_%b_%o_%n_%F user,group,filesize,oblocksize,filename,Type
+	local retf="$1"
+	local ret_hdfsstat="$2" 
+	local hdfsPath="$3"
+	filePath="$(getLeofsRealPath "$hdfsPath")"
+
+	username="`echo "$ret_hdfsstat"|awk -F "|" '{print $1}'`"
+	groupname="`echo "$ret_hdfsstat"|awk -F "|" '{print $2}'`"
+	filesize="`echo "$ret_hdfsstat"|awk -F "|" '{print $3}'`"
+	blocksize="`echo "$ret_hdfsstat"|awk -F "|" '{print $4}'`"
+	filename="`echo "$ret_hdfsstat"|awk -F "|" '{print $5}'`"
+	filetype="`echo "$ret_hdfsstat"|awk -F "|" '{print $6}'`"
+
+	api_debug "[${FUNCNAME}],hdfs all info :$username,$groupname,$filesize,$blocksize,$filename,$filetype"	"$LINENO"
+	
+	linuxUsername="`get_owner_user_value $hdfsPath`"
+	if [ "$username" != "$linuxUsername" ];then
+		api_error "[${FUNCNAME}],hdfs:$username,linux:$linuxUsername"	"$LINENO"
+		echo 0;return 0
+	fi
+	
+	linuxGroupname="`get_owner_group_value $hdfsPath`"
+	if [ "$groupname" != "$linuxGroupname" ];then
+		api_error "[${FUNCNAME}],hdfs:$groupname,linux:$linuxGroupname"	"$LINENO"
+        echo 0;return 0
+    fi
+
+	linuxFilesize="`get_filesize_value $filePath`"
+	if [ "$filesize" != "$linuxFilesize" ];then
+		api_error "[${FUNCNAME}],hdfs:$filesize,linux:$linuxFilesize"	"$LINENO"
+		echo 0;return 0
+	fi
+
+	linuxBlocksize="`get_blocksize_value $filePath`"
+	if [ "$blocksize" != "$linuxBlocksize" ];then
+		api_error "[${FUNCNAME}],hdfs:$blocksize,linux:$linuxBlocksize"	"$LINENO"
+        echo 0;return 0
+    fi
+	
+	linuxFilename="`get_filename_value $filePath`"
+	if [ "$filename" != "$linuxFilename" ];then
+		api_error "[${FUNCNAME}],hdfs:$filename,linux:$linuxFilename" 	"$LINENO"
+        echo 0;return 0
+    fi
+
+	linuxFiletype="`get_filetype_value $filePath`"
+	if [ "$filetype" != "$linuxFiletype" ];then
+		api_error "[${FUNCNAME}],hdfs:$filetype,linux:$linuxFiletype" "$LINENO"
+        echo 0;return 0
+    fi
+	
+	
+	api_info "[${FUNCNAME}], hdfs all info :$username,$groupname,$filesize,$blocksize,$filename,$filetype"	"$LINENO"
+	api_info "[${FUNCNAME}],linux all info :$linuxUsername,$linuxGroupname,$linuxFilesize,$linuxBlocksize,$linuxFilename,$linuxFiletype"	"$LINENO"
+	echo 1
+
+
+
+}
+

@@ -10,7 +10,7 @@ fi
 
 #2. 修改 REPLICATION_SCOPE => 3
 hbaseShell "alter '$a_tablename','name',{NAME => 'name',REPLICATION_SCOPE => '3'}"
-if [ `checkExistIndex "" "$a_tablename" "REPLICATION_SCOPE => '3',"` -eq 0 ];then
+if [ `checkExistIndex "" "$a_tablename" "REPLICATION_SCOPE => '3'"` -eq 0 ];then
 	echo 0; return 0
 fi
 

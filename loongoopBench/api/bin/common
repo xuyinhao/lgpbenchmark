@@ -1,75 +1,111 @@
 #!/bin/sh
+
+# add common func api
+
+if [ "x${LOG_API_RUN}" == "x" ];then
+    LOG_API_RUN="/tmp/lgp-run-api.detail.log"
+fi
+
+api_info(){
+    #$1: msg $2:lineno
+    init_log "${LOG_API_RUN}"
+    log_info "$1" "$2" "${LOG_API_RUN}"
+}
+
+api_error(){
+    #$1: msg $2:lineno
+    init_log "$LOG_API_RUN"
+    log_error "$1" "$2" "$LOG_API_RUN"
+    syslog  "lgptest_api" "$0" "1" "$1,$2"
+}
+
+api_debug(){
+    init_log "$LOG_API_RUN"
+    log_debug "$1" "$2" "$LOG_API_RUN"
+}
 function clearDir(){
- if [ "" == "$1" ]; then
-  echo "dir is not prefer!"
-  exit 0
- fi
- `$test -d "$1" 1>/dev/null 2>&1`
- if [ 0 -ne $? ]; then
-  `$mkdir -p "$1" 1>/dev/null 2>&1`
- fi
- `$rm -r "$1/*" 1>/dev/null 2>&1`
+	local dirname="${1}"
+	if [ $# -ne 1 ];then
+		exit 0	
+	fi
+	if [ "x" == "x${dirname}" ]; then
+		echo "dir is not prefer!"
+  		return 0
+ 	fi
+	ret_test=`$test -d "$dirname" 2>&1`
+ 	if [ 0 -ne $? ]; then
+  		ret_mkdir=`$mkdir -p "$dirname"  2>&1`
+ 	fi
+ 	ret_rm=`$rm -r "$dirname/*"  2>&1`
+	api_info "${FUNCNAME} ret_test:$ret_test ret_mkdir:$ret_mkdir ret_rm:$ret_rm" "$LINENO"
 }
 
 function clearTmpDir(){
- if [ "" == "$1" ]; then
-  echo "dir is not prefer!"
-  exit 0
- fi
- test -d "$1"
- if [ 0 -ne $? ]; then
-  mkdir -p "$1"
- fi
- rm -rf $1/*
+	if [ $# -ne 1 ];then
+		exit 0
+	fi
+	if [ "" == "$1" ]; then
+  		echo "dir is not prefer!"
+  		exit 0
+	fi
+ 	test -d "$1"
+ 	if [ 0 -ne $? ]; then
+  		mkdir -p "$1"
+ 	fi
+	api_info "${FUNCNAME} rm -rf $1/*" "$LINENO"
+ 	rm -rf $1/*
 }
 
-
 function getDefaultFs(){
-if [[ "$coreSitePath" == "" ]] ;then
-   echo "no coreSitePath set"
-   exit 1
-fi
+	if [[ "$coreSitePath" == "" ]] ;then
+		echo "no coreSitePath set"
+   		exit 1
+	fi
 
-if  [ ! -f $coreSitePath ];then
-   echo "no coreSitePath set"
-   exit 1
-fi
-defaultfs=$(grep -A3 "<name>fs.defaultFS</name>" $coreSitePath | \
+	if  [ ! -f $coreSitePath ];then
+   		echo "no coreSitePath set"
+   		exit 1
+	fi
+	defaultfs=$(grep -A3 "<name>fs.defaultFS</name>" $coreSitePath | \
 	grep -oP "(?<=<value>)(leofs:[/]{1,3}\w*)(?=[/]{0,2}</value>)")
-echo $defaultfs
+	echo $defaultfs
+	api_info "${FUNCNAME} defaultfs:$defaultfs " "$LINENO"
 }
 
 
 function genString(){
-  j=0;
-  for i in {a..z};do array[$j]=$i;j=$(($j+1));done
-  for i in {A..Z};do array[$j]=$i;j=$(($j+1));done
-  for ((i =0;i < $1;i++));do strs="$strs${array[$(($RANDOM%$j))]}"; done;
-        echo $strs
+	j=0;
+	for i in {a..z};do array[$j]=$i;j=$(($j+1));done
+	for i in {A..Z};do array[$j]=$i;j=$(($j+1));done
+	for ((i =0;i < $1;i++));do strs="$strs${array[$(($RANDOM%$j))]}"; done;
+	echo $strs
 }
 
 function genDeepPath(){
- deepPath="" 
- for((i=0; i<$1; i++))
-  do
-  str=$(genString $2)
-  deepPath=$deepPath"/"$str
-  done
- echo $deepPath
+	deepPath="" 
+	for((i=0; i<$1; i++))
+ 	do
+  		str=$(genString $2)
+  		deepPath=$deepPath"/"$str
+  	done
+ 	echo $deepPath
+	api_info "${FUNCNAME} deepPath:$deepPath" "$LINENO"
 }
 
 function getMountPath_o(){
- val=`grep -n 'leofs.mountpoint.dir' ${leofsSitePath}`
- val=`expr ${val:0:1} + 1`
- str=`sed -n "${val}p" ${leofsSitePath}`
- str=${str#*<value>}
- str=${str%</value>*}
- if [[ "$str" == "" ]];then
-    echo "/datapool/loongoop"
- else
-    echo $str
- fi
+	val=`grep -n 'leofs.mountpoint.dir' ${leofsSitePath}`
+	val=`expr ${val:0:1} + 1`
+	str=`sed -n "${val}p" ${leofsSitePath}`
+	str=${str#*<value>}
+	str=${str%</value>*}
+ 	if [[ "$str" == "" ]];then
+    	echo "/datapool/loongoop"
+ 	else
+    	echo $str
+ 	fi
+	api_info "${FUNCNAME} getLgpMountPath:$str" "$LINENO"
 }
+
 function getMountPath(){
 	if [[ "$coreSitePath" == "" ]] ;then
    		echo "no coreSitePath set"
@@ -80,14 +116,13 @@ function getMountPath(){
    		echo "no coreSitePath set"
   		 exit 1
 	fi
-mountPoint=$(grep -A3 "<name>leofs.mountpoint.dir</name>" $leofsSitePath |grep -oP "(?<=<value>)(.*)(?=</value>)")
- if [[ "$mountPoint" == "" ]];then
-    echo "/datapool/loongoop"
- else
-    echo $mountPoint
- fi
-
-
+	mountPoint=$(grep -A3 "<name>leofs.mountpoint.dir</name>" $leofsSitePath |grep -oP "(?<=<value>)(.*)(?=</value>)")
+ 	if [[ "$mountPoint" == "" ]];then
+    	echo "/datapool/loongoop"
+ 	else
+    	echo $mountPoint
+ 	fi
+	api_info "${FUNCNAME} getLgpMountPath:$mountPoint" "$LINENO"
 }
 
 #获取loongoop是否设置了winacl
@@ -106,74 +141,96 @@ function getWinacl(){
 		 echo "get Winacl Error"
 		 exit 1
 	fi
-			
 	echo $winaclIsSet
+	api_info "${FUNCNAME} winaclisSet-1: $winaclIsSet " "$LINENO"
 }
 
 function getLeofsRealPath(){
- userName=`whoami`
- if [[ "$1" == "/"* ]]; then
-   echo ${mountPath}"$1"
- else
-   echo ${mountPath}/user/$userName/"$1"
- fi
+	userName=`whoami`
+	
+ 	if [[ "$1" == "/"* ]]; then
+   		echo ${mountPath}"$1"
+		api_info "${FUNCNAME} path:${mountPath}${1}" "$LINENO"
+ 	else
+   		echo ${mountPath}/user/$userName/"$1"
+		api_info "${mountPath}"$1" path:${mountPath}/user/$userName/${1}" "$LINENO"
+ 	fi
 }
 
 function getMd5(){
- md5=`md5sum -t "$1"`
- md5=${md5% *}
- echo "$md5"
+	md5=`md5sum -t "$1"`
+	md5=${md5% *}
+	echo "$md5"
 }
+
+## 检查目录属性 （使用loongoop winacl）
 ## $1 : 命令执行flag
 ## $2 : src路径，本地路径格式
 ## $3 : dst路径。本地路径格式
-function checkDirNatureNeedWinacl(){
- flag=1
- if [ 0 -ne $1 ]; then
-  flag=0
- else
-  distRealPath=`getLeofsRealPath "$3"`
-  indexs=(0 1 2 3 4 5 6)
-  srcNature=`ls -l $(dirname $2)|grep $(basename $2)`
-  srcNature=${srcNature%$tmDir*}
-  srcNatures=($srcNature)
-  distNature=`ls -l $(dirname $distRealPath)|grep $(basename $distRealPath)`
-  distNature=${distNature%$apiPath*}
-  distNatures=($distNature)
- 
-  if [[ "`getWinacl`" == "false" ]];then
-   for index in $indexs
-   do
-     if [ "${srcNatures[$index]}" != "${distNatures[$index]}" ]; then
-       flag=0
-        break
-     fi
-    done
-   fi
+checkDirNatureNeedWinacl(){
+	flag=1
+if [ 0 -ne $1 ]; then
+	flag=0
+else
+	distRealPath=`getLeofsRealPath "$3"`
+  	indexs=(0 1 2 3 4 5 6)
+  	srcNature=`ls -l $(dirname $2)|grep $(basename $2)`
+  	srcNature=${srcNature%$tmDir*}
+  	srcNatures=($srcNature)
+  	distNature=`ls -l $(dirname $distRealPath)|grep $(basename $distRealPath)`
+	distNature=${distNature%$apiPath*}
+	distNatures=($distNature)
+	
+	if [[ "`getWinacl`" == "false" ]];then
+		api_info "${FUNCNAME} getwinacl: false" "$LINENO"
+		for index in $indexs
+   		do
+     		if [ "${srcNatures[$index]}" != "${distNatures[$index]}" ]; then
+       			flag=0
+        		break
+     		fi
+    	done
+	fi
 
+	if [[ "`getWinacl`" == "true" ]];then
+		api_info "${FUNCNAME} getwinacl: true" "$LINENO"
+	for i in 0
+	do
+		if [ "drwxrwxrwx" != "${distNatures[0]}" ]; then
+		api_log "${FUNCNAME} drwxrwxrwx != ${distNatures[0]}" "$LINENO"
+			flag=0
+			echo $flag
+			exit
+		fi
+		api_debug "${FUNCNAME} index:0 , drwxrwxrwx == ${distNatures[0]}" "$LINENO"
+		flag=1
+	done
+	
+	for index in 1 2 3 5 6
+	do
+		if [ "${srcNatures[$index]}" != "${distNatures[$index]}" ]; then
+		api_error "${FUNCNAME} index:$index , ${srcNatures[$index]} != ${distNatures[$index]}" "$LINENO"
+			flag=0
+			echo $flag
+			exit
+		fi
+		api_info "${FUNCNAME} index:$index , ${srcNatures[$index]} == ${distNatures[$index]}" "$LINENO"
+	flag=1
+	done
+	fi
+	
+	## index4:  size大小。xfs(lvm) 有可能文件夹size是6？而leofs是4
+	if [ "${srcNatures[4]}" != "${distNatures[4]}" -a "4096" != ${distNatures[4]} ]; then
+	    api_error "${FUNCNAME} index:4 , ${srcNatures[4]} != ${distNatures[4]} -a != 4096" "$LINENO"
+    	    flag=0
+            echo $flag
+            exit
+        fi
+        flag=1
+	api_info "${FUNCNAME} index:4 , ${srcNatures[4]}|4096  == ${distNatures[4]}" "$LINENO"
 
-   if [[ "`getWinacl`" == "true" ]];then
-  for i in 0
-   do
-        if [ "drwxrwxrwx" != "${distNatures[0]}" ]; then
-      flag=0
-      echo $flag
-      exit
-       fi
-    flag=1
-  done
-
- for index in {1..6}
- do
-  if [ "${srcNatures[$index]}" != "${distNatures[$index]}" ]; then
-    flag=0
-    echo $flag
-    exit
-  fi
- flag=1
- done
- fi
-echo $flag
+	echo $flag
+	api_info "${FUNCNAME} checkwinacl nature flag: $flag" "$LINENO"	
 fi
 }
 
@@ -190,8 +247,8 @@ function checkFileNatureNeedWinacl(){
   distNature=`ls -l $distRealPath`
   distNature=${distNature%$apiPath*}
   distNatures=($distNature)
- 
   if [[ "`getWinacl`" == "false" ]];then
+		api_info "${FUNCNAME} getwinacl:false" "$LINENO"
    for index in $indexs
    do
      if [ "${srcNatures[$index]}" != "${distNatures[$index]}" ]; then
@@ -203,6 +260,7 @@ function checkFileNatureNeedWinacl(){
 
 
  if [[ "`getWinacl`" == "true" ]];then
+		api_info "${FUNCNAME} getwinacl:true" "$LINENO"
   for i in 0 
    do
 		if [ "-rwxrwxrwx" != "${distNatures[0]}" ]; then
@@ -223,7 +281,17 @@ function checkFileNatureNeedWinacl(){
  flag=1
  done
 
+## 6 size大小。xfs(lvm) 有可能文件夹size是6？而leofs是4
+if [ "${srcNatures[6]}" != "${distNatures[6]}" -a "4096" != ${distNatures[6]} ]; then
+    flag=0
+        echo $flag
+    exit
+fi
+flag=1
+
+  
  echo $flag
+	api_info "${FUNCNAME} checkwinacl nature flag: $flag" "$LINENO"	
  fi
 fi
 }

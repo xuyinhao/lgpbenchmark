@@ -1,0 +1,8 @@
+#!/bin/bash
+#1-1 按照格式打印文件信息
+filename=ct_stat_1-1_file
+touch512LeoFile "${apiPath}/$filename"
+## %u_%g_%b_%o_%n_%F user,group,filesize,oblocksize,name,Type
+ret_hdfsallstat="`$statAll ${apiPath}/$filename 2>/dev/null`"
+checkAllStat "$?" "$ret_hdfsallstat" "${apiPath}/$filename"	#$?, hdfsstat结果，filepath
+

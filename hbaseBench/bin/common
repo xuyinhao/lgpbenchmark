@@ -61,7 +61,7 @@ checkExistIndex(){
 			hbase_info "${FUNCNAME} $c_hbaseDes -- 包含 -- $i" "$LINENO"
 		else 
 			flag=1
-			hbase_error "${FUNCNAME} $c_hbaseDes -- 不包含 -- $i" "$LINENO"
+			hbase_info "${FUNCNAME} $c_hbaseDes -- 不包含 -- $i" "$LINENO"
 			break
 		fi
 	done
@@ -78,7 +78,7 @@ local s_info=$2
 		hbase_info "${FUNCNAME} $hbasescan -- 包含 -- $s_info" "$LINENO"
 	else
 		echo 1
-		hbase_error "${FUNCNAME} $hbasescan -- 不包含 -- $s_info" "$LINENO"
+		hbase_info "${FUNCNAME} $hbasescan -- 不包含 -- $s_info" "$LINENO"
 	fi
 }
 
@@ -100,7 +100,7 @@ checkExistTableColumn(){
 	fi
 
 	if [ $flag -ne 0 ];then
-		hbase_error "${FUNCNAME} ,hbaseDes:$hbaseDes , hbaseFs:$hbaseFs" "$LINENO"
+		hbase_info "${FUNCNAME} ,hbaseDes:$hbaseDes , hbaseFs:$hbaseFs" "$LINENO"
 	fi
 
 	echo $flag
@@ -120,7 +120,7 @@ checkInfo(){
 		echo 0 ;return 0
 		
 	fi
-	hbase_error "${FUNCNAME} $e_info -- 不包含 -- $e_checkvalue" "$LINENO"	
+	hbase_info "${FUNCNAME} $e_info -- 不包含 -- $e_checkvalue" "$LINENO"	
 	echo $flag
 
 }
@@ -150,7 +150,7 @@ checkError(){
 		hbase_info "${FUNCNAME} $e_retinfo -- 包含 -- $e_checkvalue" "$LINENO"
 		echo $flag ; return $flag
 	fi
-	hbase_error "${FUNCNAME} $e_retinfo -- 不包含 -- $e_checkvalue" "$LINENO"
+	hbase_info "${FUNCNAME} $e_retinfo -- 不包含 -- $e_checkvalue" "$LINENO"
 	echo $flag ; return $flag
 	
 
@@ -167,7 +167,7 @@ checkExistSnap(){
 		hbase_info "${FUNCNAME} $ret -- 包含 -- $check_snap" "$LINENO"
 		echo $flag ; return $flag
 	fi
-	hbase_error "${FUNCNAME} $ret -- 不包含 -- $check_snap" "$LINENO"
+	hbase_info "${FUNCNAME} $ret -- 不包含 -- $check_snap" "$LINENO"
 	echo $flag
 	
 }
@@ -236,7 +236,7 @@ createTableAndPut(){
 		hbase_info "${FUNCNAME} tablename:$e_tablename " "$LINENO"
 		return 0
 	else
-		hbase_error "${FUNCNAME} tablename:$e_tablename " "$LINENO"
+		hbase_info "${FUNCNAME} tablename:$e_tablename " "$LINENO"
 		return 1
 	fi
 }
@@ -317,7 +317,7 @@ checkExistNs(){
 	if [[ $ret =~ $nsName ]];then
 		echo 0;return 0
 	fi
-	hbase_error "$FUNCNAME list_namespace-ret:$ret , nsName:$nsName" "$LINENO"
+	hbase_info "$FUNCNAME not exist . list_namespace-ret:$ret , nsName:$nsName" "$LINENO"
 	echo 1;return 1
 }
 

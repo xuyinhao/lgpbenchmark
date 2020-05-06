@@ -3,11 +3,16 @@ function getFileMode(){
  realPath=`getLeofsRealPath "$1"`
  mode=`stat -c %a $realPath`
  echo $mode
+	api_info "[${FUNCNAME}] " "$LINENO"
+	api_info "[${FUNCNAME}]  mode:$mode" "$LINENO"
+
 }
 
 function getLocalFileMode(){
  mode=`stat -c %a $1`
  echo $mode
+	 api_info "[${FUNCNAME}] mode:$mode" "$LINENO"
+
 }
 ## get hdfs path permission
 ## stat %a 暂时不支持获取？
@@ -31,6 +36,8 @@ genNumByRwx(){
 		let o_num+=1
 	done
 	echo ${modesum[0]}${modesum[1]}${modesum[2]}
+	 api_info "[${FUNCNAME}] rwxv:$1 gennum:${modesum[0]}${modesum[1]}${modesum[2]}"  "$LINENO"
+
 }
 getDirOnHdfs(){
 	local hdfsPath="$1"
@@ -38,6 +45,7 @@ getDirOnHdfs(){
     hdfsInfo=`$ls $hdfsPathP 2>/dev/null |grep "${1}$"`
     hdfsInfos=($hdfsInfo)
     genNumByRwx ${hdfsInfos[0]:1:9}
+	api_info "[${FUNCNAME}] hdfsInfos:$hdfsInfo" "$LINENO"
 }
 
 getFileOnHdfs(){
@@ -45,6 +53,7 @@ getFileOnHdfs(){
     hdfsInfo=`$ls $hdfsPath 2>/dev/null `
     hdfsInfos=($hdfsInfo)
     genNumByRwx ${hdfsInfos[0]:1:9}
+	api_info "[${FUNCNAME}] hdfsInfos:$hdfsInfo" "$LINENO"
 }
 
 
@@ -58,6 +67,7 @@ function checkOk(){
  else
   flag=0
  fi
+	
  echo $flag
 }
 function checkOkNeedWinacl(){
@@ -70,6 +80,7 @@ function checkOkNeedWinacl(){
 	if [ 0 -eq $retFlag ];then
 		if [ `getWinacl` ];then
 			##winacl=true , check by hdfs info
+			 api_info "[${FUNCNAME}] is getWinacl" "$LINENO"
 			if [ $isDirPath ];then
 				modGet=`getDirOnHdfs $path`	
 				if [ $modInfo -ne $modGet ]; then
@@ -83,6 +94,7 @@ function checkOkNeedWinacl(){
 			fi
 		else
 			## winacl=false, check by nature datapool
+			 api_info "[${FUNCNAME}] is not getWinacl" "$LINENO"
 			modGet=`getFileMode $3`
 			if [ $modInfo -ne $modGet ]; then
 				flag=0
@@ -91,6 +103,7 @@ function checkOkNeedWinacl(){
 	else
 		flag=0
 	fi
+	 api_info "[${FUNCNAME}] flag:$flag" "$LINENO"
 	echo $flag	
 
 }
@@ -105,6 +118,7 @@ function checkOkForLocalFile(){
  else
   flag=0
  fi
+	 api_info "[${FUNCNAME}] flag:$flag" "$LINENO"
  echo $flag
 
 }
@@ -119,6 +133,7 @@ function checkError(){
    flag=0
   fi
  fi
+	 api_info "[${FUNCNAME}] flag:$flag" "$LINENO"
  echo $flag
 }
 

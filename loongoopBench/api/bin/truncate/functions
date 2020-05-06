@@ -6,8 +6,9 @@ function touch8kLeoFile(){
 	local fileName=`basename "$1"`
 	str=`genString 8192`
 	echo $str > $filePath
-	rm -rf ${tmpDir}/$fileName; echo y | cp  $filePath ${tmpDir}/$fileName > /dev/null 2>&1
+	rm -rf ${tmpDir}/$fileName; \cp  $filePath ${tmpDir}/$fileName > /dev/null 2>&1
 	#echo "$1"
+	api_info "[${FUNCNAME}], f:${tmpDir}/$fileName" "$LINENO"
 }
 
 ## file:///本地目录创建一个文件
@@ -15,6 +16,7 @@ function touch1kLocalFile(){
 	local filePath="$1"
     local str=`genString 1024`
     echo $str > $filePath
+	api_info "[${FUNCNAME}], f:${filePath}" "$LINENO"
 }
 
 
@@ -25,6 +27,7 @@ function touch10MLeoFile(){
 	do
     	echo $str >> $filePath
 	done
+	api_info "[${FUNCNAME}], f:${filePath}" "$LINENO"
 #    echo "$1"
 }
 getNatureLen(){

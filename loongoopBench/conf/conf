@@ -30,4 +30,4 @@
 #nodeList="master slave1 slave2"			#节点
 #wordcount_filePath="/wordscount" 		#hdfs path , wordcount原始数据的路径
 #reduceNum=2								#wordcount MR reduce num
-
+#LOG_API_RUN="/tmp/lgp-api-run.detail.log"

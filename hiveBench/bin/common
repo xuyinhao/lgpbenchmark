@@ -6,9 +6,12 @@
 #########################
 
 
-declare basecmd=hivecmd	#beelinecmd #hivecmd						#检查正确性时，使用的cmd入口 hivecmd, beelinecmd
-declare basestdcmd=hivestdcmd	#beelinestdcmd #hivestdcmd				# hivestdcmd, beelinestdcmd
-declare LOG_HIVE_RUN=/tmp/lgp-run-hive.log		# 运行时，日志记录位置
+declare basecmd=hivecmd	#2种选择; 1.beelinecmd 2.hivecmd				#程序检查正确性时，使用的cmd入口 hivecmd, beelinecmd
+declare basestdcmd=hivestdcmd	#beelinestdcmd #hivestdcmd				# hivestdcmd, beelinestdcmd . 会有输出信息
+if [ "x$LOG_HIVE_RUN" == "x" ];then
+	LOG_HIVE_RUN=/tmp/lgp-run-hive.log		# 运行时，日志记录位置
+fi
+
 
 ##########################################################################
 #  DESCRIPTION  :log save to file 
@@ -21,6 +24,7 @@ hive_info(){
 hive_error(){
 	init_log $LOG_HIVE_RUN
     log_error "$1" "$2" "$LOG_HIVE_RUN"
+	syslog "lgptest_hive" "$0" "1" "$1"
 }
 hive_debug(){
 	init_log $LOG_HIVE_RUN
@@ -92,6 +96,7 @@ checkExistDb(){
 	if [[ "$hret" =~ "$checkDb" ]];then
 		$hadoopPath fs -ls leofs://`getHiveWarehouse`/${checkDb}.db >> $LOG_HIVE_RUN 2>&1
 		if [ $? -eq 0 ];then
+			hive_info "${FUNCNAME} ${checkDb}.db exist." "$LINENO"
 			flag=0
 		fi
 	fi
@@ -103,8 +108,9 @@ local p_value_path="$1"
 echo -e """1\t测试\tkk1
 2\tdev\tkk2
 3\test\tkk3""" > $p_value_path
-
+hive_info "${FUNCNAME} $p_value_path " "$LINENO"
 }
+
 checkTbHdfsPath(){
 	local d_tableName="$1"
 	$hadoopPath fs -ls leofs://`getHiveWarehouse`/${d_tableName} >> $LOG_HIVE_RUN 2>&1
@@ -127,8 +133,9 @@ preInsertPartitionTb(){
 	
 	$basecmd "dfs -rm  /hive_pf " >> $LOG_HIVE_RUN 2>&1
 	$basecmd  "dfs -put file://$p_value_f /"  >> $LOG_HIVE_RUN 2>&1
-	
+	hive_info "${FUNCNAME} tname:$p_tb_name,partname=$p_partName,partValue:$p_partValue" "$LINENO"
 }
+
 checkPartitionValue(){
 	local p_value_f="/tmp/hive_pf"
 	flag=1
@@ -191,10 +198,12 @@ checkBucketTb(){
 preInsertExtTb(){
 	local e_value_f="/tmp/hive_ef"
 	echo_data $e_value_f
+	hive_debug "${FUNCNAME} $e_value_f" "$LINENO"
 }
 loadDataToTb(){
 	local d_path="$1"
 	echo_data $d_path
+	hive_debug "${FUNCNAME} $d_path" "$LINENO"
 }
 
 checkExtValue(){
@@ -209,6 +218,7 @@ checkExtValue(){
         if [[ $e_items_num != "" ]];then
             real_num=`echo $ret|grep -oP "(?<=Found )(\w*)(?= items)"`
             if [ $e_items_num -eq $real_num ];then
+				hive_info "${FUNCNAME} $e_items_num -eq $real_num" "$LINENO"
                 flag=0
             fi
         fi
@@ -224,8 +234,10 @@ checkIndexTb(){
 	$basecmd "alter index ${i_indexName} on ${i_tableName} rebuild;"
 	ret=`$basestdcmd "select * from $indexTable;"`
 	if [[ "$ret" =~ "/${i_tableName}/" ]];then
+		hive_info "${FUNCNAME} $ret --包含-- ${i_tableName}" "$LINENO"
 		return 0	
 	fi
+		hive_info "${FUNCNAME} $ret --不包含-- ${i_tableName}" "$LINENO"
 	return 1
 }
 
@@ -314,6 +326,7 @@ checkInfo(){
         flag=0
     fi
     echo $flag
+	hive_info "${FUNCNAME} flag:$flag check:$e_info1 =~ $e_checkvalue1" "$LINENO"
 }
 
 ##########################################################################
@@ -323,6 +336,7 @@ checkInfo(){
 ##########################################################################
 preTable(){
 	local p_tableName="$1"
+	hive_debug "${FUNCNAME} tableName:$p_tableName"
 	${basecmd} "drop table $p_tabletableName" >/dev/null 2>&1
 	${basecmd} "create table $p_tableName(id int,name String,loc String) \
     	row format delimited fields terminated by '\t';"
@@ -344,10 +358,12 @@ compareTableValue(){
 	grep_t1=`echo $ret_t1|xargs|grep -oP "(?<=OK )(.*)(?=Time taken)"`
 	grep_t2=`echo $ret_t2|xargs|grep -oP "(?<=OK )(.*)(?=Time taken)"`
 	
-	if [[ "$grep_t1" == "${grep_t2}" ]];then
+	if [[ "${grep_t1}" == "${grep_t2}" ]];then
+		hive_info "${FUNCNAME} ${grep_t1} == ${grep_t2} " "$LINENO"
 		echo 0
 		return 0
 	fi	
+		hive_info "${FUNCNAME} ${grep_t1} != ${grep_t2} " "$LINENO"
 	echo 1;return 1
 }
 
@@ -361,6 +377,7 @@ catTableHdfsValue(){
 		r_ret="$($hadoopPath fs -cat leofs://`getHiveWarehouse`/${catTableName}/* 2>/dev/null)"
 	fi
 	echo $r_ret
+	hive_info "${FUNCNAME} ret_value:$r_ret" "$LINENO"
 }
 
 #仅支持普通表, 数据存放位置为默认位置
@@ -380,9 +397,11 @@ checkTableValue(){
 			echo 0;return 0
 		fi
 		if [[ "`catTableHdfsValue ${ck_tableName} ${c_tableType} "${c_p_value}"`" =~ "$c_info" ]];then
+			hive_info "${FUNCNAME}  ${ck_tableName} ${c_tableType} ${c_p_value} =~ $c_info" "$LINENO"
 			echo 0;return 0
 		fi	
     fi
+			hive_info "${FUNCNAME}  ${ck_tableName} ${c_tableType} ${c_p_value} 不包含 $c_info" "$LINENO"
     echo 1;return 1
 }
 
@@ -397,7 +416,8 @@ createNormalTb(){
 	${basecmd} "drop table ${n_tableName}" >/dev/null 2>&1
 	${basecmd} "create table ${n_tableName}(id int,name String,loc String);"
 	nret=$?
-	[ $nret -ne 0 ] && hive_error "create noremal table error" "$LINENO"
+	[ $nret -ne 0 ] && hive_error "${FUNCNAME} create noremal table error" "$LINENO"
+	hive_debug "${FUNCNAME} create noremal table ok" "$LINENO"
 	return $nret
 }
 createPartitionTb(){
@@ -407,7 +427,8 @@ createPartitionTb(){
 	partitioned by(month string) \
 	row format delimited fields terminated by '\t';"
 	pret=$?
-	[ $pret -ne 0 ] && hive_error "create partition table error " "$LINENO"
+	[ $pret -ne 0 ] && hive_error "${FUNCNAME} create partition table error " "$LINENO"
+	hive_debug "${FUNCNAME} create partition table ok " "$LINENO"
 	return $pret
 }
 
@@ -420,6 +441,7 @@ createBucketTb(){
 	clustered by (id) into ${b_bucketNum} buckets \
 	row format delimited fields terminated by '\t';"
 	bret=$?
-	[ $bret -ne 0 ] && hive_error "create bucket table error" "$LINENO"
+	[ $bret -ne 0 ] && hive_error "${FUNCNAME} create bucket table error" "$LINENO"
+	hive_debug "${FUNCNAME} create bucket table ok " "$LINENO"
 	return $bret
 }

@@ -2,10 +2,19 @@
 
 path=`dirname $0`
 path=`cd $path;cd "..";pwd`
+
+# conf,log
+if [ "${path}/../global.conf" ];then
+    . "${path}/../global.conf"
+fi
 . "${path}/conf/conf"
 . "${path}/bin/common"
 . "${path}/lib/log_tool.sh"
-LOG_HIVE="/tmp/lgp-hive.log"
+
+if [ "x$LOG_HIVE" == "x" ];then
+	LOG_HIVE="/tmp/lgp-hive.log"
+fi
+
 caseConfDir="$path/conf/caseConf"
 init_log $LOG_HIVE
 
@@ -61,7 +70,6 @@ elif [ 1 -eq $# -o 2 -eq $# ]; then
 	if [ "$cases" == "" ];then
     	cases=`cat $caseConfDir/$apiName`       #调用testSql时用到
 	fi
-#	 . "${path}/bin/$apiName/functions"
 else
 	echo_help
 fi

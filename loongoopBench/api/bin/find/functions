@@ -5,6 +5,7 @@ checkNumEqual(){
 	else 
 		echo 1
 	fi
+	api_info "[${FUNCNAME}],---$1 - $2 ---" "$LINENO"
 }
 ## $1:retFlag $2:retinfo  $3:find path
 checkOk(){
@@ -29,6 +30,7 @@ checkOk(){
 		  if [[ "$LeoFind" =~ "$j" ]];then
 			:
 			else
+				api_error "[${FUNCNAME}], j :$j" "$LINENO"
 				echo 0
 				exit 1
 		  fi
@@ -36,6 +38,7 @@ checkOk(){
  else
 	flag=0
  fi
+	api_info "[${FUNCNAME}], retinfo : $retInfo , LeoFind:$LeoFind" "$LINENO"
  echo $flag
 }
 
@@ -58,6 +61,7 @@ checkOkPrint0(){
   else
 	flag=0
   fi
+	api_info "[${FUNCNAME}], retinfo:$retInfo , sWcNum:$sWcNum , rWcNum:$rWcNum" "$LINENO"
   echo $flag
 }
 
@@ -97,6 +101,7 @@ checkOkByFs(){
 	else
 		flag=0
 	fi
+	api_info "[${FUNCNAME}], retinfo:$retInfo , sWcNum:$sWcNum , rWcNum:$rWcNum" "$LINENO"
 	echo $flag
 }
 ## 检查错误反馈，并比较 错误信息
@@ -115,6 +120,7 @@ function checkError(){
             flag=0
         fi
     fi
+	api_info "[${FUNCNAME}], retinfo:$retInfo ,--- $rMsg - $sMsg ---" "$LINENO"
     echo $flag
 }
 

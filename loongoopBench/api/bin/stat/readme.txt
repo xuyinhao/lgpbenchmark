@@ -21,7 +21,7 @@ Usage: hadoop fs [generic options] -stat [format] <path> ...
 %r：打印备份数
 %y：打印UTC日期 yyyy-MM-dd HH:mm:ss
 %Y：打印自1970年1月1日以来的UTC微秒数
-%F：目录打印directory, 文件打印regular file
+%F：目录打印directory, 文件打印regular file  [%F ,文件不要为空]
 %g: 所属组
 %u: 所属用户
 

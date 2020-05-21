@@ -73,5 +73,6 @@ fi
 logTime="$(date +'%Y-%m-%d_%T')"
 init_log "$LOG_HBASE"
 
-echo "$logTime run hbaseShellTest: $apiName "$cases"" |tee -a "$LOG_HBASE"
+cases_rev="$(echo $cases|xargs)"
+echo "$logTime run hbaseShellTest: $apiName $cases_rev" |tee -a "$LOG_HBASE"
 runCase $apiName "${cases}" 

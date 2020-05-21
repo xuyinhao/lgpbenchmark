@@ -10,6 +10,17 @@ function touch512LeoFile(){
     api_info "[${FUNCNAME}], f:${tmpDir}/$fileName" "$LINENO"
 }
 
+## 在本地创建一个文件
+function touch512LocalFile(){
+    filePath="$1"
+    local fileName=`basename "$1"`
+    str=`genString 512 2>/dev/null`
+    echo $str > $filePath
+    api_info "[${FUNCNAME}], f:${filePath}" "$LINENO"
+}
+
+
+
 #filesize -- hdfs:%b , linux:%s
 get_filesize_value(){
 	local f_filePath="$1"
@@ -38,7 +49,6 @@ getDirUserAndGroupOnHdfs(){
 get_owner_user_value(){
 	local f_hdfsPath="$1"
 	leoPath="`getLeofsRealPath $f_hdfsPath`"
-
 	if [ -f $leoPath ];then
 		user=`getFileUserAndGroupOnHdfs	$f_hdfsPath |awk -F ":" '{print $1}'`
 		echo $user ; return 0
@@ -56,8 +66,8 @@ get_owner_user_value(){
 #groupname -- hdfs:%g , linux:%G
 get_owner_group_value(){
 	local f_hdfsPath="$1"
-	leoPath="`getLeofsRealPath $f_hdfsPath`"
-	 if [ -f $leoPath ];then
+    leoPath="`getLeofsRealPath $f_hdfsPath`"
+	if [ -f $leoPath ];then
         group=`getFileUserAndGroupOnHdfs $f_hdfsPath |awk -F ":" '{print $2}'`
         echo $group ; return 0
     fi  
@@ -145,13 +155,15 @@ get_filename_value(){
     echo "$filename"
 }
 
-# type -- hdfs:%F ,linux : %F
+# type -- hdfs:%F ,linux : %F (linux 为空的文件 : regular empty file)
 get_filetype_value(){
     local t_filePath="$1"
     filetype="`stat -c %F $t_filePath`"
+	if [ "$filetype" == "regular empty file" ];then
+		filetype="regular file"
+	fi
     echo "$filetype"
 }
-
 
 
 checkAllStat(){
@@ -160,7 +172,8 @@ checkAllStat(){
 	local ret_hdfsstat="$2" 
 	local hdfsPath="$3"
 	filePath="$(getLeofsRealPath "$hdfsPath")"
-
+	
+	api_debug "[${FUNCNAME}],check filePath:$filePath"
 	username="`echo "$ret_hdfsstat"|awk -F "|" '{print $1}'`"
 	groupname="`echo "$ret_hdfsstat"|awk -F "|" '{print $2}'`"
 	filesize="`echo "$ret_hdfsstat"|awk -F "|" '{print $3}'`"
@@ -170,13 +183,13 @@ checkAllStat(){
 
 	api_debug "[${FUNCNAME}],hdfs all info :$username,$groupname,$filesize,$blocksize,$filename,$filetype"	"$LINENO"
 	
-	linuxUsername="`get_owner_user_value $hdfsPath`"
+	linuxUsername="`get_owner_user_value $hdfsPath `"
 	if [ "$username" != "$linuxUsername" ];then
 		api_error "[${FUNCNAME}],hdfs:$username,linux:$linuxUsername"	"$LINENO"
 		echo 0;return 0
 	fi
 	
-	linuxGroupname="`get_owner_group_value $hdfsPath`"
+	linuxGroupname="`get_owner_group_value $hdfsPath `"
 	if [ "$groupname" != "$linuxGroupname" ];then
 		api_error "[${FUNCNAME}],hdfs:$groupname,linux:$linuxGroupname"	"$LINENO"
         echo 0;return 0
@@ -214,4 +227,37 @@ checkAllStat(){
 
 
 }
+
+checkTypeByLocal(){
+	local filePath="$1"
+
+	linuxFiletype="`get_filetype_value $filePath`"
+	fileType="`${loongoopfs} -stat %F file://$filePath 2>/dev/null`"
+    api_debug "[${FUNCNAME}],hdfs:$fileType,linux:$linuxFiletype" "$LINENO"
+    if [ "$fileType" != "$linuxFiletype" ];then
+        api_error "[${FUNCNAME}],hdfs:$fileType,linux:$linuxFiletype" "$LINENO"
+        echo 0;return 0
+    fi
+	echo 1	
+
+}
+## 检查错误反馈，并比较 错误信息
+## $1 :ret   $2 : real message,  $3: should message info 
+function checkError(){
+    flag=1
+    local retFlag=$1
+    local rMsg=$2
+    local sMsg=$3
+    if [ $retFlag -eq 0 ];then
+        flag=0
+    else
+        if [[ "$rMsg" =~ "$sMsg" ]];then
+            flag=1
+        else
+            flag=0
+        fi
+    fi
+    echo $flag
+}
+
 

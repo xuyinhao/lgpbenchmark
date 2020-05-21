@@ -1,0 +1,8 @@
+#!/bin/bash
+#3-2    打印相对路径
+filename=ct_stat_3-2_file
+touch512LeoFile "$filename"
+## %u_%g_%b_%o_%n_%F user,group,filesize,oblocksize,name,Type
+ret_hdfsallstat="`$statAll $filename 2>/dev/null`"
+checkAllStat "$?" "$ret_hdfsallstat" "$filename"	#$?, hdfsstat结果，filepath
+

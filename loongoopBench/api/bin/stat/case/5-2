@@ -1,0 +1,8 @@
+#!/bin/bash
+#5-2  不存在的命令
+filename=ct_stat-5-2
+touch512LeoFile "${apiPath}/$filename"
+## %u_%g_%b_%o_%n_%F user,group,filesize,oblocksize,name,Type
+ret_hdfsallstat="`$stat %T%T%T  $apiPath/$filename 2>&1`"
+checkError "1" "$ret_hdfsallstat" "TTT"   #$1=1,stat不存在的%T,会返回0
+

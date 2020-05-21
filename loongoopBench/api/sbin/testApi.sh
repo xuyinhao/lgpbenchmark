@@ -9,9 +9,13 @@ fi
 . "${path}/bin/commands"
 . "${path}/bin/common"
 . "${path}/../lib/log_tool.sh"
+. "${path}/../lib/fail_retry.sh"
+BASE_CASE_NAME="api"
 
 caseConfDir="$path/conf/caseConf"
-
+failFilePath="${path}/conf/.failretry/failitem.$BASE_CASE_NAME"
+resultNumPath="${path}/conf/.resultnum/failnum.$BASE_CASE_NAME"
+mkdir -p `dirname $resultNumPath`;		#初始化结果路径
 API_LOG="/tmp/lgp-api.log"
 if [ "x$LOG_API" != "x" ];then
 	API_LOG="$LOG_API"
@@ -21,30 +25,72 @@ log_and_shows(){
 	log_and_show "$1" "$2" "" "$API_LOG"
 }
 
+## __增加失败的case记录
+add_fail_item(){
+    local f_item="$1"
+    add_retry_item "$BASE_CASE_NAME" "$f_item"
+}
+## __删除失败case记录
+del_fail_item(){
+    local f_item="$1"
+    del_retry_item "$BASE_CASE_NAME" "$f_item"
+}
+#失败记录到文件
+fail_record(){
+	local item_v="$1"
+##fail retry
+	if [ "x$failRetryNum" == "x" ] ;then
+		return 0
+	else
+		add_fail_item "$item_v"
+	fi
+}
+
+#失败记录删除
+fail_record_del(){
+	local item_v="$1"
+	##fail retry
+	if [ "x$failRetryNum" == "x" ] ;then
+    	return 0
+	else
+    	del_fail_item "$item_v" > /dev/null 2>&1 
+	fi
+}
+TOTAL_NUM=0 ; PASS_NUM=0 ;FAIL_NUM=0 ; SKIP_NUM=0 
 mountPath=$(getMountPath)
+
 runCase(){
- exist=$(echo "$1"| grep "#")
+ casekey="$1"
+ caseid="$2"
+ exist=$(echo "$casekey"| grep "#")
  if [ "$exist" != "" ]; then
     #echo "pass $1"
-	log_and_shows "INFO" "Skip : $1" 
+	log_and_shows "INFO" "Skip : $casekey" 
   else
-   if [ ! -d $path/bin/"$1" ]; then
+   if [ ! -d $path/bin/"$casekey" ]; then
     log_and_shows "WARN" "$apiConf are prefered!"
    else
      #echo "2:$2"
-     for caseName in $cases
+     for caseName in $caseid
      do
       passed=$(echo $caseName | grep "#")
       if [ "$passed" != "" ]; then
-		log_and_shows "INFO" "Skip case: $apiName.$caseName"
+		let TOTAL_NUM+=1 ; let SKIP_NUM+=1
+		log_and_shows "INFO" "Skip case: $casekey.$caseName"
       else
-       testcase="$path/bin/$apiName/case/$caseName"
+		let TOTAL_NUM+=1
+       testcase="$path/bin/$casekey/case/$caseName"
        if [ -f $testcase ]; then
         ret=`. $testcase`	#1:true-success, 0:false-fail
 		if [ $ret -eq 1 ] ;then
-	        log_and_shows "INFO" "$apiName.$caseName pass"
+    		fail_record_del "$casekey $caseName"
+			let PASS_NUM+=1
+	        log_and_shows "INFO" "$casekey.$caseName pass"
     	else
-			log_and_shows "ERROR" "$apiName.$caseName fail"
+			fail_record "$casekey $caseName"
+			let FAIL_NUM+=1
+			log_and_shows "ERROR" "$casekey.$caseName fail"
+			
 	    fi
        fi
      fi
@@ -59,6 +105,37 @@ echo_help(){
 	exit 1
 }
 
+##重新跑失败的case
+fail_case_retry(){
+##fail retry
+if [ "x$failRetryNum" == "x" ] ;then
+    return 0
+else
+	OLDIFS="$IFS"   #以换行符作为标识，而不是空格。
+    IFS=$'\n'
+	failcaseNum="`cat ${path}/conf/.failretry/failitem.api|wc -l`"
+	IFS="$OLDIFS"   #还原
+	if [ $failcaseNum -eq 0 ];then return 0;fi
+	for i in $(seq 1 $failRetryNum)
+	do
+		OLDIFS="$IFS"   #以换行符作为标识，而不是空格。
+	    IFS=$'\n'
+
+		for failcase in `cat ${path}/conf/.failretry/failitem.api`
+		do
+			IFS="$OLDIFS"	#还原
+		#	cat ${path}/conf/.failretry/failitem.api
+ 			clearTmpDir $tmpDir
+			clearDir $apiPath
+			log_and_shows "INFO" "Run failed case: $failcase , $i times."
+			runCase $failcase
+		done
+done
+fi
+
+}
+
+##begin run
 if [ 0 -eq $# ]; then
 	echo_help
 elif [ 1 -eq $# -o 2 -eq $# ]; then
@@ -72,7 +149,7 @@ elif [ 1 -eq $# -o 2 -eq $# ]; then
 
 	cases="$2"                # 测试的cases
 	if [ "$cases" == "" ];then
-    	cases="`cat $caseConfDir/$apiName|xargs ` "       #调用testApi时用到
+    	cases="`cat $caseConfDir/$apiName|xargs` "       #调用testApi时用到
 	fi
 	 . "${path}/bin/$apiName/functions"
 else
@@ -82,10 +159,15 @@ if [ "" == "$rootPath" ] || [ "" == "$tmpDir" ]; then
  log_and_shows "ERROR" "rootPath and tmpDir are not set!"
  exit 0
 fi
+
 logTime="$(date +'%Y-%m-%d_%T')"
 apiPath="$rootPath/$apiName"
-echo  "$logTime  Run case :$apiName $cases"|tee -a $API_LOG
+cases_rev="$(echo $cases|xargs)"
+echo  "$logTime"  Run case :"$apiName" "$cases_rev" |tee -a "$API_LOG"
+
 clearTmpDir $tmpDir
 clearDir $apiPath
 runCase $apiName "${cases}" 
-log_and_shows  "INFO" "Api $apiName test finished! Log path : $API_LOG" 
+fail_case_retry $failRetryNum
+echo "$TOTAL_NUM" "$PASS_NUM" "$FAIL_NUM" "$SKIP_NUM" > $resultNumPath
+#log_and_shows  "INFO" "Api $apiName test finished! Log path : $API_LOG" 

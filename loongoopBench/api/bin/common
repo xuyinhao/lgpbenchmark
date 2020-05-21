@@ -146,6 +146,8 @@ function getWinacl(){
 }
 
 function getLeofsRealPath(){
+	#klist测试是否用kerberos,如果没用那么相对路径则是/user/`whoami`
+	
 	userName=`whoami`
 	
  	if [[ "$1" == "/"* ]]; then
@@ -295,4 +297,5 @@ flag=1
  fi
 fi
 }
+
 

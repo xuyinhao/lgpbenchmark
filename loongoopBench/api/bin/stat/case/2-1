@@ -2,8 +2,9 @@
 #2-1     按照格式打印深层路径的文件
 
 deepPath=`genDeepPath 2 5`
-n_path="$apiPath/$deepPath"
-n_filename="$n_path/stat_filename_2-1"
-ret="`$mkdir -p  $apiPath/$deepPath  2>&1`" && $touchz  $apiPath/$deepPath/stat_filename_2-1
+n_path="${apiPath}${deepPath}"
+n_filename="${n_path}/stat_filename_2-1"
+ret="`$mkdir -p  $apiPath/$deepPath  2>&1`" &&  $touchz  $apiPath/$deepPath/stat_filename_2-1 >/dev/null 2>&1
+ret_hdfsallstat="`$statAll ${n_filename} 2>/dev/null`"
+checkAllStat "$?" "$ret_hdfsallstat" "${n_filename}"  #$?, hdfsstat结果，filepath
 
-pi_info "[${FUNCNAME}],hdfs all info :$username,$groupname,$filesize,$blocksize,$filename,$filetype"	"$LINENO"

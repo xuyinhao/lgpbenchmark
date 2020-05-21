@@ -4,14 +4,14 @@ function getFileNature(){
  nature=`ls -l $realPath 2>/dev/null`
  natures=($nature)
  echo ${natures[$2]}
-	api_log "[${FUNCNAME}], real natures:${natures[$2]}" "$LINENO"
+	api_info "[${FUNCNAME}], real natures:${natures[$2]}" "$LINENO"
 }
 
 function getLocalFileNature(){
  nature=`ls -l $1`
  natures=($nature)
  echo ${natures[$2]}
-	api_log "[${FUNCNAME}], local natures:${natures[$2]}" "$LINENO"
+	api_info "[${FUNCNAME}], local natures:${natures[$2]}" "$LINENO"
 }
 
 
@@ -20,7 +20,7 @@ function getPathNature(){
  nature=`ls -ld $realPath`
  natures=($nature)
  echo ${natures[$2]}
-	api_log "[${FUNCNAME}], path natures:${natures[$2]}" "$LINENO"
+	api_info "[${FUNCNAME}], path natures:${natures[$2]}" "$LINENO"
 }
 
 function checkOk(){

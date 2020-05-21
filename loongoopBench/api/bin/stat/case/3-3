@@ -1,0 +1,7 @@
+#!/bin/bash
+#3-3    打印本地路径
+filename=ct_stat_3-3_file
+touch512LocalFile "${tmpDir}/$filename"
+## %u_%g_%b_%o_%n_%F user,group,filesize,oblocksize,name,Type
+#ret_hdfsallstat="`$statAll file://${tmpDir}/$filename 2>/dev/null`"
+checkTypeByLocal "${tmpDir}/$filename" 

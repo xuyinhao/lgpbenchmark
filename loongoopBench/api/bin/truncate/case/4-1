@@ -3,5 +3,5 @@
 nfilePath1=${tmpDir}/tc4-1
 touch1kLocalFile $nfilePath1
 ret=`$truncate 700 file://$nfilePath1  2>&1`
-checkError $? "$ret" "truncate: Not supported"
+checkError $? "$ret" "ot supported"	#为了兼容not ,Not 
 

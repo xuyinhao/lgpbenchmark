@@ -2,8 +2,9 @@
 spath=`dirname $0`
 path=`cd $spath;cd "..";pwd`
 caseConfDir="${path}/conf/caseConf"
-apiConf=`cat ${path}/conf/toolsConf`
+apiConf=`cat ${path}/conf/toolsConf|xargs`
 . ${path}/lib/log_tool.sh
+
 
 log_and_show  "INFO" "hbaseToolsTest start $apiConf"
 for apiName in $apiConf

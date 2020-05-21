@@ -12,7 +12,7 @@ function checkOk(){
  else
   flag=0
  fi
-	api_log "[${FUNCNAME}],flag:$flag" "$LINENO"
+	api_info "[${FUNCNAME}],flag:$flag" "$LINENO"
  echo $flag
 }
 

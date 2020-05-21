@@ -3,5 +3,5 @@ str=`genString 100`
 `echo $str > /${tmpDir}/atf6-2src`
 `touch /${tmpDir}/atf6-2dst`
 ret=`$atf file:///${tmpDir}/atf6-2src file:///${tmpDir}/atf6-2dst 2>&1`
-checkError $? "$ret" "appendToFile: Not supported"
+checkError $? "$ret" "ot supported"	#为了兼容 not,Not
 `rm /${tmpDir}/atf6-2*`

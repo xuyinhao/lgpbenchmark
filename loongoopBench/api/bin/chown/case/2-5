@@ -6,4 +6,4 @@ filePath="$apiPath/chown2-5"
 $touchz $filePath 2>/dev/null
 $chown ${str}:root $filePath 2>/dev/null
 checkOkNeedWinacl $? "${str}:root" $filePath
-userdel $str 2>/dev/null
+userdel -rf $str 2>/dev/null

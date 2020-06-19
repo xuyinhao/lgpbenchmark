@@ -5,4 +5,4 @@ $touchz leofs:///chown4-1 2>/dev/null
 $chown chownU4-1:root leofs:///chown4-1 2>/dev/null
 checkOkNeedWinacl $? "chownU4-1:root" "/chown4-1"
 $rm leofs:///chown4-1 >/dev/null 2>&1
-userdel chownU4-1 2>/dev/null
+userdel -rf chownU4-1 2>/dev/null

@@ -194,14 +194,17 @@ checkAllStat(){
 		api_error "[${FUNCNAME}],hdfs:$groupname,linux:$linuxGroupname"	"$LINENO"
         echo 0;return 0
     fi
+	
 
 	linuxFilesize="`get_filesize_value $filePath`"
+	test -d $filePath && linuxFilesize=0    		#loongoop-bug26118-文件夹改为 0 size , 0 副本,blksize
 	if [ "$filesize" != "$linuxFilesize" ];then
 		api_error "[${FUNCNAME}],hdfs:$filesize,linux:$linuxFilesize"	"$LINENO"
 		echo 0;return 0
 	fi
 
 	linuxBlocksize="`get_blocksize_value $filePath`"
+	test -d $filePath && linuxBlocksize=0  			#loongoop-bug26118-文件夹改为 0 size , 0 副本,blksize
 	if [ "$blocksize" != "$linuxBlocksize" ];then
 		api_error "[${FUNCNAME}],hdfs:$blocksize,linux:$linuxBlocksize"	"$LINENO"
         echo 0;return 0

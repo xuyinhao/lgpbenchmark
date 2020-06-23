@@ -17,15 +17,36 @@ if [ 1 -eq $? ]; then
  echo 0
  return
 fi 
+
+# 路径大于0 ，返回 flag=0 . 
+# 3.x返回的是1， 2.x返回0
+
 `$test -s $deepPath/bb 2>/dev/null`
-if [ 1 -eq $? ]; then
- echo 0
- return
+flag=$?
+if [ `only_hdp31` -eq 1 ];then
+ if [ 0 -eq $flag ]; then
+   echo 0
+   return
+  fi
+else
+  if [ 1 -eq $flag ]; then
+    echo 0
+    return
+  fi	
 fi
 
+#hdp3 是返回0 。 2.x 返回1
 `$test -z $deepPath/bb 2>/dev/null`
-if [ 0 -eq $? ]; then
- echo 0
- return
+flag=$?
+if [ `only_hdp31` -eq 1 ];then
+  if [ 1 -eq $? ]; then
+    echo 0
+    return
+  fi
+else
+  if [ 0 -eq $? ]; then
+    echo 0
+    return
+  fi
 fi
 echo 1

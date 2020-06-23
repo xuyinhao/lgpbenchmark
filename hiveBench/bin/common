@@ -337,9 +337,9 @@ checkInfo(){
 preTable(){
 	local p_tableName="$1"
 	hive_debug "${FUNCNAME} tableName:$p_tableName"
-	${basecmd} "drop table $p_tabletableName" >/dev/null 2>&1
+	${basecmd} "drop table $p_tableName" >/dev/null 2>&1
 	${basecmd} "create table $p_tableName(id int,name String,loc String) \
-    	row format delimited fields terminated by '\t';"
+    	row format delimited fields terminated by '\t'  stored as textfile;"
 	loadDataToTb "/tmp/hive_db_f"
     ${exec}cmd "load data local inpath '/tmp/hive_db_f' overwrite into table ${p_tableName}"
 	return $?

@@ -9,5 +9,13 @@ echo "123" > $realf1
 f2="$d1/du_t_f1-2_2"
 realf2="$reald1/du_t_f1-2_2"
 echo "4567890" > $realf2
+if [ `only_hdp31` -eq 1 ];then
+  duOkCheck "-s $d1" "12 12 $d1"
+  echo $?;return $?
+fi
+
 duOkCheck "-s $d1" "12 $d1"
 echo $?
+
+
+

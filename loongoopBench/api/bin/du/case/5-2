@@ -2,5 +2,11 @@
 filePath="leofs://${apiPath}/du5-2"
 realPath=`getLeofsRealPath "${apiPath}/du5-2"`
 echo "111" > $realPath
+if [ `only_hdp31` -eq 1 ];then
+  duOkCheck "$filePath" "4 4 $filePath"
+  echo $? ; return $?
+fi
+
 duOkCheck "$filePath" "4 $filePath"
 echo $?
+

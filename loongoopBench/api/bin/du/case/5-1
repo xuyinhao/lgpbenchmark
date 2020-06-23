@@ -1,6 +1,12 @@
 #!/bin/sh
 filePath="du5-1"
+rm -f /${tmpDir}/$filePath
 echo "111" > ${tmpDir}/$filePath
+if [ `only_hdp31` -eq 1 ];then
+  duOkCheck "file://${tmpDir}/$filePath" "4 4 file://${tmpDir}/$filePath"
+  echo $?;return $?
+fi
+
 duOkCheck "file://${tmpDir}/$filePath" "4 file://${tmpDir}/$filePath"
 echo $?
 rm -f /${tmpDir}/$filePath

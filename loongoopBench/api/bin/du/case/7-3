@@ -11,5 +11,10 @@ f2="$d1/du_t_f1-2_2"
 realf2="$reald1/du_t_f1-2_2"
 str=`genString 40000`
 echo $str > $realf2
+if [ `only_hdp31` -eq 1 ];then
+  duOkCheck "-s -h $d1" "58.6 K 58.6 K $d1"
+  echo $? ;return $?
+fi
+
 duOkCheck "-s -h $d1" "58.6 K $d1"
 echo $?

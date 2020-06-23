@@ -2,5 +2,10 @@
 f1="$apiPath/du_t_f1-1"
 realf1=`getLeofsRealPath $f1`
 echo "123456789" > $realf1
-duOkCheck $f1 "10 $f1"
+
+if [ `only_hdp31` -eq 1 ];then
+duOkCheck $f1 "10 10 $f1" #hdp2.x是10 $f1 , hdp3.x 10 bksize $f1
+echo $? ; return $?
+fi
+duOkCheck $f1 "10 $f1" #hdp2.x是10 $f1 , hdp3.x 10 bksize $f1
 echo $?

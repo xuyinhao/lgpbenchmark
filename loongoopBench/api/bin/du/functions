@@ -6,7 +6,7 @@ function duOkCheck() {
   #echo "ret:$ret"
   if [ $? -eq 0 ]; then
     #echo "2:$2"
-    if [ "$ret" == "$2" ]; then
+    if [[ "$ret" =~ "$2" ]]; then
 		api_info "[${FUNCNAME}] ,ok  " "$LINENO"
       return 1
     fi
@@ -19,9 +19,10 @@ function duOkCheck() {
 
 function duErrorCheck(){
  ret=`$du $1 2>&1`
+ flag=$?
  #echo "$ret"
 	api_info "[${FUNCNAME}] , ret:$ret " "$LINENO"
- if [ 0 -eq $? ]; then
+ if [ 0 -eq $flag ]; then
   return 0
  fi
  str=`echo "$ret"|grep "$2"`

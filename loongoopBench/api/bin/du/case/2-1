@@ -5,5 +5,11 @@ for((i=0;i<100;i++))
 do
   echo "123456789" >> $realf1
 done
+if [ `only_hdp31` -eq 1 ];then
+  duOkCheck $f1 "1000 1000 $f1"
+  echo $? ; return $?
+fi
 duOkCheck $f1 "1000 $f1"
 echo $?
+
+

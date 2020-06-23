@@ -165,16 +165,16 @@ get_filetype_value(){
     echo "$filetype"
 }
 
-
+#检查特定的几种stat信息--后续需要自己添加
 checkAllStat(){
 	### %u_%g_%b_%o_%n_%F user,group,filesize,oblocksize,filename,Type
-	local retf="$1"
-	local ret_hdfsstat="$2" 
-	local hdfsPath="$3"
-	filePath="$(getLeofsRealPath "$hdfsPath")"
+	local retf="$1"					#程序执行的flag  , 传入命令后的 $?
+	local ret_hdfsstat="$2" 		#hdfs层 返回的stat信息
+	local hdfsPath="$3"				#需要被stat的，hadoop层的路径
+	filePath="$(getLeofsRealPath "$hdfsPath")"		#获取leofs层路径
 	
-	api_debug "[${FUNCNAME}],check filePath:$filePath"
-	username="`echo "$ret_hdfsstat"|awk -F "|" '{print $1}'`"
+	api_debug "[${FUNCNAME}],check - filePath:$filePath"
+	username="`echo "$ret_hdfsstat"|awk -F "|" '{print $1}'`"		#获取hdfs层返回的相关信息，单独取出
 	groupname="`echo "$ret_hdfsstat"|awk -F "|" '{print $2}'`"
 	filesize="`echo "$ret_hdfsstat"|awk -F "|" '{print $3}'`"
 	blocksize="`echo "$ret_hdfsstat"|awk -F "|" '{print $4}'`"
@@ -183,25 +183,31 @@ checkAllStat(){
 
 	api_debug "[${FUNCNAME}],hdfs all info :$username,$groupname,$filesize,$blocksize,$filename,$filetype"	"$LINENO"
 	
-	linuxUsername="`get_owner_user_value $hdfsPath `"
+	linuxUsername="`get_owner_user_value $hdfsPath `"		#获取检查的用户名（这里直接在hadoop fs层进行检查，避免winacl特性的影响）
 	if [ "$username" != "$linuxUsername" ];then
 		api_error "[${FUNCNAME}],hdfs:$username,linux:$linuxUsername"	"$LINENO"
 		echo 0;return 0
 	fi
 	
-	linuxGroupname="`get_owner_group_value $hdfsPath `"
+	linuxGroupname="`get_owner_group_value $hdfsPath `"		#同 用户名
 	if [ "$groupname" != "$linuxGroupname" ];then
 		api_error "[${FUNCNAME}],hdfs:$groupname,linux:$linuxGroupname"	"$LINENO"
         echo 0;return 0
     fi
-
-	linuxFilesize="`get_filesize_value $filePath`"
+	
+	
+	lgpver="`get_loongoop_version`"
+	linuxFilesize="`get_filesize_value $filePath`"			#这里通过leofs层路径进行检查，传递 $filePath
+	api_debug "[${FUNCNAME}],---debug-filesize-lgp-version :$lgpver" "$LINENO"
+	test -d $filePath && [[ "$lgpver" > "1.0.6" ]] && linuxFilesize=0    #loongoop1.0.7以后-bug26118-文件夹改为 0 size , 0 副本,blksize
 	if [ "$filesize" != "$linuxFilesize" ];then
 		api_error "[${FUNCNAME}],hdfs:$filesize,linux:$linuxFilesize"	"$LINENO"
 		echo 0;return 0
 	fi
-
+	
+	api_debug "[${FUNCNAME}],---debug-blocksize-lgp-version:$lgpver" "$LINENO"
 	linuxBlocksize="`get_blocksize_value $filePath`"
+	test -d $filePath && [[ "$lgpver" > "1.0.6" ]] && linuxBlocksize=0  			#loongoop1.0.7-bug26118-文件夹改为 0 size , 0 副本,blksize
 	if [ "$blocksize" != "$linuxBlocksize" ];then
 		api_error "[${FUNCNAME}],hdfs:$blocksize,linux:$linuxBlocksize"	"$LINENO"
         echo 0;return 0
@@ -241,6 +247,7 @@ checkTypeByLocal(){
 	echo 1	
 
 }
+
 ## 检查错误反馈，并比较 错误信息
 ## $1 :ret   $2 : real message,  $3: should message info 
 function checkError(){

@@ -14,4 +14,4 @@ if [ 1 -eq $ret ]; then
 else
  echo 0
 fi
-userdel chownU3-2 2>/dev/null
+userdel -rf  chownU3-2 2>/dev/null

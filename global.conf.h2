@@ -1,6 +1,6 @@
 #!/bin/bash
-hadoopVersion=3.1.1								#基于hadoop的版本
-loongoopVersion=1.0.8                           #loongoop的版本
+hadoopVersion=2.7.2								#基于hadoop的版本
+loongoopVersion=1.0.6							#loongoop的版本
 
 ########### COMMON BIN CMD #######
 loongoopPath="/loongoop/loongoop-${loongoopVersion}-v${hadoopVersion}"	# loongoopPath -- loongoop安装目录
@@ -14,12 +14,12 @@ hbasePath="/loongoop/hbase-1.3.1/bin/hbase"		#hbase cmd  执行文件位置
 hbasePathShell="${hbasePath} shell"				#hbase shell 执行命令
 
 ########## hive配置 ########
-hiveHome="/loongoop/hive-3.1.0/"					#hive 安装目录
-beelineConnect="jdbc:hive2://13.10.12.30:21066"		#beeline连接方式
+hiveHome="/loongoop/hive-1.2.1/"					#hive 安装目录
+beelineConnect="jdbc:hive2://node29:21066"		#beeline连接方式
 hiveConfPath="${hiveHome}/conf/hive-site.xml"	#hive-site.xml位置
 hivePath=${hiveHome}/bin/hive					#hive cmd				
 beelinePath=${hiveHome}/bin/beeline				#beeline cmd
-exec=hive  	#hive,beeline						#检查(check)结果用的方式 
+exec=hive  	#hive,beeline
 ###############################
 
 #node 节点
@@ -28,7 +28,7 @@ hbaseZKList="mds1 node29 node30"		#zookeeper节点信息
 
 
 ##########################################################################################################
-## 基本xml,jar位置  , 其他平台注意修改路径位置
+## 基本xml,jar位置
 coreSitePath="${loongoopPath}/etc/hadoop/core-site.xml"
 leofsSitePath="${loongoopPath}/etc/hadoop/leofs-site.xml"
 exampleJarPath="${loongoopPath}/share/hadoop/mapreduce/hadoop-mapreduce-examples-${hadoopVersion}.jar"
@@ -37,7 +37,7 @@ testJarPath="${loongoopPath}/share/hadoop/mapreduce/hadoop-mapreduce-client-jobc
 ## wordcount reduce调整
 reduceNum=2                             #wordcount MR reduce num
 
-#TMP DIR PATH，一般不用修改。在多个节点测试时，修改rootPath路径。防止冲突
+#TMP DIR PATH
 rootPath="/lgp_testapi"     			#hdfs目录下的，测试根路径。测试 数据将会生成在此目录下
 tmpDir="/tmp/apitmpDir"   			 	#本地的 测试数据临时目录路径
 wordcount_filePath="/wordscount"        #hdfs path , wordcount原始数据的路径

@@ -2,14 +2,14 @@
 create
 #delete
 #describe
-drop
+#drop
 #export
 #import
-#insert
+insert
 #load
 #other
 #sampling
 #select
 #show
 #update
-#yltest
+yltest

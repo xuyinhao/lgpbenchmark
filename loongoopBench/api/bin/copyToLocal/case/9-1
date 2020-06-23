@@ -1,0 +1,17 @@
+#!/bin/sh
+## 9-1 本地创建一个空文件 , -f only hdp3.1
+## 再通过copyToLocal传输到本地（同名），再比较文件属性
+fname=ctl9-1
+filePath="$apiPath/$fname"
+touch $tmpDir/$fname
+realPath=`getLeofsRealPath $filePath`
+echo 1234567890 > $realPath
+if [ `only_hdp31` -eq 1 ];then
+$ctl -f $filePath $tmpDir 2>/dev/null
+checkOkForAllLocal $? "$tmpDir/$fname" "$realPath"
+return 0
+fi
+
+$ctl $filePath $tmpDir 2>/dev/null
+checkOkForAllLocal $? "$tmpDir/$fname" "$realPath"
+

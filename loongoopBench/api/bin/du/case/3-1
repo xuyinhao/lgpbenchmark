@@ -4,5 +4,9 @@ realPath=`getLeofsRealPath $filedir`
 mkdir -p $realPath
 f1="$realPath/du_t_f3-1"
 echo "123456789" > $f1
+if [ `only_hdp31` -eq 1 ];then
+duOkCheck "$filedir/du_t_f3-1" "10 10 $filedir/du_t_f3-1"
+echo $?;return $?
+fi
 duOkCheck "$filedir/du_t_f3-1" "10 $filedir/du_t_f3-1"
 echo $?

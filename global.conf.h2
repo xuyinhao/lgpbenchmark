@@ -1,9 +1,10 @@
 #!/bin/bash
-hadoopVersion=2.7.2
+hadoopVersion=2.7.2								#基于hadoop的版本
+loongoopVersion=1.0.6							#loongoop的版本
 
 ########### COMMON BIN CMD #######
-loongoopPath="/loongoop/loongoop-1.0.6-v${hadoopVersion}"	# loongoopPath -- loongoop安装目录
-hadoopPath="/loongoop/loongoop-1.0.6-v${hadoopVersion}/bin/hadoop"		## hadoopPath hadoop cmd 文件位置
+loongoopPath="/loongoop/loongoop-${loongoopVersion}-v${hadoopVersion}"	# loongoopPath -- loongoop安装目录
+hadoopPath="/loongoop/loongoop-${loongoopVersion}-v${hadoopVersion}/bin/hadoop"		## hadoopPath hadoop cmd 文件位置
 
 ######### hadoop fs ###########
 loongoopfs="${loongoopPath}/bin/hadoop fs"

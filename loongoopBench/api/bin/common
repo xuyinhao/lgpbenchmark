@@ -297,5 +297,18 @@ flag=1
  fi
 fi
 }
+get_hadoop_version(){
+echo "${hadoopVersion%.*}"
+}
 
+only_hdp31(){
+hv=`get_hadoop_version`
+if [[ $hv > "3.1" ]] || [[ $hv == "3.1" ]] ;then
+    echo 1
+    api_info "hdp31 true . $hv"
+else
+    echo 0
+    api_info "hdp31 false .  $hv"
+fi
 
+}

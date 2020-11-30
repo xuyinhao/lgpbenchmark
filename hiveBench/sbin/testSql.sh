@@ -73,6 +73,7 @@ elif [ 1 -eq $# -o 2 -eq $# ]; then
 else
 	echo_help
 fi
+cases_rev="$(echo $cases|xargs)"
 logTime="$(date +'%Y-%m-%d_%T')"
-log_and_show "INFO" "$logTime  $apiName $cases"
+log_and_show "INFO" "$logTime  $apiName $cases_rev"
 runCase $apiName "${cases}" 

@@ -1,5 +1,5 @@
 #!/bin/bash
-hadoopVersion=3.1.1
+hadoopVersion=2.7.2
 
 ########### COMMON BIN CMD #######
 loongoopPath="/loongoop/loongoop-1.0.6-v${hadoopVersion}"	# loongoopPath -- loongoop安装目录
@@ -13,8 +13,8 @@ hbasePath="/loongoop/hbase-1.3.1/bin/hbase"		#hbase cmd  执行文件位置
 hbasePathShell="${hbasePath} shell"				#hbase shell 执行命令
 
 ########## hive配置 ########
-hiveHome="/loongoop/hive-3.1.0/"					#hive 安装目录
-beelineConnect="jdbc:hive2://13.10.12.30:21066"		#beeline连接方式
+hiveHome="/loongoop/hive-1.2.1/"					#hive 安装目录
+beelineConnect="jdbc:hive2://node29:21066"		#beeline连接方式
 hiveConfPath="${hiveHome}/conf/hive-site.xml"	#hive-site.xml位置
 hivePath=${hiveHome}/bin/hive					#hive cmd				
 beelinePath=${hiveHome}/bin/beeline				#beeline cmd

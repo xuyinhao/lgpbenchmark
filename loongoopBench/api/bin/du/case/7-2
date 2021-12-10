@@ -11,10 +11,10 @@ f2="$d1/du_t_f1-2_2"
 realf2="$reald1/du_t_f1-2_2"
 str=`genString 8000`
 echo $str > $realf2
-duOkCheck "-h $d1" "4.9 K $f1"
-if [ $? -eq 1 ];then
-duOkCheck "-h $d1" "7.8 K $f2"
-echo $?
-else
-echo 0
+if [ `only_hdp31` -eq 1 ];then
+  duOkCheck "-h $d1" "4.9 K 4.9 K $f1 7.8 K 7.8 K $f2"
+  echo $? ; return $?
 fi
+
+duOkCheck "-h $d1" "4.9 K $f1 7.8 K $f2"
+echo $?

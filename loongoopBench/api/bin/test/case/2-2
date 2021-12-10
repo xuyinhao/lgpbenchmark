@@ -17,6 +17,7 @@ if [ 1 -eq $? ]; then
  echo 0
  return
 fi 
+# 路径大于0 ，返回 flag=0
 `$test -s $deepPath/bb 2>/dev/null`
 if [ 1 -eq $? ]; then
  echo 0
